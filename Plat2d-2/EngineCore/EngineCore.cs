@@ -29,6 +29,7 @@ namespace Plat2d_2.EngineCore
 
         public EngineCore(Vector2 ScreenSize, string Title)
         {
+            Log.Info("Game is starting");
             this.ScreenSize = ScreenSize;
             this.Title = Title;
 
@@ -63,7 +64,7 @@ namespace Plat2d_2.EngineCore
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Game is loading...");
+                    Log.Error("Game has not been found.");
                 }
             }
         }

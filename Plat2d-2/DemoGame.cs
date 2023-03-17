@@ -29,13 +29,20 @@ namespace Plat2d_2
         {
 
         }
-        int frame = 0;
-        float x = 0.3f;
+        int timeframe = 0;
         public override void OnUpdate()
         {
-            Console.WriteLine($"Framecount: {frame}.");
-            player.Position.X += x;
-            frame++;
+            if (timeframe>400)
+            {
+                if (player != null)
+                {
+                    player.DestroySelf();
+                    player = null;
+                }
+            }
+            timeframe++;
+            //Console.WriteLine($"Framecount: {frame}.");
+            //frame++;
         }
     }
 }

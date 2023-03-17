@@ -18,10 +18,12 @@ namespace Plat2d_2.EngineCore
             this.Scale = Scale;
             this.Tag = Tag;
 
+            Log.Info($"[SHAPE2d]({Tag}) has been registered");
             EngineCore.RegisterShape(this);
         }
         public void DestroySelf()
         {
+            Log.Info($"[SHAPE2d]({Tag}) has been destroyed");
             EngineCore.UnRegisterShape(this);
         }
     }
