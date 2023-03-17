@@ -10,6 +10,7 @@ namespace Plat2d_2
 {
     class DemoGame : EngineCore.EngineCore
     {
+        Shape2d player;
         public DemoGame() : base(new Vector2(615, 615),"HHTRW-engine1 demo")
         {
 
@@ -22,16 +23,18 @@ namespace Plat2d_2
         {
             Console.WriteLine("OnLoad works.");
             BGColor = Color.Black;
-            Shape2d player = new Shape2d(new Vector2(10, 10), new Vector2(10, 10), "Test");
+            player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
         }
-        int frame = 0;
         public override void OnDraw()
         {
 
         }
+        int frame = 0;
+        float x = 0.3f;
         public override void OnUpdate()
         {
             Console.WriteLine($"Framecount: {frame}.");
+            player.Position.X += x;
             frame++;
         }
     }
