@@ -14,9 +14,21 @@ namespace Plat2d_2
 
         }
 
+        public override void OnDraw()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void OnLoad()
         {
             Console.WriteLine("OnLoad works.");
+        }
+        int frame = 0;
+
+        public override void OnUpdate()
+        {
+            Console.WriteLine($"Framecount: {frame}.");
+            frame++;
         }
     }
 }

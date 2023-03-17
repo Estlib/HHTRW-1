@@ -32,25 +32,37 @@ namespace Plat2d_2.EngineCore
             Window.Size = new Size((int)this.ScreenSize.X, (int)this.ScreenSize.Y);
             Window.Text = this.Title;
             Window.Paint += Renderer;
-            OnLoad();
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
             Application.Run(Window);
         }
         void GameLoop()
         {
+            OnLoad();
             while (GameLoopThread.IsAlive)
             {
-
+                try
+                {
+                    OnDraw();
+                    Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
+                    OnUpdate();
+                    Thread.Sleep(1);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Game is loading...");
+                }
             }
         }
 
         private void Renderer(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-
+            GameLoopThread.Abort();
         }
 
         public abstract void OnLoad();
+        public abstract void OnUpdate();
+        public abstract void OnDraw();
     }
 }
