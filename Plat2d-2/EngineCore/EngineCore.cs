@@ -58,7 +58,8 @@ namespace Plat2d_2.EngineCore
         private void Renderer(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            GameLoopThread.Abort();
+
+            //GameLoopThread.Abort();
         }
 
         public abstract void OnLoad();

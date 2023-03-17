@@ -16,7 +16,6 @@ namespace Plat2d_2
 
         public override void OnDraw()
         {
-            throw new NotImplementedException();
         }
 
         public override void OnLoad()
