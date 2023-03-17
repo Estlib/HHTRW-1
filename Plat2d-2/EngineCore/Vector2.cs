@@ -8,14 +8,14 @@ namespace Plat2d_2.EngineCore
 {
     public class Vector2
     {
-        public double X { get; set; }
-        public double Y { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
         public Vector2()
         {
             X = Zero().X;
             Y = Zero().Y;
         }
-        public Vector2(double X, double Y)
+        public Vector2(float X, float Y)
         {
             this.X = X;
             this.Y = Y;

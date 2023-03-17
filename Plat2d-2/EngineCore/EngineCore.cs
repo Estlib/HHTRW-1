@@ -23,6 +23,10 @@ namespace Plat2d_2.EngineCore
         private Canvas Window = null;
         private Thread GameLoopThread = null;
 
+        private static List<Shape2d> AllShapes = new List<Shape2d>();
+
+        public Color BGColor = Color.Green;
+
         public EngineCore(Vector2 ScreenSize, string Title)
         {
             this.ScreenSize = ScreenSize;
@@ -35,6 +39,15 @@ namespace Plat2d_2.EngineCore
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
             Application.Run(Window);
+        }
+
+        public static void RegisterShape(Shape2d shape)
+        {
+            AllShapes.Add(shape);
+        }
+        public static void UnRegisterShape(Shape2d shape)
+        {
+            AllShapes.Remove(shape);
         }
         void GameLoop()
         {
@@ -58,8 +71,12 @@ namespace Plat2d_2.EngineCore
         private void Renderer(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-
+            g.Clear(BGColor);
             //GameLoopThread.Abort();
+            foreach (Shape2d shape in AllShapes)
+            {
+                g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X,shape.Position.Y, shape.Scale.X, shape.Scale.Y);
+            }
         }
 
         public abstract void OnLoad();
