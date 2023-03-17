@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DemoGame.cs" />
     <Compile Include="EngineCore\EngineCore.cs">
       <SubType>Form</SubType>
     </Compile>
