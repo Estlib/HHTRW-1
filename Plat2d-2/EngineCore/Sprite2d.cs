@@ -30,6 +30,43 @@ namespace Plat2d_2.EngineCore
             Log.Info($"[SPRITE2D]({Tag}) has been registered");
             EngineCore.RegisterSprite(this);
         }
+
+        //public bool IsColliding(Sprite2d a, Sprite2d b)
+        //{
+        //    if (a.Position.X < b.Position.X + b.Scale.X &&
+        //        a.Position.X + a.Scale.X > b.Position.X &&
+        //        a.Position.Y < b.Position.Y + b.Scale.Y &&
+        //        a.Position.Y + a.Scale.Y > b.Position.Y)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+        public bool IsColliding(string tag)
+        {
+            /*if (a.Position.X < b.Position.X + b.Scale.X &&
+                a.Position.X + a.Scale.X > b.Position.X &&
+                a.Position.Y < b.Position.Y + b.Scale.Y &&
+                a.Position.Y + a.Scale.Y > b.Position.Y)
+            {
+                return true;
+            }*/
+            foreach(Sprite2d b in EngineCore.AllSprites)
+            {
+                if (b.Tag == tag)
+                {
+                    if (Position.X < b.Position.X + b.Scale.X &&
+                        Position.X + Scale.X > b.Position.X &&
+                        Position.Y < b.Position.Y + b.Scale.Y &&
+                        Position.Y + Scale.Y > b.Position.Y)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
         public void DestroySelf()
         {
             Log.Info($"[SPRITE2D]({Tag}) has been destroyed");

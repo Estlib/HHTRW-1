@@ -23,8 +23,8 @@ namespace Plat2d_2.EngineCore
         private Canvas Window = null;
         private Thread GameLoopThread = null;
 
-        private static List<Shape2d> AllShapes = new List<Shape2d>();
-        private static List<Sprite2d> AllSprites = new List<Sprite2d>();
+        public static List<Shape2d> AllShapes = new List<Shape2d>();
+        public static List<Sprite2d> AllSprites = new List<Sprite2d>();
 
         public Color BGColor = Color.Green;
 
