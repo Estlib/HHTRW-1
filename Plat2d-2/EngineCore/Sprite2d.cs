@@ -24,7 +24,7 @@ namespace Plat2d_2.EngineCore
             this.Tag = Tag;
 
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
-            Bitmap sprite = new Bitmap(tmp, (int)this.Scale.X, (int)this.Scale.Y);
+            Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
             Sprite = sprite;
 
             Log.Info($"[SPRITE2D]({Tag}) has been registered");
@@ -32,7 +32,8 @@ namespace Plat2d_2.EngineCore
         }
         public void DestroySelf()
         {
-            EngineCore.UnRegisterSprite(this);
+            Log.Info($"[SPRITE2D]({Tag}) has been destroyed");
+            EngineCore.UnRegisterSprite(this); 
         }
     }
 }
