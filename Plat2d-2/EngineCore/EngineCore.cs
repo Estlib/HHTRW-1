@@ -42,9 +42,16 @@ namespace Plat2d_2.EngineCore
             Window.Paint += Renderer;
             Window.KeyDown += Window_KeyDown;
             Window.KeyUp+= Window_KeyUp;
+            Window.FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            Window.FormClosing += Window_FormClosing;
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
             Application.Run(Window);
+        }
+
+        private void Window_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            GameLoopThread.Abort();
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
@@ -99,14 +106,22 @@ namespace Plat2d_2.EngineCore
             //GameLoopThread.Abort();
             g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
             g.RotateTransform(CameraAngle);
-            foreach (Shape2d shape in AllShapes)
+            try
             {
-                g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X,shape.Position.Y, shape.Scale.X, shape.Scale.Y);
+                foreach (Shape2d shape in AllShapes)
+                {
+                    g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
+                }
+                foreach (Sprite2d sprite in AllSprites)
+                {
+                    g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
+                }
             }
-            foreach (Sprite2d sprite in AllSprites)
+            catch (Exception)
             {
-                g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
+
             }
+
         }
 
         public abstract void OnLoad();

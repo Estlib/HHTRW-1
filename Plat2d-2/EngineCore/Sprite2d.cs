@@ -14,7 +14,7 @@ namespace Plat2d_2.EngineCore
         public Vector2 Scale = null;
         public string Directory = "";
         public string Tag = "";
-        public Image Sprite = null;
+        public Bitmap Sprite = null;
 
         public Sprite2d(Vector2 Position, Vector2 Scale, string Directory, string Tag)
         {
@@ -26,6 +26,19 @@ namespace Plat2d_2.EngineCore
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
             Sprite = sprite;
+
+            Log.Info($"[SPRITE2D]({Tag}) has been registered");
+            EngineCore.RegisterSprite(this);
+        }
+        public Sprite2d(Vector2 Position, Vector2 Scale, Sprite2d Reference, string Tag)
+        {
+            this.Position = Position;
+            this.Scale = Scale;
+            this.Tag = Tag;
+
+            //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
+            //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
+            Sprite = Reference.Sprite;
 
             Log.Info($"[SPRITE2D]({Tag}) has been registered");
             EngineCore.RegisterSprite(this);
@@ -42,7 +55,32 @@ namespace Plat2d_2.EngineCore
         //    }
         //    return false;
         //}
-        public bool IsColliding(string tag)
+        //public bool IsColliding(string tag)
+        //{
+        //    /*if (a.Position.X < b.Position.X + b.Scale.X &&
+        //        a.Position.X + a.Scale.X > b.Position.X &&
+        //        a.Position.Y < b.Position.Y + b.Scale.Y &&
+        //        a.Position.Y + a.Scale.Y > b.Position.Y)
+        //    {
+        //        return true;
+        //    }*/
+        //    foreach(Sprite2d b in EngineCore.AllSprites)
+        //    {
+        //        if (b.Tag == tag)
+        //        {
+        //            if (Position.X < b.Position.X + b.Scale.X &&
+        //                Position.X + Scale.X > b.Position.X &&
+        //                Position.Y < b.Position.Y + b.Scale.Y &&
+        //                Position.Y + Scale.Y > b.Position.Y)
+        //            {
+        //                return true;
+        //            }
+        //        }
+        //    }
+
+        //    return false;
+        //}
+        public Sprite2d IsColliding(string tag)
         {
             /*if (a.Position.X < b.Position.X + b.Scale.X &&
                 a.Position.X + a.Scale.X > b.Position.X &&
@@ -51,7 +89,7 @@ namespace Plat2d_2.EngineCore
             {
                 return true;
             }*/
-            foreach(Sprite2d b in EngineCore.AllSprites)
+            foreach (Sprite2d b in EngineCore.AllSprites)
             {
                 if (b.Tag == tag)
                 {
@@ -60,12 +98,12 @@ namespace Plat2d_2.EngineCore
                         Position.Y < b.Position.Y + b.Scale.Y &&
                         Position.Y + Scale.Y > b.Position.Y)
                     {
-                        return true;
+                        return b;
                     }
                 }
             }
 
-            return false;
+            return null;
         }
         public void DestroySelf()
         {

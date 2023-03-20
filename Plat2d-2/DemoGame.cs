@@ -19,12 +19,14 @@ namespace Plat2d_2
         bool up;
         bool down;
 
+        Vector2 lastPos = Vector2.Zero();
+
         string[,] Map =
         {
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G",".","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
-            {"G",".","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
-            {"G",".","G",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".",".","G" },
+            {"G",".","G",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".","G",".",".",".",".",".",".",".",".",".",".","G",".",".",".","C",".","G" },
             {"G",".","G",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".","G" },
             {"G",".",".","G","G","G","G","G","G","G",".",".",".",".",".","G",".",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
@@ -32,8 +34,8 @@ namespace Plat2d_2
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".","G","G","G","G","G",".",".",".",".",".",".","G",".",".","G" },
-            {"G",".",".",".",".","G",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
-            {"G",".",".",".",".","G",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
+            {"G",".","C",".",".","G",".",".",".",".",".",".",".",".",".",".","G","C",".","G" },
+            {"G",".",".",".",".","G",".",".",".",".",".",".","C",".","C",".","G",".",".","G" },
             {"G",".",".",".",".","G",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
         };
@@ -46,6 +48,9 @@ namespace Plat2d_2
         {
             Console.WriteLine("OnLoad works.");
             BGColor = Color.Black;
+            Sprite2d groundRef = new Sprite2d(true, "tiles/noart/testblock1");
+            Sprite2d airRef = new Sprite2d(true, "tiles/noart/testblock5");
+            Sprite2d coinRef = new Sprite2d(true, "tiles/noart/testobject2");
             //player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
             //player = new Sprite2d(new Vector2(8, 8), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
             for (int i = 0; i < Map.GetLength(1); i++)
@@ -54,11 +59,15 @@ namespace Plat2d_2
                 {
                     if (Map[j,i] == "G")
                     {
-                        new Sprite2d(new Vector2(i*16, j*16), new Vector2(16, 16), "tiles/noart/testblock1", "Ground");
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), groundRef, "Ground");
                     }
                     if (Map[j, i] == ".")
                     {
-                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), "tiles/noart/testblock5", "Air");
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), airRef, "Air");
+                    }
+                    if (Map[j, i] == "C")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), coinRef, "Coin");
                     }
                 }
             }
@@ -90,10 +99,23 @@ namespace Plat2d_2
             {
                 player.Position.X += 1;
             }
-            if (player.IsColliding("Ground"))
+            Sprite2d coin = player.IsColliding("Coin");
+            if (coin != null)
             {
-                Log.Info($"Collision is happening. {times}");
-                times ++;
+                Log.Info("Collectable1 is being touched");
+                coin.DestroySelf();
+            }
+            if (player.IsColliding("Ground") != null)
+            {
+                //Log.Info($"Collision is happening. {times}");
+                //times ++;
+                player.Position.X = lastPos.X;
+                player.Position.Y = lastPos.Y;
+            }
+            else
+            {
+                lastPos.X = player.Position.X;
+                lastPos.Y = player.Position.Y;
             }
             //CameraPosition.X++;
             //CameraAngle += .1f;
