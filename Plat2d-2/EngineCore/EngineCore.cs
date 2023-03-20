@@ -18,7 +18,7 @@ namespace Plat2d_2.EngineCore
     }
     public abstract class EngineCore
     {
-        private Vector2 ScreenSize = new Vector2(512, 512);
+        private Vector2 ScreenSize = new Vector2(256, 224);
         private string Title = "HHTRW-engine1";
         private Canvas Window = null;
         private Thread GameLoopThread = null;
@@ -27,6 +27,8 @@ namespace Plat2d_2.EngineCore
         private static List<Sprite2d> AllSprites = new List<Sprite2d>();
 
         public Color BGColor = Color.Green;
+
+        public Vector2 CameraPosition = Vector2.Zero();
 
         public EngineCore(Vector2 ScreenSize, string Title)
         {
@@ -83,6 +85,7 @@ namespace Plat2d_2.EngineCore
             Graphics g = e.Graphics;
             g.Clear(BGColor);
             //GameLoopThread.Abort();
+            g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
             foreach (Shape2d shape in AllShapes)
             {
                 g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X,shape.Position.Y, shape.Scale.X, shape.Scale.Y);
@@ -91,7 +94,6 @@ namespace Plat2d_2.EngineCore
             {
                 g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
             }
-
         }
 
         public abstract void OnLoad();

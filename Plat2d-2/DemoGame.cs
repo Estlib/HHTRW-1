@@ -51,6 +51,7 @@ namespace Plat2d_2
         float x = 1;
         public override void OnUpdate()
         {
+            CameraPosition.X++;
             //player.Position.X += x;          
             //if (timeframe>400)
             //{
