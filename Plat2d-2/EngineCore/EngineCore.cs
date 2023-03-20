@@ -18,7 +18,7 @@ namespace Plat2d_2.EngineCore
     }
     public abstract class EngineCore
     {
-        private Vector2 ScreenSize = new Vector2(256, 224);
+        private Vector2 ScreenSize = new Vector2(320, 240);
         private string Title = "HHTRW-engine1";
         private Canvas Window = null;
         private Thread GameLoopThread = null;
@@ -29,7 +29,7 @@ namespace Plat2d_2.EngineCore
         public Color BGColor = Color.Green;
 
         public Vector2 CameraPosition = Vector2.Zero();
-
+        public float CameraAngle = 0f;
         public EngineCore(Vector2 ScreenSize, string Title)
         {
             Log.Info("Game is starting");
@@ -40,9 +40,21 @@ namespace Plat2d_2.EngineCore
             Window.Size = new Size((int)this.ScreenSize.X, (int)this.ScreenSize.Y);
             Window.Text = this.Title;
             Window.Paint += Renderer;
+            Window.KeyDown += Window_KeyDown;
+            Window.KeyUp+= Window_KeyUp;
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
             Application.Run(Window);
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            GetKeyUp(e);
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            GetKeyDown(e);
         }
 
         public static void RegisterShape(Shape2d shape)
@@ -86,6 +98,7 @@ namespace Plat2d_2.EngineCore
             g.Clear(BGColor);
             //GameLoopThread.Abort();
             g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
+            g.RotateTransform(CameraAngle);
             foreach (Shape2d shape in AllShapes)
             {
                 g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X,shape.Position.Y, shape.Scale.X, shape.Scale.Y);
@@ -99,5 +112,7 @@ namespace Plat2d_2.EngineCore
         public abstract void OnLoad();
         public abstract void OnUpdate();
         public abstract void OnDraw();
+        public abstract void GetKeyDown(KeyEventArgs e);
+        public abstract void GetKeyUp(KeyEventArgs e);
     }
 }
