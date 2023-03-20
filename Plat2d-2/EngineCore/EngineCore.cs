@@ -24,6 +24,7 @@ namespace Plat2d_2.EngineCore
         private Thread GameLoopThread = null;
 
         private static List<Shape2d> AllShapes = new List<Shape2d>();
+        private static List<Sprite2d> AllSprites = new List<Sprite2d>();
 
         public Color BGColor = Color.Green;
 
@@ -49,6 +50,14 @@ namespace Plat2d_2.EngineCore
         public static void UnRegisterShape(Shape2d shape)
         {
             AllShapes.Remove(shape);
+        }
+        public static void RegisterSprite(Sprite2d sprite)
+        {
+            AllSprites.Add(sprite);
+        }
+        public static void UnRegisterSprite(Sprite2d sprite)
+        {
+            AllSprites.Remove(sprite);
         }
         void GameLoop()
         {
@@ -78,6 +87,11 @@ namespace Plat2d_2.EngineCore
             {
                 g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X,shape.Position.Y, shape.Scale.X, shape.Scale.Y);
             }
+            foreach (Sprite2d sprite in AllSprites)
+            {
+                g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
+            }
+
         }
 
         public abstract void OnLoad();

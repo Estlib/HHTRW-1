@@ -10,7 +10,7 @@ namespace Plat2d_2
 {
     class DemoGame : EngineCore.EngineCore
     {
-        Shape2d player;
+        Sprite2d player;
         public DemoGame() : base(new Vector2(615, 615),"HHTRW-engine1 demo")
         {
 
@@ -23,7 +23,7 @@ namespace Plat2d_2
         {
             Console.WriteLine("OnLoad works.");
             BGColor = Color.Black;
-            player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
+            player = new Sprite2d(new Vector2(8, 8), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
         }
         public override void OnDraw()
         {
