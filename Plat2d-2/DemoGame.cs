@@ -91,7 +91,7 @@ namespace Plat2d_2
         }
         //int timeframe = 0;
         //float x = 1;
-        int times = 0;
+        //int times = 0;
         public override void OnUpdate()
         {
             if (up)

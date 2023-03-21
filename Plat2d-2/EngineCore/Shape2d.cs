@@ -8,7 +8,7 @@ namespace Plat2d_2.EngineCore
 {
     public class Shape2d
     {
-        public Vector2 Position = null;
+        public Vector2 Position = null; 
         public Vector2 Scale = null;
         public string Tag = "";
 

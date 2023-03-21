@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Threading;
+using Box2DX.Dynamics;
+using Box2DX.Collision;
+using Box2DX.Common;
 
 namespace Plat2d_2.EngineCore
 {
@@ -26,11 +29,26 @@ namespace Plat2d_2.EngineCore
         public static List<Shape2d> AllShapes = new List<Shape2d>();
         public static List<Sprite2d> AllSprites = new List<Sprite2d>();
 
-        public Color BGColor = Color.Green;
+        public System.Drawing.Color BGColor = System.Drawing.Color.Green;
 
         public Vector2 CameraZoom = new Vector2(1,1);
         public Vector2 CameraPosition = Vector2.Zero();
         public float CameraAngle = 0f;
+
+        // Define the size of the world. Simulation will still work
+        // if bodies reach the end of the world, but it will be slower.
+        AABB worldAABB = new AABB
+        {
+            UpperBound = new Vec2(100, 100),
+            LowerBound = new Vec2(-100, -100)
+        };
+        // Define the gravity vector.
+        Vec2 gravity = new Vec2(0.0f, -10.0f);
+        // Do we want to let bodies sleep?
+        //bool doSleep = true;
+        // Construct a world object, which will hold and simulate the rigid bodies.
+        World world = null;
+
         public EngineCore(Vector2 ScreenSize, string Title)
         {
             Log.Info("Game is starting");
@@ -47,6 +65,8 @@ namespace Plat2d_2.EngineCore
             Window.FormClosing += Window_FormClosing;
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
+            world = new World(worldAABB, gravity, false);
+
             Application.Run(Window);
         }
 
@@ -99,9 +119,17 @@ namespace Plat2d_2.EngineCore
                 }
             }
         }
-
+        // Prepare for simulation. Typically we use a time step of 1/60 of a
+        // second (60Hz) and 10 iterations. This provides a high quality simulation
+        // in most game scenarios.
+        float timeStep = 1.0f / 60.0f;
+        int velocityIterations = 8;
+        int positionIterations = 1;
         private void Renderer(object sender, PaintEventArgs e)
         {
+            // Instruct the world to perform a single step of simulation. It is
+            // generally best to keep the time step and iterations fixed.
+            world.Step(timeStep, velocityIterations, positionIterations);
             Graphics g = e.Graphics;
             g.Clear(BGColor);
             //GameLoopThread.Abort();
@@ -112,7 +140,7 @@ namespace Plat2d_2.EngineCore
             {
                 foreach (Shape2d shape in AllShapes)
                 {
-                    g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
+                    g.FillRectangle(new SolidBrush(System.Drawing.Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
                 }
                 foreach (Sprite2d sprite in AllSprites)
                 {
