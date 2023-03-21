@@ -39,15 +39,15 @@ namespace Plat2d_2.EngineCore
         // if bodies reach the end of the world, but it will be slower.
         AABB worldAABB = new AABB
         {
-            UpperBound = new Vec2(100, 100),
-            LowerBound = new Vec2(-100, -100)
+            UpperBound = new Vec2(2000, 2000),
+            LowerBound = new Vec2(-2000, -2000)
         };
         // Define the gravity vector.
         Vec2 gravity = new Vec2(0.0f, -10.0f);
         // Do we want to let bodies sleep?
         //bool doSleep = true;
         // Construct a world object, which will hold and simulate the rigid bodies.
-        World world = null;
+        public static World world = null;
 
         public EngineCore(Vector2 ScreenSize, string Title)
         {

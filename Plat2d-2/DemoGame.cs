@@ -79,6 +79,7 @@ namespace Plat2d_2
                     if (Map[j, i] == "P")
                     {
                         player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
+                        player.CreateDynamic();
                     }
                 }
             }
@@ -91,24 +92,30 @@ namespace Plat2d_2
         }
         //int timeframe = 0;
         //float x = 1;
-        //int times = 0;
+        int times = 0;
         public override void OnUpdate()
         {
+            if (player == null)
+            {
+                return;
+            }
+            times++;
+            player.UpdatePosition();
             if (up)
             {
-                player.Position.Y -= 1;
+                //player.Position.Y -= 1;
             }
             if (down)
             {
-                player.Position.Y += 1;
+                //player.Position.Y += 1;
             }
             if (left)
             {
-                player.Position.X -= 1;
+                //player.Position.X -= 1;
             }
             if (right)
             {
-                player.Position.X += 1;
+                //player.Position.X += 1;
             }
             Sprite2d coin = player.IsColliding("Coin");
             if (coin != null)
@@ -120,13 +127,13 @@ namespace Plat2d_2
             {
                 //Log.Info($"Collision is happening. {times}");
                 //times ++;
-                player.Position.X = lastPos.X;
-                player.Position.Y = lastPos.Y;
+                //player.Position.X = lastPos.X;
+                //player.Position.Y = lastPos.Y;
             }
             else
             {
-                lastPos.X = player.Position.X;
-                lastPos.Y = player.Position.Y;
+                //lastPos.X = player.Position.X;
+                //lastPos.Y = player.Position.Y;
             }
             //CameraPosition.X++;
             //CameraAngle += .1f;

@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Box2DX.Collision;
+using Box2DX.Dynamics;
+using Box2DX.Common;
+
 
 namespace Plat2d_2.EngineCore
 {
@@ -16,6 +20,8 @@ namespace Plat2d_2.EngineCore
         public string Tag = "";
         public Bitmap Sprite = null;
         public bool IsReference = false;
+        BodyDef bodyDef = new BodyDef();
+        Body body;
 
         public Sprite2d(Vector2 Position, Vector2 Scale, string Directory, string Tag)
         {
@@ -56,7 +62,36 @@ namespace Plat2d_2.EngineCore
             Log.Info($"[SPRITE2D]({Tag}) has been registered");
             EngineCore.RegisterSprite(this);
         }
+        public void CreateDynamic()
+        {
+            // Define the dynamic body. We set its position and call the body factory.
+            bodyDef = new BodyDef();
+            bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
+            body = EngineCore.world.CreateBody(bodyDef);
 
+            // Define another box shape for our dynamic body.
+            PolygonDef shapeDef = new PolygonDef();
+            shapeDef.SetAsBox(1.0f, 1.0f);
+
+            // Set the box density to be non-zero, so it will be dynamic.
+            shapeDef.Density = 1.0f;
+
+            // Override the default friction.
+            shapeDef.Friction = 0.3f;
+
+            // Add the shape to the body.
+            body.CreateShape(shapeDef);
+
+            // Now tell the dynamic body to compute it's mass properties base
+            // on its shape.
+            body.SetMassFromShapes();
+        }
+        public void UpdatePosition()
+        {
+            Log.Warning("X is "+ body.GetPosition().X + ". Y is " + body.GetPosition().Y);
+            this.Position.X = body.GetPosition().X;
+            this.Position.Y = body.GetPosition().Y;
+        }
         //public bool IsColliding(Sprite2d a, Sprite2d b)
         //{
         //    if (a.Position.X < b.Position.X + b.Scale.X &&
