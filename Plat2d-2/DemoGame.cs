@@ -12,7 +12,7 @@ namespace Plat2d_2
     class DemoGame : EngineCore.EngineCore
     {
         Sprite2d player;
-        Sprite2d player2;
+        //Sprite2d player2;
 
         bool left;
         bool right;
@@ -32,7 +32,7 @@ namespace Plat2d_2
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
-            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
+            {"G","P",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".","G","G","G","G","G",".",".",".",".",".",".","G",".",".","G" },
             {"G",".","C",".",".","G",".",".",".",".",".",".",".",".",".",".","G","C",".","G" },
             {"G",".",".",".",".","G",".",".",".",".",".",".","C",".","C",".","G",".",".","G" },
@@ -48,9 +48,10 @@ namespace Plat2d_2
         {
             Console.WriteLine("OnLoad works.");
             BGColor = Color.Black;
-            Sprite2d groundRef = new Sprite2d(true, "tiles/noart/testblock1");
-            Sprite2d airRef = new Sprite2d(true, "tiles/noart/testblock5");
-            Sprite2d coinRef = new Sprite2d(true, "tiles/noart/testobject2");
+            //CameraZoom = new Vector2(.1f,.1f);
+            Sprite2d groundRef = new Sprite2d( "tiles/noart/testblock1");
+            Sprite2d airRef = new Sprite2d( "tiles/noart/testblock5");
+            Sprite2d coinRef = new Sprite2d( "tiles/noart/testobject2");
             //player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
             //player = new Sprite2d(new Vector2(8, 8), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
             for (int i = 0; i < Map.GetLength(1); i++)
@@ -71,8 +72,18 @@ namespace Plat2d_2
                     }
                 }
             }
-            player = new Sprite2d(new Vector2(64, 96), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
-            player2 = new Sprite2d(new Vector2(128, 192), new Vector2(32, 32), "player/wipspriteset/stand1", "Player2");
+            for (int i = 0; i < Map.GetLength(1); i++)
+            {
+                for (int j = 0; j < Map.GetLength(0); j++)
+                {
+                    if (Map[j, i] == "P")
+                    {
+                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
+                    }
+                }
+            }
+            //player = new Sprite2d(new Vector2(64, 96), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
+            //player2 = new Sprite2d(new Vector2(128, 192), new Vector2(32, 32), "player/wipspriteset/stand1", "Player2");
         }
         public override void OnDraw()
         {
@@ -102,7 +113,7 @@ namespace Plat2d_2
             Sprite2d coin = player.IsColliding("Coin");
             if (coin != null)
             {
-                Log.Info("Collectable1 is being touched");
+                Log.Info("Coin is being touched");
                 coin.DestroySelf();
             }
             if (player.IsColliding("Ground") != null)

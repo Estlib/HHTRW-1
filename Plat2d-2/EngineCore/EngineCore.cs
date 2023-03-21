@@ -28,6 +28,7 @@ namespace Plat2d_2.EngineCore
 
         public Color BGColor = Color.Green;
 
+        public Vector2 CameraZoom = new Vector2(1,1);
         public Vector2 CameraPosition = Vector2.Zero();
         public float CameraAngle = 0f;
         public EngineCore(Vector2 ScreenSize, string Title)
@@ -90,7 +91,7 @@ namespace Plat2d_2.EngineCore
                     OnDraw();
                     Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
                     OnUpdate();
-                    Thread.Sleep(1);
+                    Thread.Sleep(2);
                 }
                 catch (Exception)
                 {
@@ -106,6 +107,7 @@ namespace Plat2d_2.EngineCore
             //GameLoopThread.Abort();
             g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
             g.RotateTransform(CameraAngle);
+            g.ScaleTransform(CameraZoom.X, CameraZoom.Y);
             try
             {
                 foreach (Shape2d shape in AllShapes)
@@ -114,7 +116,10 @@ namespace Plat2d_2.EngineCore
                 }
                 foreach (Sprite2d sprite in AllSprites)
                 {
-                    g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
+                    if (!sprite.IsReference)
+                    {
+                        g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
+                    }
                 }
             }
             catch (Exception)

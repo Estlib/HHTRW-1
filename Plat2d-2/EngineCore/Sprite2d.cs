@@ -15,6 +15,7 @@ namespace Plat2d_2.EngineCore
         public string Directory = "";
         public string Tag = "";
         public Bitmap Sprite = null;
+        public bool IsReference = false;
 
         public Sprite2d(Vector2 Position, Vector2 Scale, string Directory, string Tag)
         {
@@ -22,6 +23,18 @@ namespace Plat2d_2.EngineCore
             this.Scale = Scale;
             this.Directory = Directory;
             this.Tag = Tag;
+
+            Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
+            Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
+            Sprite = sprite;
+
+            Log.Info($"[SPRITE2D]({Tag}) has been registered");
+            EngineCore.RegisterSprite(this);
+        }
+        public Sprite2d(string Directory)
+        {
+            this.IsReference = true;
+            this.Directory = Directory;
 
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
