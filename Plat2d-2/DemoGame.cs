@@ -100,27 +100,31 @@ namespace Plat2d_2
                 return;
             }
             times++;
-            player.UpdatePosition();
             if (up)
             {
                 //player.Position.Y -= 1;
-                player.AddForce(new Vector2(0, -16), Vector2.Zero());
+                //player.AddForce(new Vector2(0, -1600), Vector2.Zero());
+                player.SetVelocity(new Vector2(0, -120));
             }
             if (down)
             {
                 //player.Position.Y += 1;
-                player.AddForce(new Vector2(0, 16), Vector2.Zero());
+                //player.AddForce(new Vector2(0, 1600), Vector2.Zero());
+                player.SetVelocity(new Vector2(0, 120));
             }
             if (left)
             {
                 //player.Position.X -= 1;
-                player.AddForce(new Vector2(-16, 0), Vector2.Zero());
+                //player.AddForce(new Vector2(-1600, 0), Vector2.Zero());
+                player.SetVelocity(new Vector2(-120, 0));
             }
             if (right)
             {
                 //player.Position.X += 1;
-                player.AddForce(new Vector2(16, 0), Vector2.Zero());
+                //player.AddForce(new Vector2(1600, 0), Vector2.Zero());
+                player.SetVelocity(new Vector2(120, 0));
             }
+            player.UpdatePosition();
             Sprite2d coin = player.IsColliding("Coin");
             if (coin != null)
             {

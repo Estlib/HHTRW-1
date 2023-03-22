@@ -100,7 +100,13 @@ namespace Plat2d_2.EngineCore
         public static void UnRegisterSprite(Sprite2d sprite)
         {
             AllSprites.Remove(sprite);
-        }
+        }        
+        // Prepare for simulation. Typically we use a time step of 1/60 of a
+        // second (60Hz) and 10 iterations. This provides a high quality simulation
+        // in most game scenarios.
+        float timeStep = 1.0f / 60.0f;
+        int velocityIterations = 16;
+        int positionIterations = 16;
         void GameLoop()
         {
             OnLoad();
@@ -110,6 +116,7 @@ namespace Plat2d_2.EngineCore
                 {
                     OnDraw();
                     Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
+                    world.Step(timeStep, velocityIterations, positionIterations);
                     OnUpdate();
                     Thread.Sleep(2);
                 }
@@ -119,17 +126,11 @@ namespace Plat2d_2.EngineCore
                 }
             }
         }
-        // Prepare for simulation. Typically we use a time step of 1/60 of a
-        // second (60Hz) and 10 iterations. This provides a high quality simulation
-        // in most game scenarios.
-        float timeStep = 1.0f / 60.0f;
-        int velocityIterations = 8;
-        int positionIterations = 1;
+
         private void Renderer(object sender, PaintEventArgs e)
         {
             // Instruct the world to perform a single step of simulation. It is
             // generally best to keep the time step and iterations fixed.
-            world.Step(timeStep, velocityIterations, positionIterations);
             Graphics g = e.Graphics;
             g.Clear(BGColor);
             //GameLoopThread.Abort();
