@@ -62,10 +62,29 @@ namespace Plat2d_2.EngineCore
             Log.Info($"[SPRITE2D]({Tag}) has been registered");
             EngineCore.RegisterSprite(this);
         }
+        public void CreateStatic()
+        {
+            // Define the ground body.
+            bodyDef = new BodyDef();
+            bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
+
+            // Call the body factory which  creates the ground box shape.
+            // The body is also added to the world.
+            body = EngineCore.world.CreateBody(bodyDef);
+
+            // Define the ground box shape.
+            PolygonDef shapeDef = new PolygonDef();
+
+            // The extents are the half-widths of the box.
+            shapeDef.SetAsBox(32.0f, 32.0f);
+
+            // Add the ground shape to the ground body.
+            body.CreateShape(shapeDef);
+        }
         public void CreateDynamic()
         {
             // Define the dynamic body. We set its position and call the body factory.
-            bodyDef = new BodyDef();
+            //bodyDef = new BodyDef();
             bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
             body = EngineCore.world.CreateBody(bodyDef);
 
@@ -85,6 +104,11 @@ namespace Plat2d_2.EngineCore
             // Now tell the dynamic body to compute it's mass properties base
             // on its shape.
             body.SetMassFromShapes();
+        }
+        public void AddForce(Vector2 force, Vector2 point)
+        {
+            body.SetLinearVelocity(new Vec2(force.X, force.Y));
+            //body.ApplyForce(new Vec2(force.X, force.Y), new Vec2(point.X, point.Y));
         }
         public void UpdatePosition()
         {

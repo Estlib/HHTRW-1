@@ -43,7 +43,7 @@ namespace Plat2d_2.EngineCore
             LowerBound = new Vec2(-2000, -2000)
         };
         // Define the gravity vector.
-        Vec2 gravity = new Vec2(0.0f, -10.0f);
+        Vec2 gravity = new Vec2(0.0f, 10.0f);
         // Do we want to let bodies sleep?
         //bool doSleep = true;
         // Construct a world object, which will hold and simulate the rigid bodies.

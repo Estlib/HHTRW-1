@@ -60,15 +60,15 @@ namespace Plat2d_2
                 {
                     if (Map[j,i] == "G")
                     {
-                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), groundRef, "Ground");
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), groundRef, "Ground").CreateStatic();
                     }
                     if (Map[j, i] == ".")
                     {
-                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), airRef, "Air");
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), airRef, "Air")/*.CreateStatic()*/;
                     }
                     if (Map[j, i] == "C")
                     {
-                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), coinRef, "Coin");
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), coinRef, "Coin")/*.CreateStatic()*/;
                     }
                 }
             }
@@ -104,18 +104,22 @@ namespace Plat2d_2
             if (up)
             {
                 //player.Position.Y -= 1;
+                player.AddForce(new Vector2(0, -16), Vector2.Zero());
             }
             if (down)
             {
                 //player.Position.Y += 1;
+                player.AddForce(new Vector2(0, 16), Vector2.Zero());
             }
             if (left)
             {
                 //player.Position.X -= 1;
+                player.AddForce(new Vector2(-16, 0), Vector2.Zero());
             }
             if (right)
             {
                 //player.Position.X += 1;
+                player.AddForce(new Vector2(16, 0), Vector2.Zero());
             }
             Sprite2d coin = player.IsColliding("Coin");
             if (coin != null)
@@ -123,18 +127,18 @@ namespace Plat2d_2
                 Log.Info("Coin is being touched");
                 coin.DestroySelf();
             }
-            if (player.IsColliding("Ground") != null)
-            {
-                //Log.Info($"Collision is happening. {times}");
-                //times ++;
-                //player.Position.X = lastPos.X;
-                //player.Position.Y = lastPos.Y;
-            }
-            else
-            {
-                //lastPos.X = player.Position.X;
-                //lastPos.Y = player.Position.Y;
-            }
+            //if (player.IsColliding("Ground") != null)
+            //{
+            //    //Log.Info($"Collision is happening. {times}");
+            //    //times ++;
+            //    //player.Position.X = lastPos.X;
+            //    //player.Position.Y = lastPos.Y;
+            //}
+            //else
+            //{
+            //    //lastPos.X = player.Position.X;
+            //    //lastPos.Y = player.Position.Y;
+            //}
             //CameraPosition.X++;
             //CameraAngle += .1f;
             //player.Position.X += x;          
