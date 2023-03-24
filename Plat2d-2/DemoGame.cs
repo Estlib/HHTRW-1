@@ -24,22 +24,22 @@ namespace Plat2d_2
         string[,] Map =
         {
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
-            {"G",".","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
-            {"G",".","G",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".","G" },
-            {"G",".","G",".",".",".",".",".",".",".",".",".",".","G",".",".",".","C",".","G" },
-            {"G",".","G",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".","C",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".","G" },
             {"G",".",".","G","G","G","G","G","G","G",".",".",".",".",".","G",".",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
+            {"G",".","P",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
-            {"G","P",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".","G","G","G","G","G",".",".",".",".",".",".","G",".",".","G" },
             {"G",".","C",".",".","G",".",".",".",".",".",".",".",".",".",".","G","C",".","G" },
             {"G",".",".",".",".","G",".",".",".",".",".",".","C",".","C",".","G",".",".","G" },
             {"G",".",".",".",".","G",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
         };
-        public DemoGame() : base(new Vector2(615, 615),"HHTRW-engine1 demo")
+        public DemoGame() : base(new Vector2(615, 615),"HHTRW-engine1 demo, box2d removed nophysics")
         {
 
         }
@@ -60,7 +60,7 @@ namespace Plat2d_2
                 {
                     if (Map[j,i] == "G")
                     {
-                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), groundRef, "Ground").CreateStatic();
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), groundRef, "Ground")/*.CreateStatic()*/;
                     }
                     if (Map[j, i] == ".")
                     {
@@ -78,8 +78,8 @@ namespace Plat2d_2
                 {
                     if (Map[j, i] == "P")
                     {
-                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
-                        player.CreateDynamic();
+                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "player/wipspriteset/stand1", "Player", new Vector2(16, 32) /*new Vector2(-8, 0)*/);
+                        //player.CreateDynamic();
                     }
                 }
             }
@@ -102,56 +102,66 @@ namespace Plat2d_2
             times++;
             if (up)
             {
-                //player.Position.Y -= 1;
+                player.Position.Y -= 1;
+
+                //Box2d remnants
                 //player.AddForce(new Vector2(0, -1600), Vector2.Zero());
-                player.ApplyImpulse(new Vector2(0, -1600), Vector2.Zero());
+                //player.ApplyImpulse(new Vector2(0, -1600), Vector2.Zero());
                 //player.AddForce(new Vector2(0, -1600), new Vector2(0, -1600));
                 //player.SetVelocity(new Vector2(0, -120));
             }
             if (down)
             {
-                //player.Position.Y += 1;
+                player.Position.Y += 1;
+
+                //Box2d remnants
                 //player.AddForce(new Vector2(0, 1600), Vector2.Zero());
-                player.ApplyImpulse(new Vector2(0, 1600), Vector2.Zero());
+                //player.ApplyImpulse(new Vector2(0, 1600), Vector2.Zero());
                 //player.AddForce(new Vector2(0, 1600), new Vector2(0, 1600));
                 //player.SetVelocity(new Vector2(0, 120));
             }
             if (left)
             {
-                //player.Position.X -= 1;
+                player.Position.X -= 1;
+
+                //Box2d remnants
                 //player.AddForce(new Vector2(-1600, 0), Vector2.Zero());
-                player.ApplyImpulse(new Vector2(-1600, 0), Vector2.Zero());
+                //player.ApplyImpulse(new Vector2(-1600, 0), Vector2.Zero());
                 //player.AddForce(new Vector2(-1600, 0), new Vector2(-1600, 0));
                 //player.SetVelocity(new Vector2(-120, 0));
             }
             if (right)
             {
-                //player.Position.X += 1;
+                player.Position.X += 1;
+
+                //Box2d remnants
                 //player.AddForce(new Vector2(1600, 0), Vector2.Zero());
-                player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
+                //player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
                 //player.AddForce(new Vector2(1600, 0), new Vector2(1600, 0));
                 //player.SetVelocity(new Vector2(120, 0));
             }
-            player.UpdatePosition();
+            //player.UpdatePosition();
             Sprite2d coin = player.IsColliding("Coin");
             if (coin != null)
             {
                 Log.Info("Coin is being touched");
                 coin.DestroySelf();
             }
-            //if (player.IsColliding("Ground") != null)
-            //{
-            //    //Log.Info($"Collision is happening. {times}");
-            //    //times ++;
-            //    //player.Position.X = lastPos.X;
-            //    //player.Position.Y = lastPos.Y;
-            //}
-            //else
-            //{
-            //    //lastPos.X = player.Position.X;
-            //    //lastPos.Y = player.Position.Y;
-            //}
+            if (player.IsColliding("Ground") != null)
+            {
+                Log.Info($"Collision is happening. {times}");
+                times++;
+                player.Position.X = lastPos.X;
+                player.Position.Y = lastPos.Y;
+            }
+            else
+            {
+                lastPos.X = player.Position.X;
+                lastPos.Y = player.Position.Y;
+            }
+            //see this for scrolling example:
             //CameraPosition.X++;
+
             //CameraAngle += .1f;
             //player.Position.X += x;          
             //if (timeframe>400)

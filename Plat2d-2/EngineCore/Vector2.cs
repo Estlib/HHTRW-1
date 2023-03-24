@@ -9,6 +9,7 @@ namespace Plat2d_2.EngineCore
 {
     public class Vector2
     {
+
         public float X { get; set; }
         public float Y { get; set; }
         public Vector2()
@@ -30,6 +31,5 @@ namespace Plat2d_2.EngineCore
         {
             return new Vector2(0, 0);
         }
-
     }
 }
