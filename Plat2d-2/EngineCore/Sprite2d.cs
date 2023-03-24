@@ -76,7 +76,7 @@ namespace Plat2d_2.EngineCore
             PolygonDef shapeDef = new PolygonDef();
 
             // The extents are the half-widths of the box.
-            shapeDef.SetAsBox(16.0f, 16.0f);
+            shapeDef.SetAsBox(32.0f, 32.0f);
 
             // Add the ground shape to the ground body.
             body.CreateShape(shapeDef);
@@ -90,7 +90,7 @@ namespace Plat2d_2.EngineCore
 
             // Define another box shape for our dynamic body.
             PolygonDef shapeDef = new PolygonDef();
-            shapeDef.SetAsBox(1, 1);
+            shapeDef.SetAsBox(1f, 1f);
 
             // Set the box density to be non-zero, so it will be dynamic.
             shapeDef.Density = 1.0f;
@@ -105,8 +105,13 @@ namespace Plat2d_2.EngineCore
             // on its shape.
             body.SetMassFromShapes();
         }
+        public void ApplyImpulse(Vector2 force, Vector2 point)
+        {
+            body.ApplyImpulse(new Vec2(force.X, force.Y), new Vec2(point.X, point.Y));
+        }
         public void AddForce(Vector2 force, Vector2 point)
         {
+            //body.SetBullet();
             //body.SetLinearVelocity(new Vec2(force.X, force.Y));
             body.ApplyForce(new Vec2(force.X, force.Y), new Vec2(point.X, point.Y));
         }
