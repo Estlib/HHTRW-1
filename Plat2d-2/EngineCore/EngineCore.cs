@@ -35,19 +35,19 @@ namespace Plat2d_2.EngineCore
         public Vector2 CameraPosition = Vector2.Zero();
         public float CameraAngle = 0f;
 
-        // Define the size of the world. Simulation will still work
-        // if bodies reach the end of the world, but it will be slower.
-        AABB worldAABB = new AABB
-        {
-            UpperBound = new Vec2(2000, 2000),
-            LowerBound = new Vec2(-2000, -2000)
-        };
+        //// Define the size of the world. Simulation will still work
+        //// if bodies reach the end of the world, but it will be slower.
+        //AABB worldAABB = new AABB
+        //{
+        //    UpperBound = new Vec2(2000, 2000),
+        //    LowerBound = new Vec2(-2000, -2000)
+        //};
         // Define the gravity vector.
-        Vec2 gravity = new Vec2(0.0f, 10.0f);
+        //Vec2 gravity = new Vec2(0.0f, 10.0f);
         // Do we want to let bodies sleep?
         //bool doSleep = true;
         // Construct a world object, which will hold and simulate the rigid bodies.
-        public static World world = null;
+        //public static World world = null;
 
         public EngineCore(Vector2 ScreenSize, string Title)
         {
@@ -65,7 +65,7 @@ namespace Plat2d_2.EngineCore
             Window.FormClosing += Window_FormClosing;
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
-            world = new World(worldAABB, gravity, false);
+            //world = new World(worldAABB, gravity, false);
 
             Application.Run(Window);
         }
@@ -101,12 +101,12 @@ namespace Plat2d_2.EngineCore
         {
             AllSprites.Remove(sprite);
         }        
-        // Prepare for simulation. Typically we use a time step of 1/60 of a
-        // second (60Hz) and 10 iterations. This provides a high quality simulation
-        // in most game scenarios.
-        float timeStep = 1.0f / 60.0f;
-        int velocityIterations = 16;
-        int positionIterations = 16;
+        //// Prepare for simulation. Typically we use a time step of 1/60 of a
+        //// second (60Hz) and 10 iterations. This provides a high quality simulation
+        //// in most game scenarios.
+        //float timeStep = 1.0f / 60.0f;
+        //int velocityIterations = 16;
+        //int positionIterations = 16;
         void GameLoop()
         {
             OnLoad();
@@ -116,7 +116,7 @@ namespace Plat2d_2.EngineCore
                 {
                     OnDraw();
                     Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
-                    world.Step(timeStep, velocityIterations, positionIterations);
+                    //world.Step(timeStep, velocityIterations, positionIterations);
                     OnUpdate();
                     Thread.Sleep(2);
                 }

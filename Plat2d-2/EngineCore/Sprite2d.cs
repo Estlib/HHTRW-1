@@ -8,7 +8,7 @@ using System.Drawing.Imaging;
 using Box2DX.Collision;
 using Box2DX.Dynamics;
 using Box2DX.Common;
-
+using System.Runtime.InteropServices;
 
 namespace Plat2d_2.EngineCore
 {
@@ -206,7 +206,7 @@ namespace Plat2d_2.EngineCore
             {
                 if (b.Tag == tag)
                 {
-                    if (Position.X+8 < b.Position.X + b.Scale.X &&
+                    if (Position.X+8 < b.Position.X + b.Scale.X && // +8 and -8 cut off a strip of 8 collidable pixels from the sides of the sprite
                         Position.X-8 + Scale.X > b.Position.X &&
                         Position.Y < b.Position.Y + b.Scale.Y &&
                         Position.Y + Scale.Y > b.Position.Y)
@@ -217,6 +217,20 @@ namespace Plat2d_2.EngineCore
             }
 
             return null;
+        }
+        public void IsJumpingNormally(string tag, bool type, int jumpcontroller)
+        {
+            if (type == true)
+            {
+                Position.Y -= jumpcontroller;
+            }
+        }
+        public void IsFalling(string tag, bool type, int jumpcontroller)
+        {
+            if (type == true)
+            {
+                Position.Y += jumpcontroller;
+            }
         }
         public void DestroySelf()
         {

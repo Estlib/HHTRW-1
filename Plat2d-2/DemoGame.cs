@@ -18,6 +18,10 @@ namespace Plat2d_2
         bool right;
         bool up;
         bool down;
+        bool jump;
+        bool fire;
+        bool pause;
+        bool swap;
 
         Vector2 lastPos = Vector2.Zero();
 
@@ -93,6 +97,10 @@ namespace Plat2d_2
         //int timeframe = 0;
         //float x = 1;
         int times = 0;
+        int jumpcontroller = 12;
+        int fallcontroller = 1;
+        int jumpheight = 64;
+        int collectedheight = 0;
         public override void OnUpdate()
         {
             if (player == null)
@@ -100,9 +108,12 @@ namespace Plat2d_2
                 return;
             }
             times++;
+            
+
             if (up)
             {
                 player.Position.Y -= 1;
+                player.Position.X = lastPos.X;
 
                 //Box2d remnants
                 //player.AddForce(new Vector2(0, -1600), Vector2.Zero());
@@ -113,6 +124,7 @@ namespace Plat2d_2
             if (down)
             {
                 player.Position.Y += 1;
+                player.Position.X = lastPos.X;
 
                 //Box2d remnants
                 //player.AddForce(new Vector2(0, 1600), Vector2.Zero());
@@ -123,6 +135,7 @@ namespace Plat2d_2
             if (left)
             {
                 player.Position.X -= 1;
+                player.Position.Y = lastPos.Y;
 
                 //Box2d remnants
                 //player.AddForce(new Vector2(-1600, 0), Vector2.Zero());
@@ -133,12 +146,51 @@ namespace Plat2d_2
             if (right)
             {
                 player.Position.X += 1;
+                player.Position.Y = lastPos.Y;
 
                 //Box2d remnants
                 //player.AddForce(new Vector2(1600, 0), Vector2.Zero());
                 //player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
                 //player.AddForce(new Vector2(1600, 0), new Vector2(1600, 0));
                 //player.SetVelocity(new Vector2(120, 0));
+            }
+            if (jump)
+            {
+                /*
+                 * the above is pseudoidea for how the jump should work, 
+                 * the gravity is disabled, 
+                 * and then player is automoved up by a predetermined amount by a formula or a method.
+                 */
+                player.IsJumpingNormally("Player", true, jumpcontroller);
+                player.IsFalling("Player", false, fallcontroller);
+
+                fallcontroller = 0;
+                if (jumpcontroller > 1 && collectedheight < jumpheight)
+                {
+                    collectedheight += jumpcontroller;
+                    jumpcontroller -= 1;
+                }
+                else if (jumpcontroller < 10 && collectedheight >= jumpheight)
+                {
+                    jump = false;
+                    collectedheight = 0;
+                    jumpcontroller = 8;
+                    fallcontroller = 1;
+                }
+                
+
+            }
+            else if (!jump && player.IsColliding("Ground")==null)
+            {
+                player.IsJumpingNormally("Player", false, jumpcontroller);
+                player.IsFalling("Player", true, fallcontroller);
+
+                jumpcontroller = 12;
+                if (fallcontroller < 10)
+                {
+                    fallcontroller += 2;
+                }
+                
             }
             //player.UpdatePosition();
             Sprite2d coin = player.IsColliding("Coin");
@@ -183,6 +235,10 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.A) { left = true; }
             if (e.KeyCode == Keys.S) { down = true; }
             if (e.KeyCode == Keys.D) { right = true; }
+            if (e.KeyCode == Keys.Z) { jump = true; }
+            if (e.KeyCode == Keys.X) { fire = true; }
+            if (e.KeyCode == Keys.Enter) { pause = true; }
+            if (e.KeyCode == Keys.Shift) { swap = true; }
         }
 
         public override void GetKeyUp(KeyEventArgs e)
@@ -191,6 +247,10 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.A) { left = false; }
             if (e.KeyCode == Keys.S) { down = false; }
             if (e.KeyCode == Keys.D) { right = false; }
+            if (e.KeyCode == Keys.Z) { jump = false; }
+            if (e.KeyCode == Keys.X) { fire = false; }
+            if (e.KeyCode == Keys.Enter) { pause = false; }
+            if (e.KeyCode == Keys.Shift) { swap = false; }
         }
     }
 }
