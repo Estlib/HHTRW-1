@@ -99,6 +99,8 @@ namespace Plat2d_2.EngineCore
             // Override the default friction.
             shapeDef.Friction = 1.0f;
 
+            shapeDef.Restitution = 0.00000001f;
+
             // Add the shape to the body.
             body.CreateShape(shapeDef);
 
