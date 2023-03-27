@@ -85,7 +85,7 @@ namespace Plat2d_2.EngineCore
         {
             // Define the dynamic body. We set its position and call the body factory.
             //bodyDef = new BodyDef();
-            bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
+            bodyDef.Position = new Vec2(this.Position.X-16, this.Position.Y-16);
             body = EngineCore.world.CreateBody(bodyDef);
 
             // Define another box shape for our dynamic body.
