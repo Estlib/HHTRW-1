@@ -6,37 +6,40 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Plat2d_2.EngineCore;
 using System.Windows.Forms;
+using Box2DX.Common;
 
 namespace Plat2d_2
 {
     class DemoGame : EngineCore.EngineCore
     {
         Sprite2d player;
+        Shape2d playercollision;
         //Sprite2d player2;
 
         bool left;
         bool right;
         bool up;
         bool down;
+        bool jump;
 
         Vector2 lastPos = Vector2.Zero();
 
         string[,] Map =
         {
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
-            {"G",".","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
-            {"G",".","G",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".","G" },
-            {"G",".","G",".",".",".",".",".",".",".",".",".",".","G",".",".",".","C",".","G" },
-            {"G",".","G",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".","G" },
-            {"G",".",".","G","G","G","G","G","G","G",".",".",".",".",".","G",".",".",".","G" },
-            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G","P",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
-            {"G",".",".",".",".","G","G","G","G","G",".",".",".",".",".",".","G",".",".","G" },
-            {"G",".","C",".",".","G",".",".",".",".",".",".",".",".",".",".","G","C",".","G" },
-            {"G",".",".",".",".","G",".",".",".",".",".",".","C",".","C",".","G",".",".","G" },
-            {"G",".",".",".",".","G",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
+            {"G",".",".",".",".",".",".","G","G","G",".",".",".",".",".",".","G",".",".","G" },
+            {"G",".","C",".",".",".",".",".",".",".",".",".",".",".",".",".","G","C",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".","G",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
         };
         public DemoGame() : base(new Vector2(615, 615),"HHTRW-engine1 demo")
@@ -80,6 +83,8 @@ namespace Plat2d_2
                     {
                         player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
                         player.CreateDynamic();
+                        //playercollision = new Shape2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "Player");
+                        //playercollision.CreateDynamic();
                     }
                 }
             }
@@ -93,6 +98,8 @@ namespace Plat2d_2
         //int timeframe = 0;
         //float x = 1;
         int times = 0;
+        int remainingJumpSteps = 0;
+
         public override void OnUpdate()
         {
             if (player == null)
@@ -131,6 +138,31 @@ namespace Plat2d_2
                 player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
                 //player.AddForce(new Vector2(1600, 0), new Vector2(1600, 0));
                 //player.SetVelocity(new Vector2(120, 0));
+            }
+            if (jump)
+            {
+                //player.Position.X += 1;
+                //player.AddForce(new Vector2(1600, 0), Vector2.Zero());
+                //player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
+                //player.AddForce(new Vector2(1600, 0), new Vector2(1600, 0));
+                if (player.IsColliding("Ground")!=null)
+                {
+                    remainingJumpSteps = 6;
+                }
+            }
+            if (remainingJumpSteps > 0)
+            {
+                float Xvel = player.GetXVelocity();
+                player.SetVelocity(new Vector2(Xvel ,-4800));
+                remainingJumpSteps--;
+            }
+            if (player.IsColliding("Ground") != null)
+            {
+                Log.Info("Player is colliding with Ground");
+            }
+            else if (player.IsColliding("Ground") == null)
+            {
+                Log.Warning("Player is not colliding with Ground and thus cannot jump.");
             }
             player.UpdatePosition();
             Sprite2d coin = player.IsColliding("Coin");
@@ -173,6 +205,7 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.A) { left = true; }
             if (e.KeyCode == Keys.S) { down = true; }
             if (e.KeyCode == Keys.D) { right = true; }
+            if (e.KeyCode == Keys.Z) { jump = true; }
         }
 
         public override void GetKeyUp(KeyEventArgs e)
@@ -181,6 +214,7 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.A) { left = false; }
             if (e.KeyCode == Keys.S) { down = false; }
             if (e.KeyCode == Keys.D) { right = false; }
+            if (e.KeyCode == Keys.Z) { jump = false; }
         }
     }
 }

@@ -76,7 +76,7 @@ namespace Plat2d_2.EngineCore
             PolygonDef shapeDef = new PolygonDef();
 
             // The extents are the half-widths of the box.
-            shapeDef.SetAsBox(32.0f, 32.0f);
+            shapeDef.SetAsBox(16.0f, 16.0f);
 
             // Add the ground shape to the ground body.
             body.CreateShape(shapeDef);
@@ -90,13 +90,13 @@ namespace Plat2d_2.EngineCore
 
             // Define another box shape for our dynamic body.
             PolygonDef shapeDef = new PolygonDef();
-            shapeDef.SetAsBox(1f, 1f);
+            shapeDef.SetAsBox(1.0f, 1.0f);
 
             // Set the box density to be non-zero, so it will be dynamic.
-            shapeDef.Density = 1.0f;
+            shapeDef.Density = 1000.1f;
 
             // Override the default friction.
-            shapeDef.Friction = 0.3f;
+            shapeDef.Friction = 1.0f;
 
             // Add the shape to the body.
             body.CreateShape(shapeDef);
@@ -118,6 +118,10 @@ namespace Plat2d_2.EngineCore
         public void SetVelocity(Vector2 velocity)
         {
             body.SetLinearVelocity(new Vec2(velocity.X, velocity.Y));
+        }
+        public float GetXVelocity()
+        {
+            return body.GetLinearVelocity().X;
         }
         public void UpdatePosition()
         {
@@ -174,8 +178,8 @@ namespace Plat2d_2.EngineCore
             {
                 if (b.Tag == tag)
                 {
-                    if (Position.X < b.Position.X + b.Scale.X &&
-                        Position.X + Scale.X > b.Position.X &&
+                    if (Position.X+8 < b.Position.X + b.Scale.X && //+8 trim off x
+                        Position.X-8 + Scale.X > b.Position.X &&
                         Position.Y < b.Position.Y + b.Scale.Y &&
                         Position.Y + Scale.Y > b.Position.Y)
                     {

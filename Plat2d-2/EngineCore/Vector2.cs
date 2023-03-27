@@ -16,6 +16,7 @@ namespace Plat2d_2.EngineCore
             X = Zero().X;
             Y = Zero().Y;
         }
+
         public Vector2(float X, float Y)
         {
             this.X = X;
