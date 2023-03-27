@@ -154,7 +154,7 @@ namespace Plat2d_2
                 //player.AddForce(new Vector2(1600, 0), new Vector2(1600, 0));
                 //player.SetVelocity(new Vector2(120, 0));
             }
-            if (jump)
+            if (jump==true)
             {
                 /*
                  * the above is pseudoidea for how the jump should work, 
@@ -180,7 +180,7 @@ namespace Plat2d_2
                 
 
             }
-            else if (!jump && player.IsColliding("Ground")==null)
+            else if (jump == false)
             {
                 player.IsJumpingNormally("Player", false, jumpcontroller);
                 player.IsFalling("Player", true, fallcontroller);
