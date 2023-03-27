@@ -117,9 +117,10 @@ namespace Plat2d_2
             }
             if (down)
             {
+                Log.Warning("Down has no action currently");
                 //player.Position.Y += 1;
                 //player.AddForce(new Vector2(0, 1600), Vector2.Zero());
-                player.ApplyImpulse(new Vector2(0, 1600), Vector2.Zero());
+                //player.ApplyImpulse(new Vector2(0, 1600), Vector2.Zero());
                 //player.AddForce(new Vector2(0, 1600), new Vector2(0, 1600));
                 //player.SetVelocity(new Vector2(0, 120));
             }
@@ -127,17 +128,17 @@ namespace Plat2d_2
             {
                 //player.Position.X -= 1;
                 //player.AddForce(new Vector2(-1600, 0), Vector2.Zero());
-                player.ApplyImpulse(new Vector2(-1600, 0), Vector2.Zero());
+                //player.ApplyImpulse(new Vector2(-1600, 0), Vector2.Zero());
                 //player.AddForce(new Vector2(-1600, 0), new Vector2(-1600, 0));
-                //player.SetVelocity(new Vector2(-120, 0));
+                player.SetVelocity(new Vector2(-120, 0));
             }
             if (right)
             {
                 //player.Position.X += 1;
                 //player.AddForce(new Vector2(1600, 0), Vector2.Zero());
-                player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
+                //player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
                 //player.AddForce(new Vector2(1600, 0), new Vector2(1600, 0));
-                //player.SetVelocity(new Vector2(120, 0));
+                player.SetVelocity(new Vector2(120, 0));
             }
             if (jump)
             {
@@ -152,8 +153,9 @@ namespace Plat2d_2
             }
             if (remainingJumpSteps > 0)
             {
+                //player.AddForce(new Vector2(0, -4800000), Vector2.Zero());
                 float Xvel = player.GetXVelocity();
-                player.SetVelocity(new Vector2(Xvel ,-4800));
+                player.SetVelocity(new Vector2(Xvel, -4800));
                 remainingJumpSteps--;
             }
             if (player.IsColliding("Ground") != null)

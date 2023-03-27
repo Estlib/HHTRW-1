@@ -85,8 +85,9 @@ namespace Plat2d_2.EngineCore
         {
             // Define the dynamic body. We set its position and call the body factory.
             //bodyDef = new BodyDef();
-            bodyDef.Position = new Vec2(this.Position.X-16, this.Position.Y-16);
+            bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
             body = EngineCore.world.CreateBody(bodyDef);
+            body.IsBullet();
 
             // Define another box shape for our dynamic body.
             PolygonDef shapeDef = new PolygonDef();
@@ -107,11 +108,11 @@ namespace Plat2d_2.EngineCore
         }
         public void ApplyImpulse(Vector2 force, Vector2 point)
         {
+            //body.SetBullet(true);
             body.ApplyImpulse(new Vec2(force.X, force.Y), new Vec2(point.X, point.Y));
         }
         public void AddForce(Vector2 force, Vector2 point)
         {
-            //body.SetBullet();
             //body.SetLinearVelocity(new Vec2(force.X, force.Y));
             body.ApplyForce(new Vec2(force.X, force.Y), new Vec2(point.X, point.Y));
         }
@@ -178,8 +179,8 @@ namespace Plat2d_2.EngineCore
             {
                 if (b.Tag == tag)
                 {
-                    if (Position.X+8 < b.Position.X + b.Scale.X && //+8 trim off x
-                        Position.X-8 + Scale.X > b.Position.X &&
+                    if (Position.X < b.Position.X + b.Scale.X && //+8 trim off x
+                        Position.X + Scale.X > b.Position.X &&
                         Position.Y < b.Position.Y + b.Scale.Y &&
                         Position.Y + Scale.Y > b.Position.Y)
                     {
