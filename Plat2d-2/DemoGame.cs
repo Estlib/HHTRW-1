@@ -42,7 +42,7 @@ namespace Plat2d_2
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
         };
-        public DemoGame() : base(new Vector2(615, 615),"HHTRW-engine1 demo")
+        public DemoGame() :  base(new Vector2(615, 615),"HHTRW-engine1 demo")
         {
 
         }
@@ -55,6 +55,7 @@ namespace Plat2d_2
             Sprite2d groundRef = new Sprite2d( "tiles/noart/testblock1");
             Sprite2d airRef = new Sprite2d( "tiles/noart/testblock5");
             Sprite2d coinRef = new Sprite2d( "tiles/noart/testobject2");
+            Sprite2d playerStand = new Sprite2d("player/wipspriteset/stand1");
             //player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
             //player = new Sprite2d(new Vector2(8, 8), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
             for (int i = 0; i < Map.GetLength(1); i++)
@@ -81,7 +82,7 @@ namespace Plat2d_2
                 {
                     if (Map[j, i] == "P")
                     {
-                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
+                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerStand, "Player");
                         player.CreateDynamic();
                         //playercollision = new Shape2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "Player");
                         //playercollision.CreateDynamic();
@@ -99,6 +100,8 @@ namespace Plat2d_2
         //float x = 1;
         int times = 0;
         int remainingJumpSteps = 0;
+        Sprite2d playerStand = new Sprite2d("player/wipspriteset/stand1");
+        Sprite2d playerRun1 = new Sprite2d("player/wipspriteset/run1");
 
         public override void OnUpdate()
         {
@@ -114,6 +117,9 @@ namespace Plat2d_2
                 player.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
                 //player.AddForce(new Vector2(0, -1600), new Vector2(0, -1600));
                 //player.SetVelocity(new Vector2(0, -120));
+
+                //sprite animation for up key action - none
+                //up function changes weapon in the future, rn its a hover for testing purposes
             }
             if (down)
             {
@@ -122,7 +128,11 @@ namespace Plat2d_2
                 //player.AddForce(new Vector2(0, 1600), Vector2.Zero());
                 //player.ApplyImpulse(new Vector2(0, 1600), Vector2.Zero());
                 //player.AddForce(new Vector2(0, 1600), new Vector2(0, 1600));
-                //player.SetVelocity(new Vector2(0, 120));
+                //player.SetVelocity(new Vector2(0, 120
+
+                //sprite animation for down key action
+                //down function will be crouching, and changing hitbox smaller
+                //if false, hitbox normal, else hitbox small
             }
             if (left)
             {
@@ -131,6 +141,9 @@ namespace Plat2d_2
                 //player.ApplyImpulse(new Vector2(-1600, 0), Vector2.Zero());
                 //player.AddForce(new Vector2(-1600, 0), new Vector2(-1600, 0));
                 player.SetVelocity(new Vector2(-120, 0));
+
+                //sprite animation for walking left
+
             }
             if (right)
             {
@@ -139,6 +152,10 @@ namespace Plat2d_2
                 //player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
                 //player.AddForce(new Vector2(1600, 0), new Vector2(1600, 0));
                 player.SetVelocity(new Vector2(120, 0));
+
+                //sprite animation for walking right
+                //player = EngineCore.HHTRW.SpriteSystem.Player.PlayerRun(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), player, "player");
+                player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(player.Scale.X, player.Scale.Y), playerStand, "Player");
             }
             if (jump)
             {
@@ -150,6 +167,12 @@ namespace Plat2d_2
                 {
                     remainingJumpSteps = 6;
                 }
+
+                //jumping animation
+            }
+            else
+            {
+                //standing animation
             }
             if (remainingJumpSteps > 0)
             {
