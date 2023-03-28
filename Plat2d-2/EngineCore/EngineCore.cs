@@ -9,6 +9,7 @@ using System.Threading;
 using Box2DX.Dynamics;
 using Box2DX.Collision;
 using Box2DX.Common;
+using System.Security.Policy;
 
 namespace Plat2d_2.EngineCore
 {
@@ -163,5 +164,6 @@ namespace Plat2d_2.EngineCore
         public abstract void OnDraw();
         public abstract void GetKeyDown(KeyEventArgs e);
         public abstract void GetKeyUp(KeyEventArgs e);
+
     }
 }

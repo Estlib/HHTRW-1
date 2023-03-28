@@ -7,13 +7,19 @@ using System.Drawing;
 using Plat2d_2.EngineCore;
 using System.Windows.Forms;
 using Box2DX.Common;
+using System.IO;
 
 namespace Plat2d_2
 {
     class DemoGame : EngineCore.EngineCore
     {
         Sprite2d player;
-        Shape2d playercollision;
+        int steps = 0;
+        int slowDownFrameRate = 100;
+        int playerSpeed = 10;
+        Sprite2d currentSprite;
+
+        //Shape2d playercollision;
         //Sprite2d player2;
 
         bool left;
@@ -49,13 +55,38 @@ namespace Plat2d_2
 
         public override void OnLoad()
         {
+
+            List<Sprite2d> playerSprites = new List<Sprite2d>();
             Console.WriteLine("OnLoad works.");
             BGColor = Color.Black;
             //CameraZoom = new Vector2(.1f,.1f);
             Sprite2d groundRef = new Sprite2d( "tiles/noart/testblock1");
             Sprite2d airRef = new Sprite2d( "tiles/noart/testblock5");
             Sprite2d coinRef = new Sprite2d( "tiles/noart/testobject2");
-            Sprite2d playerStand = new Sprite2d("player/wipspriteset/stand1");
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand1"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run1"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run2"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run3"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run4"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run5"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run6"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand2"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3duck"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3jump"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/ALTfall"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand1flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run1flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run2flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run3flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run4flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run5flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run6flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand2flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3duckflip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3jumpflip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/ALTfallFLIP"));
+            Sprite2d currentSprite = playerSprites[0];
+
             //player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
             //player = new Sprite2d(new Vector2(8, 8), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
             for (int i = 0; i < Map.GetLength(1); i++)
@@ -82,8 +113,11 @@ namespace Plat2d_2
                 {
                     if (Map[j, i] == "P")
                     {
-                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerStand, "Player");
+                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), currentSprite, "Player");
+                        //player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerStand, "Player");
                         player.CreateDynamic();
+                        //pass a list of sprites here, changing happens by animating list numbers, limited by if limits
+                        //see https://www.youtube.com/results?search_query=box2d+tutorial+c%23
                         //playercollision = new Shape2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "Player");
                         //playercollision.CreateDynamic();
                     }
@@ -100,8 +134,20 @@ namespace Plat2d_2
         //float x = 1;
         int times = 0;
         int remainingJumpSteps = 0;
-        Sprite2d playerStand = new Sprite2d("player/wipspriteset/stand1");
-        Sprite2d playerRun1 = new Sprite2d("player/wipspriteset/run1");
+        int start;
+        int end;
+
+        private void AnimatePlayer(int start, int end)
+        {
+            Log.Info("AnimatePlayer has been called");
+            steps++;
+            if (steps > end || steps < start)
+            {
+                steps = start;
+            }
+            Log.Info($"Currentsprite should be # {steps}");
+            //currentSprite = playerSprites[steps];
+        }
 
         public override void OnUpdate()
         {
@@ -110,16 +156,18 @@ namespace Plat2d_2
                 return;
             }
             times++;
+
             if (up)
             {
-                //player.Position.Y -= 1;
-                //player.AddForce(new Vector2(0, -1600), Vector2.Zero());
                 player.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
-                //player.AddForce(new Vector2(0, -1600), new Vector2(0, -1600));
-                //player.SetVelocity(new Vector2(0, -120));
 
                 //sprite animation for up key action - none
                 //up function changes weapon in the future, rn its a hover for testing purposes
+                //
+                //player.Position.Y -= 1;
+                //player.AddForce(new Vector2(0, -1600), Vector2.Zero());
+                //player.AddForce(new Vector2(0, -1600), new Vector2(0, -1600));
+                //player.SetVelocity(new Vector2(0, -120));
             }
             if (down)
             {
@@ -136,26 +184,31 @@ namespace Plat2d_2
             }
             if (left)
             {
+                player.SetVelocity(new Vector2(-120, 0));
+
+
                 //player.Position.X -= 1;
                 //player.AddForce(new Vector2(-1600, 0), Vector2.Zero());
                 //player.ApplyImpulse(new Vector2(-1600, 0), Vector2.Zero());
                 //player.AddForce(new Vector2(-1600, 0), new Vector2(-1600, 0));
-                player.SetVelocity(new Vector2(-120, 0));
 
                 //sprite animation for walking left
 
             }
             if (right)
             {
+                player.SetVelocity(new Vector2(120, 0));
+                AnimatePlayer(1, 6);
+                
+
+
                 //player.Position.X += 1;
                 //player.AddForce(new Vector2(1600, 0), Vector2.Zero());
                 //player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
                 //player.AddForce(new Vector2(1600, 0), new Vector2(1600, 0));
-                player.SetVelocity(new Vector2(120, 0));
-
                 //sprite animation for walking right
                 //player = EngineCore.HHTRW.SpriteSystem.Player.PlayerRun(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), player, "player");
-                player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(player.Scale.X, player.Scale.Y), playerStand, "Player");
+                //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(player.Scale.X, player.Scale.Y), playerStand, "Player");
             }
             if (jump)
             {
