@@ -22,6 +22,10 @@ namespace Plat2d_2.EngineCore
         public bool IsReference = false;
         BodyDef bodyDef = new BodyDef();
         Body body;
+        private Vector2 vector21;
+        private Vector2 vector22;
+        private List<Sprite2d> playerSprites;
+        private string v;
 
         public Sprite2d(Vector2 Position, Vector2 Scale, string Directory, string Tag)
         {
@@ -62,6 +66,15 @@ namespace Plat2d_2.EngineCore
             Log.Info($"[SPRITE2D]({Tag}) has been registered");
             EngineCore.RegisterSprite(this);
         }
+
+        //public Sprite2d(Vector2 vector21, Vector2 vector22, List<Sprite2d> playerSprites, string v)
+        //{
+        //    this.vector21 = vector21;
+        //    this.vector22 = vector22;
+        //    this.playerSprites = playerSprites;
+        //    this.v = v;
+        //}
+
         public void CreateStatic()
         {
             // Define the ground body.
@@ -198,5 +211,16 @@ namespace Plat2d_2.EngineCore
             Log.Info($"[SPRITE2D]({Tag}) has been destroyed");
             EngineCore.UnRegisterSprite(this); 
         }
+
+        //internal void UpdateSprite(int steps)
+        //{
+        //    this.Position = Position;
+        //    this.Scale = Scale;
+        //    this.Tag = Tag;
+
+        //    //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
+        //    //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
+        //    Sprite = steps.Sprite;
+        //}
     }
 }

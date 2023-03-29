@@ -17,11 +17,12 @@ namespace Plat2d_2
         int steps = 0;
         int slowDownFrameRate = 100;
         int playerSpeed = 10;
-        Sprite2d currentSprite;
+        int currentSprite;
 
         //Shape2d playercollision;
         //Sprite2d player2;
 
+        int facedirection;
         bool left;
         bool right;
         bool up;
@@ -85,7 +86,7 @@ namespace Plat2d_2
             playerSprites.Add(new Sprite2d("player/wipspriteset/stand3duckflip"));
             playerSprites.Add(new Sprite2d("player/wipspriteset/stand3jumpflip"));
             playerSprites.Add(new Sprite2d("player/wipspriteset/ALTfallFLIP"));
-            Sprite2d currentSprite = playerSprites[0];
+            currentSprite = 0;
 
             //player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
             //player = new Sprite2d(new Vector2(8, 8), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
@@ -113,7 +114,7 @@ namespace Plat2d_2
                 {
                     if (Map[j, i] == "P")
                     {
-                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), currentSprite, "Player");
+                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerSprites[0], "Player");
                         //player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerStand, "Player");
                         player.CreateDynamic();
                         //pass a list of sprites here, changing happens by animating list numbers, limited by if limits
@@ -145,8 +146,8 @@ namespace Plat2d_2
             {
                 steps = start;
             }
-            Log.Info($"Currentsprite should be # {steps}");
-            //currentSprite = playerSprites[steps];
+            //player.UpdateSprite(steps);
+            currentSprite = steps;
         }
 
         public override void OnUpdate()
@@ -168,6 +169,7 @@ namespace Plat2d_2
                 //player.AddForce(new Vector2(0, -1600), Vector2.Zero());
                 //player.AddForce(new Vector2(0, -1600), new Vector2(0, -1600));
                 //player.SetVelocity(new Vector2(0, -120));
+                facedirection = 2;
             }
             if (down)
             {
@@ -185,7 +187,8 @@ namespace Plat2d_2
             if (left)
             {
                 player.SetVelocity(new Vector2(-120, 0));
-
+                facedirection = 0;
+                AnimatePlayer(1, 6);
 
                 //player.Position.X -= 1;
                 //player.AddForce(new Vector2(-1600, 0), Vector2.Zero());
@@ -198,8 +201,9 @@ namespace Plat2d_2
             if (right)
             {
                 player.SetVelocity(new Vector2(120, 0));
-                AnimatePlayer(1, 6);
-                
+                facedirection = 1;
+                AnimatePlayer(12, 17);
+
 
 
                 //player.Position.X += 1;
@@ -223,10 +227,24 @@ namespace Plat2d_2
 
                 //jumping animation
             }
-            else
-            {
-                //standing animation
-            }
+            //else
+            //{
+            //    if (jump == false || down == false)
+            //    {
+            //        if (facedirection == 0)
+            //        {
+
+            //            AnimatePlayer(12, 12);
+
+            //        }
+            //        else if (facedirection == 1)
+            //        {
+
+            //            AnimatePlayer(1, 1);
+            //        }
+            //    }
+            //    //standing animation
+            //}
             if (remainingJumpSteps > 0)
             {
                 //player.AddForce(new Vector2(0, -4800000), Vector2.Zero());
@@ -275,6 +293,7 @@ namespace Plat2d_2
             //timeframe++;
             //Console.WriteLine($"Framecount: {frame}.");
             //frame++;
+            Log.Info($"Currentsprite should be # {steps}");
         }
 
         public override void GetKeyDown(KeyEventArgs e)
