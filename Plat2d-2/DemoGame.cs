@@ -155,7 +155,7 @@ namespace Plat2d_2
 
                 //sprite animation for walking right
                 //player = EngineCore.HHTRW.SpriteSystem.Player.PlayerRun(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), player, "player");
-                player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(player.Scale.X, player.Scale.Y), playerStand, "Player");
+                //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(player.Scale.X, player.Scale.Y), playerStand, "Player");
             }
             if (jump)
             {
