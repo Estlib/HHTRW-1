@@ -18,7 +18,8 @@ namespace Plat2d_2
         int slowDownFrameRate = 100;
         int playerSpeed = 10;
         int currentSprite;
-        List<string> playerSprites = new List<string>();
+        List<Sprite2d> playerSprites = new List<Sprite2d>();
+        List<string> playerSpritesS = new List<string>();
 
         //Shape2d playercollision;
         //Sprite2d player2;
@@ -65,28 +66,50 @@ namespace Plat2d_2
             Sprite2d groundRef = new Sprite2d( "tiles/noart/testblock1");
             Sprite2d airRef = new Sprite2d( "tiles/noart/testblock5");
             Sprite2d coinRef = new Sprite2d( "tiles/noart/testobject2");
-            playerSprites.Add("player/wipspriteset/stand1"); //0
-            playerSprites.Add("player/wipspriteset/run1");
-            playerSprites.Add("player/wipspriteset/run2");
-            playerSprites.Add("player/wipspriteset/run3");
-            playerSprites.Add("player/wipspriteset/run4");
-            playerSprites.Add("player/wipspriteset/run5");
-            playerSprites.Add("player/wipspriteset/run6");
-            playerSprites.Add("player/wipspriteset/stand2");
-            playerSprites.Add("player/wipspriteset/stand3duck");
-            playerSprites.Add("player/wipspriteset/stand3jump");
-            playerSprites.Add("player/wipspriteset/ALTfall");
-            playerSprites.Add("player/wipspriteset/stand1flip"); //11
-            playerSprites.Add("player/wipspriteset/run1flip");
-            playerSprites.Add("player/wipspriteset/run2flip");
-            playerSprites.Add("player/wipspriteset/run3flip");
-            playerSprites.Add("player/wipspriteset/run4flip");
-            playerSprites.Add("player/wipspriteset/run5flip");
-            playerSprites.Add("player/wipspriteset/run6flip");
-            playerSprites.Add("player/wipspriteset/stand2flip");
-            playerSprites.Add("player/wipspriteset/stand3duckflip");
-            playerSprites.Add("player/wipspriteset/stand3jumpflip");
-            playerSprites.Add("player/wipspriteset/ALTfallFLIP");
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand1")); //0
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run1"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run2"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run3"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run4"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run5"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run6"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand2"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3duck"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3jump"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/ALTfall"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand1flip")); //11
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run1flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run2flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run3flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run4flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run5flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/run6flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand2flip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3duckflip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3jumpflip"));
+            playerSprites.Add(new Sprite2d("player/wipspriteset/ALTfallFLIP"));
+            playerSpritesS.Add("player/wipspriteset/stand1"); //0
+            playerSpritesS.Add("player/wipspriteset/run1");
+            playerSpritesS.Add("player/wipspriteset/run2");
+            playerSpritesS.Add("player/wipspriteset/run3");
+            playerSpritesS.Add("player/wipspriteset/run4");
+            playerSpritesS.Add("player/wipspriteset/run5");
+            playerSpritesS.Add("player/wipspriteset/run6");
+            playerSpritesS.Add("player/wipspriteset/stand2");
+            playerSpritesS.Add("player/wipspriteset/stand3duck");
+            playerSpritesS.Add("player/wipspriteset/stand3jump");
+            playerSpritesS.Add("player/wipspriteset/ALTfall");
+            playerSpritesS.Add("player/wipspriteset/stand1flip"); //11
+            playerSpritesS.Add("player/wipspriteset/run1flip");
+            playerSpritesS.Add("player/wipspriteset/run2flip");
+            playerSpritesS.Add("player/wipspriteset/run3flip");
+            playerSpritesS.Add("player/wipspriteset/run4flip");
+            playerSpritesS.Add("player/wipspriteset/run5flip");
+            playerSpritesS.Add("player/wipspriteset/run6flip");
+            playerSpritesS.Add("player/wipspriteset/stand2flip");
+            playerSpritesS.Add("player/wipspriteset/stand3duckflip");
+            playerSpritesS.Add("player/wipspriteset/stand3jumpflip");
+            playerSpritesS.Add("player/wipspriteset/ALTfallFLIP");
             currentSprite = 0;
 
             //player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
@@ -130,7 +153,28 @@ namespace Plat2d_2
         }
         public override void OnDraw()
         {
-
+            if (up)
+            {
+                Log.Warning("Up has no animation currently.");
+            }
+            if (down)
+            {
+                Log.Warning("Down has no animation currently");
+            }
+            if (left)
+            {
+                facedirection = 0;
+                AnimatePlayer(1, 6);
+            }
+            if (right)
+            {
+                facedirection = 1;
+                AnimatePlayer(12, 17);
+            }
+            if (jump)
+            {
+                Log.Warning("Up has no animation currently");
+            }
         }
         //int timeframe = 0;
         //float x = 1;
@@ -139,7 +183,7 @@ namespace Plat2d_2
         int start;
         int end;
 
-        private void AnimatePlayer(int start, int end, List<string> playerSprites)
+        private void AnimatePlayer(int start, int end)
         {
             Log.Info("AnimatePlayer has been called");
             steps++;
@@ -147,8 +191,7 @@ namespace Plat2d_2
             {
                 steps = start;
             }
-            player.UpdateSprite(steps, player, playerSprites);
-            //currentSprite = steps;
+            currentSprite = steps;
         }
         //int[] jumpFrames = new int[] { };
         //private void AnimatePlayerOneWayOnly(int[] frames)
@@ -174,72 +217,26 @@ namespace Plat2d_2
             if (up)
             {
                 player.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
-
-                //sprite animation for up key action - none
-                //up function changes weapon in the future, rn its a hover for testing purposes
-                //
-                //player.Position.Y -= 1;
-                //player.AddForce(new Vector2(0, -1600), Vector2.Zero());
-                //player.AddForce(new Vector2(0, -1600), new Vector2(0, -1600));
-                //player.SetVelocity(new Vector2(0, -120));
-                facedirection = 2;
             }
             if (down)
             {
                 Log.Warning("Down has no action currently");
-                //player.Position.Y += 1;
-                //player.AddForce(new Vector2(0, 1600), Vector2.Zero());
-                //player.ApplyImpulse(new Vector2(0, 1600), Vector2.Zero());
-                //player.AddForce(new Vector2(0, 1600), new Vector2(0, 1600));
-                //player.SetVelocity(new Vector2(0, 120
-
-                //sprite animation for down key action
-                //down function will be crouching, and changing hitbox smaller
-                //if false, hitbox normal, else hitbox small
             }
             if (left)
             {
                 player.SetVelocity(new Vector2(-120, player.GetYVelocity()));
-                facedirection = 0;
-                AnimatePlayer(1, 6, playerSprites);
-
-                //player.Position.X -= 1;
-                //player.AddForce(new Vector2(-1600, 0), Vector2.Zero());
-                //player.ApplyImpulse(new Vector2(-1600, 0), Vector2.Zero());
-                //player.AddForce(new Vector2(-1600, 0), new Vector2(-1600, 0));
-
-                //sprite animation for walking left
 
             }
             if (right)
             {
-                player.SetVelocity(new Vector2(120, player.GetYVelocity())); //breakhere
-                facedirection = 1;
-                AnimatePlayer(12, 17, playerSprites);
-
-
-
-                //player.Position.X += 1;
-                //player.AddForce(new Vector2(1600, 0), Vector2.Zero());
-                //player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
-                //player.AddForce(new Vector2(1600, 0), new Vector2(1600, 0));
-                //sprite animation for walking right
-                //player = EngineCore.HHTRW.SpriteSystem.Player.PlayerRun(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), player, "player");
-                //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(player.Scale.X, player.Scale.Y), playerStand, "Player");
+                player.SetVelocity(new Vector2(120, player.GetYVelocity()));
             }
             if (jump)
             {
-                //player.Position.X += 1;
-                //player.AddForce(new Vector2(1600, 0), Vector2.Zero());
-                //player.ApplyImpulse(new Vector2(1600, 0), Vector2.Zero());
-                //player.AddForce(new Vector2(1600, 0), new Vector2(1600, 0));
                 if (player.IsColliding("Ground")!=null)
                 {
                     remainingJumpSteps = 6;
                 }
-                //AnimatePlayerOneWayOnly();
-
-                //jumping animation
             }
             //else
             //{
@@ -285,6 +282,7 @@ namespace Plat2d_2
                 Log.Warning("Player is not colliding with Ground and thus cannot jump.");
             }
             player.UpdatePosition();
+            player.UpdateSprite(currentSprite, playerSpritesS);
             Sprite2d coin = player.IsColliding("Coin");
             if (coin != null)
             {

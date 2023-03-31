@@ -24,7 +24,6 @@ namespace Plat2d_2.EngineCore
         Body body;
         private Vector2 vector21;
         private Vector2 vector22;
-        private List<Sprite2d> playerSprites;
         private string v;
 
         public Sprite2d(Vector2 Position, Vector2 Scale, string Directory, string Tag)
@@ -145,9 +144,10 @@ namespace Plat2d_2.EngineCore
         }
         public void UpdatePosition()
         {
-            Log.Warning("X is "+ body.GetPosition().X + ". Y is " + body.GetPosition().Y);
+            Log.Warning("X is " + body.GetPosition().X + ". Y is " + body.GetPosition().Y);
             this.Position.X = (float)System.Math.Round(body.GetPosition().X);
             this.Position.Y = (float)System.Math.Round(body.GetPosition().Y);
+            this.Sprite = 
         }
         //public bool IsColliding(Sprite2d a, Sprite2d b)
         //{
@@ -216,19 +216,19 @@ namespace Plat2d_2.EngineCore
             EngineCore.UnRegisterSprite(this); 
         }
 
-        public Sprite2d UpdateSprite(int steps, Sprite2d player, List<string> playerSprites)
+        public Sprite2d UpdateSprite(int currentSprite, List<string> playerSprites)
         {
 
-            player.Position = Position;
-            player.Scale = Scale;
-            player.Tag = Tag;
+            this.Position = Position;
+            this.Scale = Scale;
+            this.Tag = Tag;
 
             //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
-            player.Directory = playerSprites[steps];
+            this.Directory = (playerSprites[currentSprite]);
 
             //return Sprite2d(Position,Scale,Directory,Tag);
-            return player;
+            return this;
         }
     }
 }
