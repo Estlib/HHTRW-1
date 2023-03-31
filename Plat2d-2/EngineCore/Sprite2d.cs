@@ -139,6 +139,10 @@ namespace Plat2d_2.EngineCore
         {
             return body.GetLinearVelocity().X;
         }
+        public float GetYVelocity()
+        {
+            return body.GetLinearVelocity().Y;
+        }
         public void UpdatePosition()
         {
             Log.Warning("X is "+ body.GetPosition().X + ". Y is " + body.GetPosition().Y);
@@ -212,15 +216,19 @@ namespace Plat2d_2.EngineCore
             EngineCore.UnRegisterSprite(this); 
         }
 
-        //internal void UpdateSprite(int steps)
-        //{
-        //    this.Position = Position;
-        //    this.Scale = Scale;
-        //    this.Tag = Tag;
+        public Sprite2d UpdateSprite(int steps, Sprite2d player, List<string> playerSprites)
+        {
 
-        //    //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
-        //    //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
-        //    Sprite = steps.Sprite;
-        //}
+            player.Position = Position;
+            player.Scale = Scale;
+            player.Tag = Tag;
+
+            //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
+            //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
+            player.Directory = playerSprites[steps];
+
+            //return Sprite2d(Position,Scale,Directory,Tag);
+            return player;
+        }
     }
 }

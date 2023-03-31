@@ -18,6 +18,7 @@ namespace Plat2d_2
         int slowDownFrameRate = 100;
         int playerSpeed = 10;
         int currentSprite;
+        List<string> playerSprites = new List<string>();
 
         //Shape2d playercollision;
         //Sprite2d player2;
@@ -57,35 +58,35 @@ namespace Plat2d_2
         public override void OnLoad()
         {
 
-            List<Sprite2d> playerSprites = new List<Sprite2d>();
+            //List<Sprite2d> playerSprites = new List<Sprite2d>();
             Console.WriteLine("OnLoad works.");
             BGColor = Color.Black;
             //CameraZoom = new Vector2(.1f,.1f);
             Sprite2d groundRef = new Sprite2d( "tiles/noart/testblock1");
             Sprite2d airRef = new Sprite2d( "tiles/noart/testblock5");
             Sprite2d coinRef = new Sprite2d( "tiles/noart/testobject2");
-            playerSprites.Add(new Sprite2d("player/wipspriteset/stand1"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run1"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run2"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run3"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run4"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run5"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run6"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/stand2"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3duck"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3jump"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/ALTfall"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/stand1flip"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run1flip"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run2flip"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run3flip"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run4flip"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run5flip"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/run6flip"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/stand2flip"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3duckflip"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/stand3jumpflip"));
-            playerSprites.Add(new Sprite2d("player/wipspriteset/ALTfallFLIP"));
+            playerSprites.Add("player/wipspriteset/stand1"); //0
+            playerSprites.Add("player/wipspriteset/run1");
+            playerSprites.Add("player/wipspriteset/run2");
+            playerSprites.Add("player/wipspriteset/run3");
+            playerSprites.Add("player/wipspriteset/run4");
+            playerSprites.Add("player/wipspriteset/run5");
+            playerSprites.Add("player/wipspriteset/run6");
+            playerSprites.Add("player/wipspriteset/stand2");
+            playerSprites.Add("player/wipspriteset/stand3duck");
+            playerSprites.Add("player/wipspriteset/stand3jump");
+            playerSprites.Add("player/wipspriteset/ALTfall");
+            playerSprites.Add("player/wipspriteset/stand1flip"); //11
+            playerSprites.Add("player/wipspriteset/run1flip");
+            playerSprites.Add("player/wipspriteset/run2flip");
+            playerSprites.Add("player/wipspriteset/run3flip");
+            playerSprites.Add("player/wipspriteset/run4flip");
+            playerSprites.Add("player/wipspriteset/run5flip");
+            playerSprites.Add("player/wipspriteset/run6flip");
+            playerSprites.Add("player/wipspriteset/stand2flip");
+            playerSprites.Add("player/wipspriteset/stand3duckflip");
+            playerSprites.Add("player/wipspriteset/stand3jumpflip");
+            playerSprites.Add("player/wipspriteset/ALTfallFLIP");
             currentSprite = 0;
 
             //player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
@@ -138,7 +139,7 @@ namespace Plat2d_2
         int start;
         int end;
 
-        private void AnimatePlayer(int start, int end)
+        private void AnimatePlayer(int start, int end, List<string> playerSprites)
         {
             Log.Info("AnimatePlayer has been called");
             steps++;
@@ -146,9 +147,21 @@ namespace Plat2d_2
             {
                 steps = start;
             }
-            //player.UpdateSprite(steps);
-            currentSprite = steps;
+            player.UpdateSprite(steps, player, playerSprites);
+            //currentSprite = steps;
         }
+        //int[] jumpFrames = new int[] { };
+        //private void AnimatePlayerOneWayOnly(int[] frames)
+        //{
+        //    Log.Info("AnimatePlayer has been called");
+        //    steps++;
+        //    if (steps > end || steps < start)
+        //    {
+        //        steps = end;
+        //    }
+        //    //player.UpdateSprite(steps);
+        //    currentSprite = steps;
+        //}
 
         public override void OnUpdate()
         {
@@ -186,9 +199,9 @@ namespace Plat2d_2
             }
             if (left)
             {
-                player.SetVelocity(new Vector2(-120, 0));
+                player.SetVelocity(new Vector2(-120, player.GetYVelocity()));
                 facedirection = 0;
-                AnimatePlayer(1, 6);
+                AnimatePlayer(1, 6, playerSprites);
 
                 //player.Position.X -= 1;
                 //player.AddForce(new Vector2(-1600, 0), Vector2.Zero());
@@ -200,9 +213,9 @@ namespace Plat2d_2
             }
             if (right)
             {
-                player.SetVelocity(new Vector2(120, 0));
+                player.SetVelocity(new Vector2(120, player.GetYVelocity())); //breakhere
                 facedirection = 1;
-                AnimatePlayer(12, 17);
+                AnimatePlayer(12, 17, playerSprites);
 
 
 
@@ -224,6 +237,7 @@ namespace Plat2d_2
                 {
                     remainingJumpSteps = 6;
                 }
+                //AnimatePlayerOneWayOnly();
 
                 //jumping animation
             }
@@ -245,11 +259,21 @@ namespace Plat2d_2
             //    }
             //    //standing animation
             //}
+            //else 
+            //{
+            //    if (facedirection == 0)
+            //    {
+            //        AnimatePlayer(0, 1);
+            //    }
+            //    else if (facedirection == 1)
+            //    {
+            //        AnimatePlayer(11, 1);
+            //    }
+            //}
             if (remainingJumpSteps > 0)
             {
                 //player.AddForce(new Vector2(0, -4800000), Vector2.Zero());
-                float Xvel = player.GetXVelocity();
-                player.SetVelocity(new Vector2(Xvel, -4800));
+                player.SetVelocity(new Vector2(player.GetXVelocity(), -4800));
                 remainingJumpSteps--;
             }
             if (player.IsColliding("Ground") != null)
