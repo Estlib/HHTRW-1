@@ -186,12 +186,17 @@ namespace Plat2d_2
         private void AnimatePlayer(int start, int end)
         {
             Log.Info("AnimatePlayer has been called");
-            steps++;
+            slowDownFrameRate += 1;
+            if (slowDownFrameRate == 4)
+            {
+                steps++;
+                slowDownFrameRate = 0;
+            }
             if (steps > end || steps < start)
             {
                 steps = start;
             }
-            currentSprite = steps;
+            player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
         }
         //int[] jumpFrames = new int[] { };
         //private void AnimatePlayerOneWayOnly(int[] frames)
@@ -282,7 +287,7 @@ namespace Plat2d_2
                 Log.Warning("Player is not colliding with Ground and thus cannot jump.");
             }
             player.UpdatePosition();
-            player.UpdateSprite(currentSprite, playerSpritesS);
+            //player.UpdateSprite(currentSprite, playerSpritesS);
             Sprite2d coin = player.IsColliding("Coin");
             if (coin != null)
             {
