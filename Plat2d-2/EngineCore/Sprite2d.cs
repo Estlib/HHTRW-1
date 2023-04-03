@@ -147,7 +147,7 @@ namespace Plat2d_2.EngineCore
             Log.Warning("X is " + body.GetPosition().X + ". Y is " + body.GetPosition().Y);
             this.Position.X = (float)System.Math.Round(body.GetPosition().X);
             this.Position.Y = (float)System.Math.Round(body.GetPosition().Y);
-            this.Sprite = 
+            //this.Sprite = 
         }
         //public bool IsColliding(Sprite2d a, Sprite2d b)
         //{
