@@ -140,16 +140,7 @@ namespace Plat2d_2.EngineCore
         }
         public float GetYVelocity()
         {
-            body.SetUserData(body);
-            if (body == null)
-            {
-                Log.Error($"body is null");
-                return body.GetPosition().Y;
-            }
-            else
-            {
-                return body.GetLinearVelocity().Y;
-            }
+            return body.GetLinearVelocity().Y;
         }
         public void UpdatePosition()
         {
