@@ -8,6 +8,7 @@ using Plat2d_2.EngineCore;
 using System.Windows.Forms;
 using Box2DX.Common;
 using System.IO;
+using Box2DX.Dynamics;
 
 namespace Plat2d_2
 {
@@ -15,11 +16,12 @@ namespace Plat2d_2
     {
         Sprite2d player;
         int steps = 0;
-        int slowDownFrameRate = 100;
+        int slowDownFrameRate = 1;
         int playerSpeed = 10;
         int currentSprite;
         List<Sprite2d> playerSprites = new List<Sprite2d>();
         List<string> playerSpritesS = new List<string>();
+        List<Bitmap> playerSpritesBitmap = new List<Bitmap>();
 
         //Shape2d playercollision;
         //Sprite2d player2;
@@ -61,7 +63,7 @@ namespace Plat2d_2
 
             //List<Sprite2d> playerSprites = new List<Sprite2d>();
             Console.WriteLine("OnLoad works.");
-            BGColor = Color.Black;
+            BGColor = System.Drawing.Color.Black;
             //CameraZoom = new Vector2(.1f,.1f);
             Sprite2d groundRef = new Sprite2d( "tiles/noart/testblock1");
             Sprite2d airRef = new Sprite2d( "tiles/noart/testblock5");
@@ -110,6 +112,28 @@ namespace Plat2d_2
             playerSpritesS.Add("player/wipspriteset/stand3duckflip");
             playerSpritesS.Add("player/wipspriteset/stand3jumpflip");
             playerSpritesS.Add("player/wipspriteset/ALTfallFLIP");
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1.png"))); //0
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run2.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run3.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run4.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run5.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run6.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand2.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3duck.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3jump.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfall.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1flip.png"))); //11
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1flip.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run2flip.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run3flip.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run4flip.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run5flip.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run6flip.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand2flip.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3duckflip.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3jumpflip.png")));
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfallFLIP.png")));
             currentSprite = 0;
 
             //player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
@@ -138,7 +162,7 @@ namespace Plat2d_2
                 {
                     if (Map[j, i] == "P")
                     {
-                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerSprites[0], "Player");
+                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerSpritesBitmap[0], "Player");
                         //player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerStand, "Player");
                         player.CreateDynamic();
                         //pass a list of sprites here, changing happens by animating list numbers, limited by if limits
@@ -185,7 +209,7 @@ namespace Plat2d_2
 
         private void AnimatePlayer(int start, int end)
         {
-            Log.Info("AnimatePlayer has been called");
+            //Log.Info("AnimatePlayer has been called");
             slowDownFrameRate += 1;
             if (slowDownFrameRate == 4)
             {
@@ -196,7 +220,8 @@ namespace Plat2d_2
             {
                 steps = start;
             }
-            player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
+            //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
+            player.Sprite = playerSpritesBitmap[steps];
         }
         //int[] jumpFrames = new int[] { };
         //private void AnimatePlayerOneWayOnly(int[] frames)
@@ -230,11 +255,13 @@ namespace Plat2d_2
             if (left)
             {
                 player.SetVelocity(new Vector2(-120, player.GetYVelocity()));
+                //AnimatePlayer(1, 6);
 
             }
             if (right)
             {
                 player.SetVelocity(new Vector2(120, player.GetYVelocity()));
+                //AnimatePlayer(12, 17);
             }
             if (jump)
             {
@@ -321,6 +348,7 @@ namespace Plat2d_2
             //Console.WriteLine($"Framecount: {frame}.");
             //frame++;
             Log.Info($"Currentsprite should be # {steps}");
+            
         }
 
         public override void GetKeyDown(KeyEventArgs e)

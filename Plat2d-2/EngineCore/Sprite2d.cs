@@ -25,6 +25,7 @@ namespace Plat2d_2.EngineCore
         private Vector2 vector21;
         private Vector2 vector22;
         private string v;
+        private Bitmap bitmap;
 
         public Sprite2d(Vector2 Position, Vector2 Scale, string Directory, string Tag)
         {
@@ -34,10 +35,9 @@ namespace Plat2d_2.EngineCore
             this.Tag = Tag;
 
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
-            Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
-            Sprite = sprite;
+            this.Sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
 
-            Log.Info($"[SPRITE2D]({Tag}) has been registered");
+            Log.Info($"[SPRITE2D]({Directory} {Tag}) has been registered");
             EngineCore.RegisterSprite(this);
         }
         public Sprite2d(string Directory)
@@ -46,10 +46,9 @@ namespace Plat2d_2.EngineCore
             this.Directory = Directory;
 
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
-            Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
-            Sprite = sprite;
+            this.Sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
 
-            Log.Info($"[SPRITE2D]({Tag}) has been registered");
+            Log.Info($"[SPRITE2D]({Directory} {Tag}) has been registered");
             EngineCore.RegisterSprite(this);
         }
         public Sprite2d(Vector2 Position, Vector2 Scale, Sprite2d Reference, string Tag)
@@ -60,9 +59,23 @@ namespace Plat2d_2.EngineCore
 
             //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
-            Sprite = Reference.Sprite;
+            this.Sprite = Reference.Sprite;
 
-            Log.Info($"[SPRITE2D]({Tag}) has been registered");
+            Log.Info($"[SPRITE2D]({Directory} {Tag}) has been registered");
+            EngineCore.RegisterSprite(this);
+        }
+
+        public Sprite2d(Vector2 Position, Vector2 Scale, Bitmap bitmap, string Tag)
+        {
+            this.Position = Position;
+            this.Scale = Scale;
+            this.Tag = Tag;
+
+            //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
+            //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
+            this.Sprite = bitmap;
+
+            Log.Info($"[SPRITE2D]({Directory} {Tag}) has been registered");
             EngineCore.RegisterSprite(this);
         }
 
