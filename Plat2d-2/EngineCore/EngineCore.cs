@@ -107,8 +107,8 @@ namespace Plat2d_2.EngineCore
         // in most game scenarios.
         float timeStep = 1.0f / 60.0f;
         //float timeStep = 100000.01f;
-        int velocityIterations = 1;
-        int positionIterations = 1;
+        int velocityIterations = 16;
+        int positionIterations = 16;
         void GameLoop()
         {
             OnLoad();

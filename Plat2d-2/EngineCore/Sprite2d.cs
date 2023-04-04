@@ -99,6 +99,7 @@ namespace Plat2d_2.EngineCore
 
             // Define the ground box shape.
             PolygonDef shapeDef = new PolygonDef();
+            shapeDef.Density = 0.0f;
 
             // The extents are the half-widths of the box.
             shapeDef.SetAsBox(16.0f, 16.0f);
@@ -119,15 +120,20 @@ namespace Plat2d_2.EngineCore
             shapeDef.SetAsBox(1.0f, 1.0f);
 
             // Set the box density to be non-zero, so it will be dynamic.
-            shapeDef.Density = 1000.1f;
+            shapeDef.Density = 1000.0f;
 
             // Override the default friction.
-            shapeDef.Friction = 1.0f;
+            shapeDef.Friction = 2.0f;
 
-            shapeDef.Restitution = 0.00000001f;
+            shapeDef.Restitution = 0.0f;
 
             // Add the shape to the body.
             body.CreateShape(shapeDef);
+
+            ////make a mass of things
+            //MassData massData = new MassData();
+            //massData.Mass = 0.01f;
+            //body.SetMass(massData);
 
             // Now tell the dynamic body to compute it's mass properties base
             // on its shape.
