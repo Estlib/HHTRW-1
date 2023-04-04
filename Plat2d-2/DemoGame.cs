@@ -34,6 +34,7 @@ namespace Plat2d_2
         bool jump;
         bool jumpmode;
         bool nokey;
+        bool LRDcheck;
 
         Vector2 lastPos = Vector2.Zero();
 
@@ -181,10 +182,26 @@ namespace Plat2d_2
         {
             if (up)
             {
+                if (up == true && left == true)
+                {
+                    up = false;
+                }
+                if (up == true && right == true)
+                {
+                    up = false;
+                }
                 Log.Warning("Up has no animation currently.");
             }
             if (down)
             {
+                if (down == true && left == true)
+                {
+                    down = false;
+                }
+                if (down == true && right == true)
+                {
+                    down = false;
+                }
                 if (facedirection == 0)
                 {
                     AnimatePlayer(19, 19);
@@ -193,6 +210,7 @@ namespace Plat2d_2
                 {
                     AnimatePlayer(8, 8);
                 }
+
             }
             if (left)
             {
@@ -404,6 +422,12 @@ namespace Plat2d_2
             }
             nokey = check;
             return nokey;
+        }
+
+        public bool NoCrouchWalk(bool LRDcheck)
+        {
+
+            return LRDcheck;
         }
 
         public override void GetKeyDown(KeyEventArgs e)
