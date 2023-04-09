@@ -280,6 +280,19 @@ namespace Plat2d_2
             //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
             player.Sprite = playerSpritesBitmap[steps];
         }
+        int[] jumpFramesL = new int[] {7, 9 };
+        int[] jumpFramesR = new int[] {18, 20 };
+        private void AnimatePlayerOneWayOnly(int start, int end, int[] frames)
+        {
+            Log.Info("AnimatePlayer has been called");
+            steps++;
+            if (steps > end || steps < start)
+            {
+                steps = end;
+            }
+            //player.UpdateSprite(steps);
+            player.Sprite = playerSpritesBitmap[steps];
+        }
         //int[] jumpFrames = new int[] { };
         //private void AnimatePlayerOneWayOnly(int[] frames)
         //{

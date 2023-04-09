@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using Box2DX.Collision;
 using Box2DX.Dynamics;
 using Box2DX.Common;
+using Box2DX.Collision;
 
 
 namespace Plat2d_2.EngineCore
@@ -21,7 +17,7 @@ namespace Plat2d_2.EngineCore
         public Bitmap Sprite = null;
         public bool IsReference = false;
         BodyDef bodyDef = new BodyDef();
-        Body body;
+        Box2DX.Dynamics.Body body;
         private Vector2 vector21;
         private Vector2 vector22;
         private string v;
@@ -106,6 +102,8 @@ namespace Plat2d_2.EngineCore
 
             // Add the ground shape to the ground body.
             body.CreateShape(shapeDef);
+
+            body.SetUserData(this);
         }
         public void CreateDynamic()
         {
@@ -138,6 +136,8 @@ namespace Plat2d_2.EngineCore
             // Now tell the dynamic body to compute it's mass properties base
             // on its shape.
             body.SetMassFromShapes();
+
+            body.SetUserData(this);
         }
         public void ApplyImpulse(Vector2 force, Vector2 point)
         {
@@ -204,6 +204,7 @@ namespace Plat2d_2.EngineCore
 
         //    return false;
         //}
+
         public Sprite2d IsColliding(string tag)
         {
             /*if (a.Position.X < b.Position.X + b.Scale.X &&
