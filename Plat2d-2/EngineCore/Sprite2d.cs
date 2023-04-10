@@ -87,7 +87,7 @@ namespace Plat2d_2.EngineCore
         {
             // Define the ground body.
             bodyDef = new BodyDef();
-            bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
+            bodyDef.Position = new Vec2(this.Position.X-8, this.Position.Y-7);
 
             // Call the body factory which  creates the ground box shape.
             // The body is also added to the world.
@@ -98,7 +98,7 @@ namespace Plat2d_2.EngineCore
             shapeDef.Density = 0.0f;
 
             // The extents are the half-widths of the box.
-            shapeDef.SetAsBox(16.0f, 16.0f);
+            shapeDef.SetAsBox(22.0f, 23.0f);
 
             // Add the ground shape to the ground body.
             body.CreateShape(shapeDef);
@@ -218,8 +218,8 @@ namespace Plat2d_2.EngineCore
             {
                 if (b.Tag == tag)
                 {
-                    if (Position.X < b.Position.X + b.Scale.X && //+8 trim off x
-                        Position.X + Scale.X > b.Position.X &&
+                    if (Position.X+8 < b.Position.X + b.Scale.X && //+8 trim off x
+                        Position.X-8 + Scale.X > b.Position.X &&
                         Position.Y < b.Position.Y + b.Scale.Y &&
                         Position.Y + Scale.Y > b.Position.Y)
                     {
