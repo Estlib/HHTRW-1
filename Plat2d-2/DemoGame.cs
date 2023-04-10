@@ -35,6 +35,7 @@ namespace Plat2d_2
         bool jumpmode;
         bool nokey;
         bool LRDcheck;
+        MyDebugDraw debugDraw = new MyDebugDraw();
 
         Vector2 lastPos = Vector2.Zero();
 
@@ -56,7 +57,7 @@ namespace Plat2d_2
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
         };
-        public DemoGame() :  base(new Vector2(615, 615),"HHTRW-engine1 demo")
+        public DemoGame() :  base(new Vector2(615, 615),"HHTRW-engine1 demo", debugDraw)
         {
 
         }
@@ -177,9 +178,13 @@ namespace Plat2d_2
             }
             //player = new Sprite2d(new Vector2(64, 96), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
             //player2 = new Sprite2d(new Vector2(128, 192), new Vector2(32, 32), "player/wipspriteset/stand1", "Player2");
+
         }
         public override void OnDraw()
         {
+            debugDraw.Begin();
+            EngineCore.world.DrawDebugData();
+            debugDraw.End();
             if (up)
             {
                 if (up == true && left == true)

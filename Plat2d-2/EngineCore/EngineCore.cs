@@ -43,14 +43,14 @@ namespace Plat2d_2.EngineCore
             UpperBound = new Vec2(2000, 2000),
             LowerBound = new Vec2(-2000, -2000)
         };
+        MyDebugDraw debugDraw = new MyDebugDraw();
         // Define the gravity vector.
         Vec2 gravity = new Vec2(0.0f, 560.0f);
         // Do we want to let bodies sleep?
         //bool doSleep = true;
         // Construct a world object, which will hold and simulate the rigid bodies.
         public static World world = null;
-
-        public EngineCore(Vector2 ScreenSize, string Title)
+         public EngineCore(Vector2 ScreenSize, string Titl, MyDebugDraw debugDraw)
         {
             Log.Info("Game is starting");
             this.ScreenSize = ScreenSize;
@@ -69,6 +69,8 @@ namespace Plat2d_2.EngineCore
             world = new World(worldAABB, gravity, false);
 
             Application.Run(Window);
+            world.SetDebugDraw(debugDraw);
+
         }
 
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
