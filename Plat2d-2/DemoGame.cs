@@ -37,16 +37,31 @@ namespace Plat2d_2
         //List<Level> levels = new List<Level>();
         List<string[,]> levelMaps = new List<string[,]>();
 
-        string[,] Map =
-        {
+        string[,] Map ={
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
+            {":",":",":",":",":",":","1","2","3","4","5","6","7","8","9",":",":",":",":",":" },
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
+            {":","P",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":","F",":",":",":" },
+            {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
-            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+        };
+        string[,] Map2 = {
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G",".",".",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
             {"G",".",".","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","F","G" },
-            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".","P",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".",".",".","G","G","G",".",".",".",".",".",".","G",".",".","G" },
@@ -54,10 +69,27 @@ namespace Plat2d_2
             {"G",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".","G",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
-        };
-        string[,] Map2 = {
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
-            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+        };
+        string[,] Map3 = {
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+            {"G",".","P",".",".",".",".","C","C","G",".",".",".",".",".",".","G",".",".","G" },
+            {"G",".",".",".",".",".",".","C","C","G",".",".",".","C",".",".","G",".",".","G" },
+            {"G","G","G","G","G",".","C",".",".","G",".",".",".",".","C",".",".",".",".","G" },
+            {"G","C",".","C",".",".",".",".",".",".",".","C","C","C","C","C",".",".",".","G" },
+            {"G",".","C",".","C",".","C",".",".",".",".",".",".",".","C",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".","G",".",".",".",".",".","C",".",".",".",".","F","G" },
+            {"G",".",".","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G","G","G" },
+            {"G",".",".",".",".",".",".","G",".",".","C",".","G","G",".",".",".","G","G","G" },
+            {"G","C",".","C",".","C",".","G",".",".",".","G","G","G",".",".",".","G","G","G" },
+            {"G",".","C",".","C",".",".","G",".",".",".",".","G","G",".",".",".","G","G","G" },
+            {"G","G","G","G","G",".",".","G",".","C","G",".","G","G",".",".",".","G","G","G" },
+            {"G","C","C","C","C","C",".",".",".",".",".",".","G","G","C",".",".","G","G","G" },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+        };
+        string[,] Map4 = {
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
@@ -71,9 +103,29 @@ namespace Plat2d_2
             {"G",".","P",".",".",".","G","G","G","G",".",".","C",".","C",".",".",".",".","G" },
             {"G",".",".",".",".",".","G","G","G","G",".",".",".",".",".",".",".",".",".","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
         };
 
-    public DemoGame() :  base(new Vector2(615, 615),"HHTRW-engine1 demo")
+        string[,] Map5 = {
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+            {"G",".","P",".",".",".",".","C","C","G",".",".",".",".",".",".","G",".",".","G" },
+            {"G",".",".",".",".",".",".","C","C","G",".",".",".","C",".",".","G",".",".","G" },
+            {"G","G","G","G","G",".","C",".",".","G",".",".",".",".","C",".",".",".",".","G" },
+            {"G","C",".","C",".",".",".",".",".",".",".","C","C","C","C","C",".",".",".","G" },
+            {"G",".","C",".","C",".","C",".",".",".",".",".",".",".","C",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".","G",".",".",".",".",".","C",".",".",".",".","F","G" },
+            {"G",".",".","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G","G","G" },
+            {"G",".",".",".",".",".",".","G",".",".","C",".","G","G",".",".",".","G","G","G" },
+            {"G","C",".","C",".","C",".","G",".",".",".","G","G","G",".",".",".","G","G","G" },
+            {"G",".","C",".","C",".",".","G",".",".",".",".","G","G",".",".",".","G","G","G" },
+            {"G","G","G","G","G",".",".","G",".","C","G",".","G","G",".",".",".","G","G","G" },
+            {"G","C","C","C","C","C",".",".",".",".",".",".","G","G","C",".",".","G","G","G" },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+        };
+
+
+        public DemoGame() :  base(new Vector2(615, 615),"HHTRW-engine1 demo")
         {
 
         }
@@ -89,8 +141,21 @@ namespace Plat2d_2
             Sprite2d airRef = new Sprite2d( "tiles/noart/testblock5");
             Sprite2d coinRef = new Sprite2d( "tiles/noart/testobject2");
             Sprite2d levelEndRef = new Sprite2d("tiles/noart/testobject3");
+            Sprite2d tsairRef = new Sprite2d("tiles/noart/testblock6");
+            Sprite2d ts1 = new Sprite2d("tiles/noart/ts1");
+            Sprite2d ts2 = new Sprite2d("tiles/noart/ts2");
+            Sprite2d ts3 = new Sprite2d("tiles/noart/ts3");
+            Sprite2d ts4 = new Sprite2d("tiles/noart/ts4");
+            Sprite2d ts5 = new Sprite2d("tiles/noart/ts5");
+            Sprite2d ts6 = new Sprite2d("tiles/noart/ts6");
+            Sprite2d ts7 = new Sprite2d("tiles/noart/ts7");
+            Sprite2d ts8 = new Sprite2d("tiles/noart/ts8");
+            Sprite2d ts9 = new Sprite2d("tiles/noart/ts9");
             levelMaps.Add(Map);
             levelMaps.Add(Map2);
+            levelMaps.Add(Map3);
+            levelMaps.Add(Map4);
+            levelMaps.Add(Map5);
 
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1.png"))); //0
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1.png")));
@@ -136,6 +201,46 @@ namespace Plat2d_2
                     {
                         new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), levelEndRef, "Finish")/*.CreateStatic()*/;
                     }
+                    if (Map[j, i] == ":")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), tsairRef, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "1")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts1, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "2")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts2, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "3")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts3, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "4")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts4, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "5")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts5, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "6")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts6, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "7")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts7, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "8")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts8, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "9")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts9, "Air")/*.CreateStatic()*/;
+                    }
                 }
             }
             for (int i = 0; i < Map.GetLength(1); i++)
@@ -162,6 +267,7 @@ namespace Plat2d_2
             if (levelClear[currentLevel] == true)
             {
                 currentLevel++;
+                UnLoadCurrentLevel();
                 LoadNextLevel(levelMaps.ElementAt(currentLevel));
             }
             if (up)
@@ -239,14 +345,29 @@ namespace Plat2d_2
                 }
             }
         }
-
-        private void LoadNextLevel(string[,] currentLevel)
+        private void UnLoadCurrentLevel()
         {
 
+            RemoveAllSprites(AllSprites);
+        }
+        private void LoadNextLevel(string[,] currentLevel)
+        {
+            Log.Info("New Level is being loaded");
             Sprite2d groundRef = new Sprite2d("tiles/noart/testblock1");
             Sprite2d airRef = new Sprite2d("tiles/noart/testblock5");
             Sprite2d coinRef = new Sprite2d("tiles/noart/testobject2");
             Sprite2d levelEndRef = new Sprite2d("tiles/noart/testobject3");
+            Sprite2d tsairRef = new Sprite2d("tiles/noart/testblock6");
+            Sprite2d ts1 = new Sprite2d("tiles/noart/ts1");
+            Sprite2d ts2 = new Sprite2d("tiles/noart/ts2");
+            Sprite2d ts3 = new Sprite2d("tiles/noart/ts3");
+            Sprite2d ts4 = new Sprite2d("tiles/noart/ts4");
+            Sprite2d ts5 = new Sprite2d("tiles/noart/ts5");
+            Sprite2d ts6 = new Sprite2d("tiles/noart/ts6");
+            Sprite2d ts7 = new Sprite2d("tiles/noart/ts7");
+            Sprite2d ts8 = new Sprite2d("tiles/noart/ts8");
+            Sprite2d ts9 = new Sprite2d("tiles/noart/ts9");
+
             string[,] Map = currentLevel;
             for (int i = 0; i < Map.GetLength(1); i++)
             {
@@ -267,6 +388,46 @@ namespace Plat2d_2
                     if (Map[j, i] == "F")
                     {
                         new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), levelEndRef, "Finish")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == ":")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), tsairRef, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "1")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts1, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "2")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts2, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "3")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts3, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "4")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts4, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "5")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts5, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "6")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts6, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "7")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts7, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "8")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts8, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "9")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts9, "Air")/*.CreateStatic()*/;
                     }
                 }
             }
@@ -367,7 +528,7 @@ namespace Plat2d_2
             {
                 if (player.IsColliding("Ground")!=null)
                 {
-                    remainingJumpSteps = 6;
+                    remainingJumpSteps = 9;
                     remainingJumpFrames = 9;
                 }
                 jumpmode = true;
@@ -404,7 +565,7 @@ namespace Plat2d_2
             if (remainingJumpSteps > 0)
             {
                 //player.AddForce(new Vector2(0, -4800000), Vector2.Zero());
-                player.SetVelocity(new Vector2(player.GetXVelocity(), -4800));
+                player.SetVelocity(new Vector2(player.GetXVelocity(), -12800));
                 remainingJumpSteps--;
             }
             if (player.IsColliding("Ground") != null)

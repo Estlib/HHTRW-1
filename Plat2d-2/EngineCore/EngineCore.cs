@@ -102,6 +102,15 @@ namespace Plat2d_2.EngineCore
         {
             AllSprites.Remove(sprite);
         }
+        public static void RemoveAllSprites(List<Sprite2d> spritelist)
+        {
+            foreach (var sprite in spritelist)
+            {
+                //Log.Info($"sprite {sprite} has been Removed");
+                AllSprites.Remove(sprite);
+                sprite.DestroySelf();
+            }
+        }
         // Prepare for simulation. Typically we use a time step of 1/60 of a
         // second (60Hz) and 10 iterations. This provides a high quality simulation
         // in most game scenarios.

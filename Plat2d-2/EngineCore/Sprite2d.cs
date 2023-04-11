@@ -237,7 +237,7 @@ namespace Plat2d_2.EngineCore
 
         public Sprite2d UpdateSprite(int currentSprite, List<string> playerSprites)
         {
-
+            // unused and incomplete method, do not use, this is kept for future iteration.
             this.Position = Position;
             this.Scale = Scale;
             this.Tag = Tag;
