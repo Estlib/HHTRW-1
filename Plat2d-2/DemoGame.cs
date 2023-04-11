@@ -19,12 +19,7 @@ namespace Plat2d_2
         int slowDownFrameRate = 1;
         int playerSpeed = 10;
         int currentSprite;
-        //List<Sprite2d> playerSprites = new List<Sprite2d>();
-        //List<string> playerSpritesS = new List<string>();
         List<Bitmap> playerSpritesBitmap = new List<Bitmap>();
-
-        //Shape2d playercollision;
-        //Sprite2d player2;
 
         int facedirection;
         bool left;
@@ -36,7 +31,11 @@ namespace Plat2d_2
         bool nokey;
         bool LRDcheck;
 
-        Vector2 lastPos = Vector2.Zero();
+        //Vector2 lastPos = Vector2.Zero();
+        //List<Level> levels = new List<Level>();
+        Level level1 = new Level("tiles/noart");
+
+        string[,] currentLevel = 
 
         string[,] Map =
         {
@@ -71,50 +70,7 @@ namespace Plat2d_2
             Sprite2d groundRef = new Sprite2d( "tiles/noart/testblock1");
             Sprite2d airRef = new Sprite2d( "tiles/noart/testblock5");
             Sprite2d coinRef = new Sprite2d( "tiles/noart/testobject2");
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/stand1")); //0
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run1"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run2"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run3"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run4"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run5"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run6"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/stand2"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/stand3duck"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/stand3jump"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/ALTfall"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/stand1flip")); //11
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run1flip"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run2flip"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run3flip"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run4flip"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run5flip"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/run6flip"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/stand2flip"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/stand3duckflip"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/stand3jumpflip"));
-            //playerSprites.Add(new Sprite2d("player/wipspriteset/ALTfallFLIP"));
-            //playerSpritesS.Add("player/wipspriteset/stand1"); //0
-            //playerSpritesS.Add("player/wipspriteset/run1");
-            //playerSpritesS.Add("player/wipspriteset/run2");
-            //playerSpritesS.Add("player/wipspriteset/run3");
-            //playerSpritesS.Add("player/wipspriteset/run4");
-            //playerSpritesS.Add("player/wipspriteset/run5");
-            //playerSpritesS.Add("player/wipspriteset/run6");
-            //playerSpritesS.Add("player/wipspriteset/stand2");
-            //playerSpritesS.Add("player/wipspriteset/stand3duck");
-            //playerSpritesS.Add("player/wipspriteset/stand3jump");
-            //playerSpritesS.Add("player/wipspriteset/ALTfall");
-            //playerSpritesS.Add("player/wipspriteset/stand1flip"); //11
-            //playerSpritesS.Add("player/wipspriteset/run1flip");
-            //playerSpritesS.Add("player/wipspriteset/run2flip");
-            //playerSpritesS.Add("player/wipspriteset/run3flip");
-            //playerSpritesS.Add("player/wipspriteset/run4flip");
-            //playerSpritesS.Add("player/wipspriteset/run5flip");
-            //playerSpritesS.Add("player/wipspriteset/run6flip");
-            //playerSpritesS.Add("player/wipspriteset/stand2flip");
-            //playerSpritesS.Add("player/wipspriteset/stand3duckflip");
-            //playerSpritesS.Add("player/wipspriteset/stand3jumpflip");
-            //playerSpritesS.Add("player/wipspriteset/ALTfallFLIP");
+
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1.png"))); //0
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1.png")));
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run2.png")));
@@ -139,8 +95,6 @@ namespace Plat2d_2
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfallFLIP.png")));
             currentSprite = 0;
 
-            //player = new Shape2d(new Vector2(8, 8), new Vector2(32, 32), "Test");
-            //player = new Sprite2d(new Vector2(8, 8), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
             for (int i = 0; i < Map.GetLength(1); i++)
             {
                 for (int j = 0; j < Map.GetLength(0); j++)

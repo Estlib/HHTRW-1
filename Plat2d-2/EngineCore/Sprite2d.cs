@@ -3,7 +3,6 @@ using System.Drawing;
 using Box2DX.Collision;
 using Box2DX.Dynamics;
 using Box2DX.Common;
-using Box2DX.Collision;
 
 
 namespace Plat2d_2.EngineCore
@@ -17,7 +16,7 @@ namespace Plat2d_2.EngineCore
         public Bitmap Sprite = null;
         public bool IsReference = false;
         BodyDef bodyDef = new BodyDef();
-        Box2DX.Dynamics.Body body;
+        Body body;
         private Vector2 vector21;
         private Vector2 vector22;
         private string v;
