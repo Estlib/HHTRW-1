@@ -20,6 +20,8 @@ namespace Plat2d_2
         int playerSpeed = 10;
         int currentSprite;
         List<Bitmap> playerSpritesBitmap = new List<Bitmap>();
+        int currentLevel = 0;
+        bool[] levelClear = new bool[6] {false,false,false,false,false,false};
 
         int facedirection;
         bool left;
@@ -33,9 +35,7 @@ namespace Plat2d_2
 
         //Vector2 lastPos = Vector2.Zero();
         //List<Level> levels = new List<Level>();
-        Level level1 = new Level("tiles/noart");
-
-        string[,] currentLevel = 
+        List<string[,]> levelMaps = new List<string[,]>();
 
         string[,] Map =
         {
@@ -45,7 +45,7 @@ namespace Plat2d_2
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
             {"G",".",".","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
-            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","F","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G",".","P",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
@@ -55,7 +55,25 @@ namespace Plat2d_2
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
         };
-        public DemoGame() :  base(new Vector2(615, 615),"HHTRW-engine1 demo")
+        string[,] Map2 = {
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","F","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".","C","C","C",".",".",".",".",".",".",".",".",".",".",".","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","G" },
+            {"G",".","P",".",".",".","G","G","G","G",".",".","C",".","C",".",".",".",".","G" },
+            {"G",".",".",".",".",".","G","G","G","G",".",".",".",".",".",".",".",".",".","G" },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+        };
+
+    public DemoGame() :  base(new Vector2(615, 615),"HHTRW-engine1 demo")
         {
 
         }
@@ -70,6 +88,9 @@ namespace Plat2d_2
             Sprite2d groundRef = new Sprite2d( "tiles/noart/testblock1");
             Sprite2d airRef = new Sprite2d( "tiles/noart/testblock5");
             Sprite2d coinRef = new Sprite2d( "tiles/noart/testobject2");
+            Sprite2d levelEndRef = new Sprite2d("tiles/noart/testobject3");
+            levelMaps.Add(Map);
+            levelMaps.Add(Map2);
 
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1.png"))); //0
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1.png")));
@@ -111,6 +132,10 @@ namespace Plat2d_2
                     {
                         new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), coinRef, "Coin")/*.CreateStatic()*/;
                     }
+                    if (Map[j, i] == "F")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), levelEndRef, "Finish")/*.CreateStatic()*/;
+                    }
                 }
             }
             for (int i = 0; i < Map.GetLength(1); i++)
@@ -134,6 +159,11 @@ namespace Plat2d_2
         }
         public override void OnDraw()
         {
+            if (levelClear[currentLevel] == true)
+            {
+                currentLevel++;
+                LoadNextLevel(levelMaps.ElementAt(currentLevel));
+            }
             if (up)
             {
                 if (up == true && left == true)
@@ -164,7 +194,6 @@ namespace Plat2d_2
                 {
                     AnimatePlayer(8, 8);
                 }
-
             }
             if (left)
             {
@@ -210,6 +239,55 @@ namespace Plat2d_2
                 }
             }
         }
+
+        private void LoadNextLevel(string[,] currentLevel)
+        {
+
+            Sprite2d groundRef = new Sprite2d("tiles/noart/testblock1");
+            Sprite2d airRef = new Sprite2d("tiles/noart/testblock5");
+            Sprite2d coinRef = new Sprite2d("tiles/noart/testobject2");
+            Sprite2d levelEndRef = new Sprite2d("tiles/noart/testobject3");
+            string[,] Map = currentLevel;
+            for (int i = 0; i < Map.GetLength(1); i++)
+            {
+                for (int j = 0; j < Map.GetLength(0); j++)
+                {
+                    if (Map[j, i] == "G")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), groundRef, "Ground").CreateStatic();
+                    }
+                    if (Map[j, i] == ".")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), airRef, "Air")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "C")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), coinRef, "Coin")/*.CreateStatic()*/;
+                    }
+                    if (Map[j, i] == "F")
+                    {
+                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), levelEndRef, "Finish")/*.CreateStatic()*/;
+                    }
+                }
+            }
+            for (int i = 0; i < Map.GetLength(1); i++)
+            {
+                for (int j = 0; j < Map.GetLength(0); j++)
+                {
+                    if (Map[j, i] == "P")
+                    {
+                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerSpritesBitmap[0], "Player");
+                        //player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerStand, "Player");
+                        player.CreateDynamic();
+                        //pass a list of sprites here, changing happens by animating list numbers, limited by if limits
+                        //see https://www.youtube.com/results?search_query=box2d+tutorial+c%23
+                        //playercollision = new Shape2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "Player");
+                        //playercollision.CreateDynamic();
+                    }
+                }
+            }
+        }
+
         //int timeframe = 0;
         //float x = 1;
         int times = 0;
@@ -345,6 +423,13 @@ namespace Plat2d_2
             {
                 Log.Info("Coin is being touched");
                 coin.DestroySelf();
+            }
+            Sprite2d levelfinish = player.IsColliding("Finish");
+            if (levelfinish != null)
+            {
+                Log.Info("Player has triggered level finish");
+                levelfinish.DestroySelf();
+                levelClear[currentLevel] = true;
             }
             //if (player.IsColliding("Ground") != null)
             //{

@@ -17,11 +17,11 @@ namespace Plat2d_2.EngineCore
 
         //public int? musicNumber {  get; set; }
         //public string artSetFolder { get; set; }
-        public string[,] GetFirstMostLayer 
-        { 
-            get { return Level1(firstMostLayer); }
-            set { firstMostLayer = this.firstMostLayer; }
-        }
+        //public string[,] GetFirstMostLayer 
+        //{ 
+        //    get { return Level1(firstMostLayer); }
+        //    set { firstMostLayer = this.firstMostLayer; }
+        //}
         //public string[,] objectRenderLayer { get; set; }
         //public string[,] lastMostLayer { get; set; }
         //public string[,] hudLayer { get; set; }
@@ -43,8 +43,16 @@ namespace Plat2d_2.EngineCore
             this.lastMostLayer = null;
             this.hudLayer = null;
         }
-
-        private string[,] Level1(string[,] firstMostLayer)
+        public Level(string artSetFolder, string[,] firstMostLayer)
+        {
+            this.musicNumber = 0;
+            this.artSetFolder = artSetFolder;
+            this.firstMostLayer = Level1(firstMostLayer);
+            this.objectRenderLayer = null;
+            this.lastMostLayer = null;
+            this.hudLayer = null;
+        }
+        public string[,] Level1(string[,] firstMostLayer)
         {
             string[,] Map =
             {

@@ -94,6 +94,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="EngineCore\Level.cs" />
+    <Compile Include="EngineCore\LevelData.cs" />
     <Compile Include="EngineCore\Log.cs" />
     <Compile Include="EngineCore\Shape2d.cs" />
     <Compile Include="EngineCore\Sprite2d.cs" />
