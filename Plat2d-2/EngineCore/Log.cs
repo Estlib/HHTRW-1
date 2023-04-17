@@ -8,6 +8,11 @@ namespace Plat2d_2.EngineCore
 {
     public class Log
     {
+        public int MSGCOUNT;
+        public int INFOCOUNT;
+        public int WARNINGCOUNT;
+        public int ERRORCOUNT;
+        public int HIGHCOUNT;
         public static void Normal(string msg)
         {
             Console.ForegroundColor = ConsoleColor.White;
@@ -30,6 +35,12 @@ namespace Plat2d_2.EngineCore
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"[ERROR] - {msg}");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        public static void Highlight(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"[HIGHLIGHTED MSG] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
         }
     }

@@ -127,31 +127,31 @@ namespace Plat2d_2.EngineCore
 
         //    return false;
         //}
-        public Sprite2d IsColliding(string tag)
-        {
-            /*if (a.Position.X < b.Position.X + b.Scale.X &&
-                a.Position.X + a.Scale.X > b.Position.X &&
-                a.Position.Y < b.Position.Y + b.Scale.Y &&
-                a.Position.Y + a.Scale.Y > b.Position.Y)
-            {
-                return true;
-            }*/
-            foreach (Sprite2d b in EngineCore.AllSprites)
-            {
-                if (b.Tag == tag)
-                {
-                    if (Position.X < b.Position.X + b.Scale.X && //+8 trim off x
-                        Position.X + Scale.X > b.Position.X &&
-                        Position.Y < b.Position.Y + b.Scale.Y &&
-                        Position.Y + Scale.Y > b.Position.Y)
-                    {
-                        return b;
-                    }
-                }
-            }
+        //public Shape2d IsColliding(string tag)
+        //{
+        //    /*if (a.Position.X < b.Position.X + b.Scale.X &&
+        //        a.Position.X + a.Scale.X > b.Position.X &&
+        //        a.Position.Y < b.Position.Y + b.Scale.Y &&
+        //        a.Position.Y + a.Scale.Y > b.Position.Y)
+        //    {
+        //        return true;
+        //    }*/
+        //    foreach (Sprite2d b in EngineCore.AllShapes)
+        //    {
+        //        if (b.Tag == tag)
+        //        {
+        //            if (Position.X < b.Position.X + b.Scale.X && //+8 trim off x
+        //                Position.X + Scale.X > b.Position.X &&
+        //                Position.Y < b.Position.Y + b.Scale.Y &&
+        //                Position.Y + Scale.Y > b.Position.Y)
+        //            {
+        //                return b;
+        //            }
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
         public void DestroySelf()
         {
             Log.Info($"[SHAPE2d]({Tag}) has been destroyed");

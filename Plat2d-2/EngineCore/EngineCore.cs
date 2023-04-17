@@ -29,6 +29,9 @@ namespace Plat2d_2.EngineCore
 
         public static List<Shape2d> AllShapes = new List<Shape2d>();
         public static List<Sprite2d> AllSprites = new List<Sprite2d>();
+        public static List<Shape2d>[] LevelShapes = new List<Shape2d>[10];
+        public static List<Sprite2d>[] LevelSprites = new List<Sprite2d>[10];
+        public static bool pausebuttoninput = false;
 
         public System.Drawing.Color BGColor = System.Drawing.Color.Green;
 
@@ -66,7 +69,7 @@ namespace Plat2d_2.EngineCore
             Window.FormClosing += Window_FormClosing;
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
-            world = new World(worldAABB, gravity, false);
+            world = new World(worldAABB, gravity, pausebuttoninput);
 
             Application.Run(Window);
         }
@@ -96,20 +99,23 @@ namespace Plat2d_2.EngineCore
         }
         public static void RegisterSprite(Sprite2d sprite)
         {
-            AllSprites.Add(sprite);
+            //AllSprites.Add(sprite);
+            LevelSprites[DemoGame.currentLevel].Add(sprite);
         }
         public static void UnRegisterSprite(Sprite2d sprite)
         {
-            AllSprites.Remove(sprite);
+            //AllSprites.Remove(sprite);
+            LevelSprites[DemoGame.currentLevel].Remove(sprite);
         }
-        public static void RemoveAllSprites(List<Sprite2d> spritelist)
+        public static void RemoveAllSprites()
         {
-            foreach (var sprite in spritelist)
-            {
-                //Log.Info($"sprite {sprite} has been Removed");
-                AllSprites.Remove(sprite);
-                sprite.DestroySelf();
-            }
+            AllSprites = new List<Sprite2d>();
+            LevelSprites[DemoGame.currentLevel] = new List<Sprite2d>();
+            //for (int i = 0; i < AllSprites.Count; i++)
+            //{
+            //    Sprite2d sprite = AllSprites[i];
+            //    AllSprites.Remove(sprite);
+            //}
         }
         // Prepare for simulation. Typically we use a time step of 1/60 of a
         // second (60Hz) and 10 iterations. This provides a high quality simulation
@@ -149,24 +155,24 @@ namespace Plat2d_2.EngineCore
             g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
             g.RotateTransform(CameraAngle);
             g.ScaleTransform(CameraZoom.X, CameraZoom.Y);
-            try
-            {
+            //try
+            //{
                 foreach (Shape2d shape in AllShapes)
                 {
                     g.FillRectangle(new SolidBrush(System.Drawing.Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
                 }
-                foreach (Sprite2d sprite in AllSprites)
+                foreach (Sprite2d sprite in LevelSprites[DemoGame.currentLevel])
                 {
                     if (!sprite.IsReference)
                     {
                         g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
                     }
                 }
-            }
-            catch (Exception)
-            {
+            //}
+            //catch (Exception)
+            //{
 
-            }
+            //}
 
         }
 
