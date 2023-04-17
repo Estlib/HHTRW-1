@@ -109,13 +109,21 @@ namespace Plat2d_2.EngineCore
         }
         public static void RemoveAllSprites()
         {
-            AllSprites = new List<Sprite2d>();
-            LevelSprites[DemoGame.currentLevel] = new List<Sprite2d>();
+            foreach (var sprite in LevelSprites[DemoGame.currentLevel])
+            {
+                if (sprite.HasBody())
+                {
+                    sprite.DestroyStatic(sprite);
+                }
+            }
+            //AllSprites = new List<Sprite2d>();
+            //LevelSprites[DemoGame.currentLevel] = new List<Sprite2d>();
             //for (int i = 0; i < AllSprites.Count; i++)
             //{
             //    Sprite2d sprite = AllSprites[i];
             //    AllSprites.Remove(sprite);
             //}
+
         }
         // Prepare for simulation. Typically we use a time step of 1/60 of a
         // second (60Hz) and 10 iterations. This provides a high quality simulation
@@ -175,7 +183,6 @@ namespace Plat2d_2.EngineCore
             //}
 
         }
-
         public abstract void OnLoad();
         public abstract void OnUpdate();
         public abstract void OnDraw();

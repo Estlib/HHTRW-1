@@ -670,7 +670,7 @@ namespace Plat2d_2
         {
             if (player == null)
             {
-                return;
+                //return;
                 //when player is null (as in doesnt exist) function is exited.
             }
             //times++;
@@ -707,12 +707,12 @@ namespace Plat2d_2
                 player.SetVelocity(new Vector2(player.GetXVelocity(), -12800)); //then it applies a velocity to the player in the up direction, forming a jump
                 remainingJumpSteps--; //subtract a frame from the jumpsteps
             }
-            Sprite2d ground = player.IsColliding("Ground", currentLevel);
+            //Sprite2d ground = player.IsColliding("Ground", currentLevel);
             if (player.IsColliding("Ground",currentLevel) != null) //if player is colliding with ground then it sets current jumpmode to false, as player is not currently jumping and logs a message
             {
                 jumpmode = false;
                 //Log.Info("Player is colliding with Ground");
-                ground.DestroyStatic(player);
+                //ground.DestroyStatic(player);
             }
             else if (player.IsColliding("Ground", currentLevel) == null) //if player is not colliding with ground then it logs a warning to the console that the player cant press jump key.
             {

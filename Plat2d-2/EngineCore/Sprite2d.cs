@@ -3,7 +3,7 @@ using System.Drawing;
 using Box2DX.Collision;
 using Box2DX.Dynamics;
 using Box2DX.Common;
-
+using System;
 
 namespace Plat2d_2.EngineCore
 {
@@ -113,7 +113,7 @@ namespace Plat2d_2.EngineCore
         }
         public void DestroyStatic(Sprite2d sprite)
         {
-            sprite.body.Dispose();
+            EngineCore.world.DestroyBody(sprite.body);
         }
         /// <summary>
         /// Creates a static body into the world.
@@ -290,22 +290,23 @@ namespace Plat2d_2.EngineCore
         /// <summary>
         /// destructor for the sprite2d class
         /// </summary>
-        ~Sprite2d()
-        {
-            //if (body != null)
-            //{
-            //    DestroyStatic(this);
-            //}
-            Log.Info($"[SPRITE2D]({Tag}) has been destroyed using the destructor");
-            if (body != null)
-            {
-                EngineCore.world.DestroyBody(body);
-                Log.Highlight($"{this.body}");
-            }
-            //Log.Info($"Unregistering {this}");
-            EngineCore.UnRegisterSprite(this);
-            EngineCore.LevelSprites[DemoGame.currentLevel] = new List<Sprite2d> { this };
-        }
+        //~Sprite2d()
+        //{
+        //    //if (body != null)
+        //    //{
+        //    //    DestroyStatic(this);
+        //    //}
+        //    Log.Info($"[SPRITE2D]({Tag}) has been destroyed using the destructor");
+        //    //if (body != null)
+        //    //{
+        //    //    EngineCore.world.DestroyBody(body);
+        //    //    Log.Highlight($"{this.body}");
+        //    //}
+        //    //Log.Info($"Unregistering {this}");
+        //    EngineCore.world.DestroyBody(body);
+        //    EngineCore.UnRegisterSprite(this);
+        //    EngineCore.LevelSprites[DemoGame.currentLevel] = new List<Sprite2d> { this };
+        //}
         /// <summary>
         /// unused method for updating the sprite in sprite2d class
         /// </summary>
@@ -325,6 +326,11 @@ namespace Plat2d_2.EngineCore
 
             //return Sprite2d(Position,Scale,Directory,Tag);
             return this;
+        }
+
+        internal bool HasBody()
+        {
+            return this.body != null;
         }
     }
 }
