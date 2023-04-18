@@ -21,6 +21,7 @@ namespace Plat2d_2
         int currentSprite;
         List<Bitmap> playerSpritesBitmap = new List<Bitmap>();
         public static int currentLevel = 0;
+        public static int currentLevelEndSize = 0;
         bool[] levelClear = new bool[6] {false,false,false,false,false,false};
 
         int facedirection;
@@ -253,7 +254,7 @@ namespace Plat2d_2
         //};
 
 
-        public DemoGame() :  base(new Vector2(615, 615),"HHTRW-engine1 demo")
+        public DemoGame() :  base(new Vector2(320+16, 240+40),"HHTRW-engine1 demo")
         {
 
         }
@@ -333,6 +334,7 @@ namespace Plat2d_2
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfallFLIP.png")));
             currentSprite = 0; 
             LoadNextLevel(levelMaps.ElementAt(currentLevel), NoArtRefs);
+
             //for (int i = 0; i < Map.GetLength(1); i++)
             //{
             //    for (int j = 0; j < Map.GetLength(0); j++)
@@ -517,15 +519,30 @@ namespace Plat2d_2
                     AnimatePlayer(0, 0);
                 }
             }
-            //if (player.Position.X < 160)
-            //{
-            //    CameraPosition.X = 0;
-            //}
-            //else
-            //if (player.Position.X > 160)
-            //{
-            //    CameraPosition.X -= (player.Position.X-CameraPosition.X);
-            //}
+            if (player.Position.X <= 160)
+            {
+                CameraPosition.X = 0;
+            }
+            else if (player.Position.X > 160 && player.Position.X <= currentLevelEndSize - 160)
+            {
+                int diff = (int)player.Position.X - 160;
+                CameraPosition.X = -diff;
+            }
+            else if (player.Position.X > currentLevelEndSize - 160)
+            {
+                if (currentLevelEndSize == 320)
+                {
+                    CameraPosition.X = currentLevelEndSize - 320;
+                }
+                else
+                {
+                    CameraPosition.X = -(currentLevelEndSize -320);
+                }
+            }
+
+            Log.Info($"current level length {currentLevelEndSize}");
+            Log.Info($"camera position: {CameraPosition.X}");
+            Log.Info($"player position: {player.Position.X}");
         }
         /// <summary>
         /// Unloads all of the content on screen. Including player and level tiles
@@ -581,9 +598,8 @@ namespace Plat2d_2
         private void LoadNextLevel(string[,] currentLevel, Sprite2d[] noArtRefs)
         {
             Log.Info("New Level is being loaded");
-           
-
             string[,] Map = currentLevel;
+            currentLevelEndSize = currentLevel.GetLength(1) * 16;
             for (int i = 0; i < Map.GetLength(1); i++)
             {
                 for (int j = 0; j < Map.GetLength(0); j++)
@@ -699,6 +715,7 @@ namespace Plat2d_2
                 }
 
             }
+            
             //LoadPlayerFromNextLevel(playerSpritesBitmap);
             for (int i = 0; i < Map.GetLength(1); i++)
             {
@@ -716,6 +733,7 @@ namespace Plat2d_2
                     }
                 }
             }
+            
         }
 
         //int timeframe = 0;
