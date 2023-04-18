@@ -43,5 +43,12 @@ namespace Plat2d_2.EngineCore
             Console.WriteLine($"[HIGHLIGHTED MSG] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
         }
+
+        public static void Select(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"[PLAYER SELECT] - {msg}");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
     }
 }
