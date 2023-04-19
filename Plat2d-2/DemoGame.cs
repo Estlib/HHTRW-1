@@ -540,9 +540,9 @@ namespace Plat2d_2
                 }
             }
 
-            Log.Info($"current level length {currentLevelEndSize}");
-            Log.Info($"camera position: {CameraPosition.X}");
-            Log.Info($"player position: {player.Position.X}");
+            //Log.Info($"current level length {currentLevelEndSize}");
+            //Log.Info($"camera position: {CameraPosition.X}");
+            //Log.Info($"player position: {player.Position.X}");
         }
         /// <summary>
         /// Unloads all of the content on screen. Including player and level tiles
