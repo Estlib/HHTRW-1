@@ -14,6 +14,7 @@ namespace Plat2d_2.EngineCore
         public string[,] objectRenderLayer = null;
         public string[,] lastMostLayer = null;
         public string[,] hudLayer = null;
+        public string levelType = null;
 
         //public int? musicNumber {  get; set; }
         //public string artSetFolder { get; set; }
