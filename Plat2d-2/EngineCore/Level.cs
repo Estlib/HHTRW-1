@@ -15,6 +15,7 @@ namespace Plat2d_2.EngineCore
         public string[,] lastMostLayer = null;
         public string[,] hudLayer = null;
         public string levelType = null;
+        public string levelname = null;
 
         //public int? musicNumber {  get; set; }
         //public string artSetFolder { get; set; }
@@ -52,6 +53,21 @@ namespace Plat2d_2.EngineCore
             this.objectRenderLayer = null;
             this.lastMostLayer = null;
             this.hudLayer = null;
+        }
+        public Level(string[,] firstMostLayer, string[,] objectRenderLayer, string[,] lastMostLayer,  string levelname)
+        {
+            string findthislevel = levelname;
+            this.musicNumber = 0;
+            this.artSetFolder = null;
+            this.firstMostLayer = LevelLayers(levelname, 0);
+            this.objectRenderLayer = LevelLayers(levelname, 1);
+            this.lastMostLayer = LevelLayers(levelname, 2);
+            this.hudLayer = null;
+        }
+
+        public string[,] LevelLayers(string levelname, int layernumber)
+        {
+            return LevelData.ReturnLayer(levelname, layernumber);
         }
         public string[,] Level1(string[,] firstMostLayer)
         {

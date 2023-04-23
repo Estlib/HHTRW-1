@@ -19,12 +19,12 @@ namespace Plat2d_2
         int slowDownFrameRate = 1;
         int playerSpeed = 10;
         int currentSprite;
-        List<Bitmap> playerSpritesBitmap = new List<Bitmap>();
+        List<Bitmap> playerSpritesBitmap = new List<Bitmap>(); //holds player sprite bitmaps
         public static int currentLevel = 0;
         public static int currentLevelEndSize = 0;
-        bool[] levelClear = new bool[6] {false,false,false,false,false,false};
+        bool[] levelClear = new bool[10] { false, false, false, false, false, false, false, false, false, false }; //holds the flags for levels that are cleared
 
-        int facedirection;
+        int facedirection; //holds value for which direction player last faced
         bool left;
         bool right;
         bool up;
@@ -34,36 +34,23 @@ namespace Plat2d_2
         bool nokey;
         bool LRDcheck;
 
-        //Vector2 lastPos = Vector2.Zero();
-        //List<Level> levels = new List<Level>();
-        List<string[,]> levelMaps = new List<string[,]>();
-        //List<Sprite2d> NoArtRefs = new List<Sprite2d>();
-        public Sprite2d[] NoArtRefs = new Sprite2d[30];
+        List<string[,]> levelMaps = new List<string[,]>(); // list of arrays that holds all the level maps
+        List<List<string[,]>> layeredMaps = new List<List<string[,]>>();
+        
 
-        //string[,] Map =
-        //{
-        //    {".",".",".",".","." },
-        //    {".",".",".",".","." },
-        //    {".",".",".",".","." },
-        //    {".",".",".",".","." },
-        //    {".",".",".",".","." },
-        //    {".",".",".",".","." },
-        //    {"P",".",".",".","F" },
-        //    {".",".","G",".","." },
-        //    {"G","G","G","G","G" }
-        //}; 
-        //string[,] Map2 =
-        //{
-        //    {".",".",".",".","." },
-        //    {".",".",".",".","." },
-        //    {".",".",".",".","." },
-        //    {".",".",".",".","." },
-        //    {".",".",".",".","." },
-        //    {"P",".",".",".","." },
-        //    {".",".",".",".","F" },
-        //    {".",".",".",".","." },
-        //    {"G","G","G","G","G" }
-        //};
+        public Sprite2d[] NoArtRefs = new Sprite2d[30]; //array for holding the reference sprites to use for the noart tileset.
+        public Sprite2d[] PlainsArtRefs = new Sprite2d[64];
+        public string[] PlainsArtRefsTags = new string[] {
+            "Air","Gem","Ground","Ground","Ground","Ground","Air","Air",
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "Air","Air","Air","Air","Air","Air","Door","Air",
+            "Door","Air","ButtonToggleAir","Air","Air","Air","Ground","Ground",
+            "ShootSolid","ShootSolid","GhostShootSolid","ShootSolid","Air","Air","Air","Air",
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "GhostSolid","GhostSolid","GhostSolid","GhostSolid","GhostDoor","Air","Air","Air",
+            "Air","Air","Air","Air","Air","StopButton","PlayButton","ButtonToggleSolid",};
+
+//one layer test maps
         string[,] Map ={
             {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
             {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
@@ -80,7 +67,7 @@ namespace Plat2d_2
             {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
-        };
+        }; //title screen map, one layer old version.
         string[,] Map2 ={
             {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
             {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
@@ -97,7 +84,7 @@ namespace Plat2d_2
             {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
-        };
+        }; //level select screen map, one layer old version.
         string[,] Map3 = {
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G","G",".",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".","G" },
@@ -114,7 +101,7 @@ namespace Plat2d_2
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
-        };
+        }; //test level 1 map, one layer.
         string[,] Map4 = {
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G",".","P",".",".",".",".","C","C","G",".",".",".",".",".",".","G",".",".","G" },
@@ -131,7 +118,7 @@ namespace Plat2d_2
             {"G","C","C","C","C","C",".",".",".",".",".",".","G","G","C",".",".","G","G","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
-        };
+        }; //test level 2 map, one layer.
         string[,] Map5 = {
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G" },
@@ -148,7 +135,7 @@ namespace Plat2d_2
             {"G",".",".",".",".",".","G","G","G","G",".",".",".",".",".",".",".",".",".","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
-        };
+        }; //test level 3 map, one layer.
         string[,] Map6 = {
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
@@ -165,8 +152,75 @@ namespace Plat2d_2
             {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
-        };
-
+        }; //scrolling test level 4 map, one layer.
+        string[,] Map7 = {
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C","C","C",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".",".",".","C",".",".",".",".",".",".",".",".","C","C",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".","G","G","G","G","G","G","G","G",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".","C",".",".",".",".","C",".","C",".",".",".","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","F" },
+            {"G",".",".",".",".",".","C","C","C",".",".",".",".","G","G","G","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".","C",".",".","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G",".",".","G",".",".",".",".",".","." },
+            {"G",".","P",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
+        }; //duplicate of level 4
+        string[,] Map8 = {
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C","C","C",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".",".",".","C",".",".",".",".",".",".",".",".","C","C",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".","G","G","G","G","G","G","G","G",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".","C",".",".",".",".","C",".","C",".",".",".","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","F" },
+            {"G",".",".",".",".",".","C","C","C",".",".",".",".","G","G","G","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".","C",".",".","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G",".",".","G",".",".",".",".",".","." },
+            {"G",".","P",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
+        }; //duplicate of level 4
+        string[,] Map9 = {
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C","C","C",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".",".",".","C",".",".",".",".",".",".",".",".","C","C",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".","G","G","G","G","G","G","G","G",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".","C",".",".",".",".","C",".","C",".",".",".","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","F" },
+            {"G",".",".",".",".",".","C","C","C",".",".",".",".","G","G","G","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".","C",".",".","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G",".",".","G",".",".",".",".",".","." },
+            {"G",".","P",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
+        }; //duplicate of level 4
+        string[,] Map10 = {
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C","C","C",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".",".",".","C",".",".",".",".",".",".",".",".","C","C",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".","G","G","G","G","G","G","G","G",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G","C",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".","C",".",".",".",".","C",".","C",".",".",".","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","F" },
+            {"G",".",".",".",".",".","C","C","C",".",".",".",".","G","G","G","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","C",".","C",".","C",".",".","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G",".",".","G",".",".",".",".",".","." },
+            {"G",".","P",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G",".",".",".",".",".","G","G","G","G","G","G","G",".",".",".","G","G","G","G","G","G","G",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","G","G","G","G","G","G",".",".",".",".",".",".",".",".","." },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
+            {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
+        }; //duplicate of level 4
         //string[,] Map ={
         //    {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
         //    {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
@@ -253,90 +307,110 @@ namespace Plat2d_2
         //    {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G" },
         //};
 
-
+        /// <summary>
+        /// constructor for demogame. bases enginecore
+        /// </summary>
         public DemoGame() :  base(new Vector2(320+16, 240+40),"HHTRW-engine1 demo")
         {
 
         }
-
+        /// <summary>
+        /// method that runs on load of the game, setting it up for play.
+        /// </summary>
         public override void OnLoad()
         {
+            Log.Highlight($"Game is starting, current game: DemoGame");
 
+            //sets up a levelsprites list in an array of lists. one for each existing screen.
             LevelSprites[0] = new List<Sprite2d>();
             LevelSprites[1] = new List<Sprite2d>();
             LevelSprites[2] = new List<Sprite2d>();
             LevelSprites[3] = new List<Sprite2d>();
             LevelSprites[4] = new List<Sprite2d>();
             LevelSprites[5] = new List<Sprite2d>();
-            //List<Sprite2d> playerSprites = new List<Sprite2d>();
-            Console.WriteLine("OnLoad works.");
-            BGColor = System.Drawing.Color.Black;
+            LevelSprites[6] = new List<Sprite2d>();
+            LevelSprites[7] = new List<Sprite2d>();
+            LevelSprites[8] = new List<Sprite2d>();
+            LevelSprites[9] = new List<Sprite2d>();
+
+            BGColor = System.Drawing.Color.Black; //sets window background color to be black
             //CameraZoom = new Vector2(.1f,.1f);
-            SetReferencesInArray();
-            Sprite2d groundRef = NoArtRefs[0];
-            Sprite2d airRef = NoArtRefs[1];
-            Sprite2d coinRef = NoArtRefs[2];
-            Sprite2d levelEndRef = NoArtRefs[3];
-            Sprite2d tsairRef = NoArtRefs[4];
-            Sprite2d ts1 = NoArtRefs[5];
-            Sprite2d ts2 = NoArtRefs[6];
-            Sprite2d ts3 = NoArtRefs[7];
-            Sprite2d ts4 = NoArtRefs[8];
-            Sprite2d ts5 = NoArtRefs[9];
-            Sprite2d ts6 = NoArtRefs[10];
-            Sprite2d ts7 = NoArtRefs[11];
-            Sprite2d ts8 = NoArtRefs[12];
-            Sprite2d ts9 = NoArtRefs[13];
-            Sprite2d lss1 = NoArtRefs[14];
-            Sprite2d lss2 = NoArtRefs[15];
-            Sprite2d lss3 = NoArtRefs[16];
-            Sprite2d lss4 = NoArtRefs[17];
-            Sprite2d lss5 = NoArtRefs[18];
-            Sprite2d lss6 = NoArtRefs[19];
-            Sprite2d numbertile01 = NoArtRefs[20];
-            Sprite2d numbertile02 = NoArtRefs[21];
-            Sprite2d numbertile03 = NoArtRefs[22];
-            Sprite2d numbertile04 = NoArtRefs[23];
-            Sprite2d numbertile05 = NoArtRefs[24];
-            Sprite2d numbertile06 = NoArtRefs[25];
-            Sprite2d numbertile07 = NoArtRefs[26];
-            Sprite2d numbertile08 = NoArtRefs[27];
-            Sprite2d numbertile09 = NoArtRefs[28];
-            Sprite2d numbertile0A = NoArtRefs[29];
+            SetReferencesInArray(); //assings the references into an array
+
+            ////old way of setting references
+            //Sprite2d groundRef = NoArtRefs[0];
+            //Sprite2d airRef = NoArtRefs[1];
+            //Sprite2d coinRef = NoArtRefs[2];
+            //Sprite2d levelEndRef = NoArtRefs[3];
+            //Sprite2d tsairRef = NoArtRefs[4];
+            //Sprite2d ts1 = NoArtRefs[5];
+            //Sprite2d ts2 = NoArtRefs[6];
+            //Sprite2d ts3 = NoArtRefs[7];
+            //Sprite2d ts4 = NoArtRefs[8];
+            //Sprite2d ts5 = NoArtRefs[9];
+            //Sprite2d ts6 = NoArtRefs[10];
+            //Sprite2d ts7 = NoArtRefs[11];
+            //Sprite2d ts8 = NoArtRefs[12];
+            //Sprite2d ts9 = NoArtRefs[13];
+            //Sprite2d lss1 = NoArtRefs[14];
+            //Sprite2d lss2 = NoArtRefs[15];
+            //Sprite2d lss3 = NoArtRefs[16];
+            //Sprite2d lss4 = NoArtRefs[17];
+            //Sprite2d lss5 = NoArtRefs[18];
+            //Sprite2d lss6 = NoArtRefs[19];
+            //Sprite2d numbertile01 = NoArtRefs[20];
+            //Sprite2d numbertile02 = NoArtRefs[21];
+            //Sprite2d numbertile03 = NoArtRefs[22];
+            //Sprite2d numbertile04 = NoArtRefs[23];
+            //Sprite2d numbertile05 = NoArtRefs[24];
+            //Sprite2d numbertile06 = NoArtRefs[25];
+            //Sprite2d numbertile07 = NoArtRefs[26];
+            //Sprite2d numbertile08 = NoArtRefs[27];
+            //Sprite2d numbertile09 = NoArtRefs[28];
+            //Sprite2d numbertile0A = NoArtRefs[29];
+
+            //sets the onelayer maps into a levelmaps list.
             levelMaps.Add(Map);
             levelMaps.Add(Map2);
             levelMaps.Add(Map3);
             levelMaps.Add(Map4);
             levelMaps.Add(Map5);
             levelMaps.Add(Map6);
+            levelMaps.Add(Map7);
+            levelMaps.Add(Map8);
+            levelMaps.Add(Map9);
+            levelMaps.Add(Map10);
 
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1.png"))); //0
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run2.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run3.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run4.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run5.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run6.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand2.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3duck.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3jump.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfall.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1flip.png"))); //11
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1flip.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run2flip.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run3flip.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run4flip.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run5flip.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run6flip.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand2flip.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3duckflip.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3jumpflip.png")));
-            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfallFLIP.png")));
-            currentSprite = 0; 
-            LoadNextLevel(levelMaps.ElementAt(currentLevel), NoArtRefs);
+            
 
+            //setting sprites into the playersprites bitmap list
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1.png"))); //0 - standing --------------*
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1.png"))); //1 - running 1/6
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run2.png"))); //2 - running 2/6
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run3.png"))); //3 - running 3/6
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run4.png"))); //4 - running 4/6
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run5.png"))); //5 - running 5/6
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run6.png"))); //6 - running 6/6
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand2.png"))); //7 - inbetween for standing and crouching
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3duck.png"))); //8 - crouching
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3jump.png"))); //9 - jumping
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfall.png"))); //10 - falling
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1flip.png"))); //11 - standing flipped --------------*
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1flip.png"))); //12 - running 1/6 flipped
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run2flip.png"))); //13 - running 2/6 flipped
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run3flip.png"))); //14 - running 3/6 flipped
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run4flip.png"))); //15 - running 4/6 flipped
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run5flip.png"))); //16 - running 5/6 flipped
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run6flip.png"))); //17 - running 6/6 flipped
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand2flip.png"))); //18 - inbetween for standing and crouching flipped
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3duckflip.png"))); //19 - crouching flipped
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3jumpflip.png"))); //20 - jumping flipped
+            playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfallFLIP.png"))); //21 - falling flipped
+            currentSprite = 0; //integer value for holding the current player sprite, through which the list is accessed and player is animated through the use of
+
+            LoadNextLevel(levelMaps.ElementAt(currentLevel), NoArtRefs, PlainsArtRefsTags);
             //for (int i = 0; i < Map.GetLength(1); i++)
-            //{
+            //{ //old method for drawing levels and spawning player, this is extracted into a method of its own
             //    for (int j = 0; j < Map.GetLength(0); j++)
             //    {
             //        if (Map[j,i] == "G")
@@ -443,7 +517,7 @@ namespace Plat2d_2
             {
                 UnLoadCurrentLevel();
                 currentLevel++;
-                LoadNextLevel(levelMaps.ElementAt(currentLevel),NoArtRefs);
+                LoadNextLevel(levelMaps.ElementAt(currentLevel),PlainsArtRefs,PlainsArtRefsTags);
             }
             if (up)
             {
@@ -519,6 +593,8 @@ namespace Plat2d_2
                     AnimatePlayer(0, 0);
                 }
             }
+
+            // the following if structure is the player camera
             if (player.Position.X <= 160)
             {
                 CameraPosition.X = 0;
@@ -546,8 +622,6 @@ namespace Plat2d_2
         }
         /// <summary>
         /// Unloads all of the content on screen. Including player and level tiles
-        /// 
-        /// TODO: fix problem of it not removing collisions/causing phantom collisions
         /// </summary>
         private void UnLoadCurrentLevel()
         {
@@ -558,7 +632,6 @@ namespace Plat2d_2
         /// </summary>
         private void SetReferencesInArray()
         {
-            NoArtRefs = new Sprite2d[30];
             NoArtRefs[0] = new Sprite2d("tiles/noart/testblock1");
             NoArtRefs[1] = new Sprite2d("tiles/noart/testblock5");
             NoArtRefs[2] = new Sprite2d("tiles/noart/testobject2");
@@ -589,17 +662,93 @@ namespace Plat2d_2
             NoArtRefs[27] = new Sprite2d("tiles/noart/numbertile08");
             NoArtRefs[28] = new Sprite2d("tiles/noart/numbertile09");
             NoArtRefs[29] = new Sprite2d("tiles/noart/numbertile0A");
+            PlainsArtRefs[0] = new Sprite2d("tiles/plains/00");
+            PlainsArtRefs[1] = new Sprite2d("tiles/plains/01");
+            PlainsArtRefs[2] = new Sprite2d("tiles/plains/02");
+            PlainsArtRefs[3] = new Sprite2d("tiles/plains/03");
+            PlainsArtRefs[4] = new Sprite2d("tiles/plains/04");
+            PlainsArtRefs[5] = new Sprite2d("tiles/plains/05");
+            PlainsArtRefs[6] = new Sprite2d("tiles/plains/06");
+            PlainsArtRefs[7] = new Sprite2d("tiles/plains/07");
+            PlainsArtRefs[8] = new Sprite2d("tiles/plains/08");
+            PlainsArtRefs[9] = new Sprite2d("tiles/plains/09");
+            PlainsArtRefs[10] = new Sprite2d("tiles/plains/10");
+            PlainsArtRefs[11] = new Sprite2d("tiles/plains/11");
+            PlainsArtRefs[12] = new Sprite2d("tiles/plains/12");
+            PlainsArtRefs[13] = new Sprite2d("tiles/plains/13");
+            PlainsArtRefs[14] = new Sprite2d("tiles/plains/14");
+            PlainsArtRefs[15] = new Sprite2d("tiles/plains/15");
+            PlainsArtRefs[16] = new Sprite2d("tiles/plains/16");
+            PlainsArtRefs[17] = new Sprite2d("tiles/plains/17");
+            PlainsArtRefs[18] = new Sprite2d("tiles/plains/18");
+            PlainsArtRefs[19] = new Sprite2d("tiles/plains/19");
+            PlainsArtRefs[20] = new Sprite2d("tiles/plains/20");
+            PlainsArtRefs[21] = new Sprite2d("tiles/plains/21");
+            PlainsArtRefs[22] = new Sprite2d("tiles/plains/22");
+            PlainsArtRefs[23] = new Sprite2d("tiles/plains/23");
+            PlainsArtRefs[24] = new Sprite2d("tiles/plains/24");
+            PlainsArtRefs[25] = new Sprite2d("tiles/plains/25");
+            PlainsArtRefs[26] = new Sprite2d("tiles/plains/26");
+            PlainsArtRefs[27] = new Sprite2d("tiles/plains/27");
+            PlainsArtRefs[28] = new Sprite2d("tiles/plains/28");
+            PlainsArtRefs[29] = new Sprite2d("tiles/plains/29");
+            PlainsArtRefs[30] = new Sprite2d("tiles/plains/30");
+            PlainsArtRefs[31] = new Sprite2d("tiles/plains/31");
+            PlainsArtRefs[32] = new Sprite2d("tiles/plains/32");
+            PlainsArtRefs[33] = new Sprite2d("tiles/plains/33");
+            PlainsArtRefs[34] = new Sprite2d("tiles/plains/34");
+            PlainsArtRefs[35] = new Sprite2d("tiles/plains/35");
+            PlainsArtRefs[36] = new Sprite2d("tiles/plains/36");
+            PlainsArtRefs[37] = new Sprite2d("tiles/plains/37");
+            PlainsArtRefs[38] = new Sprite2d("tiles/plains/38");
+            PlainsArtRefs[39] = new Sprite2d("tiles/plains/39");
+            PlainsArtRefs[40] = new Sprite2d("tiles/plains/40");
+            PlainsArtRefs[41] = new Sprite2d("tiles/plains/41");
+            PlainsArtRefs[42] = new Sprite2d("tiles/plains/42");
+            PlainsArtRefs[43] = new Sprite2d("tiles/plains/43");
+            PlainsArtRefs[44] = new Sprite2d("tiles/plains/44");
+            PlainsArtRefs[45] = new Sprite2d("tiles/plains/45");
+            PlainsArtRefs[46] = new Sprite2d("tiles/plains/46");
+            PlainsArtRefs[47] = new Sprite2d("tiles/plains/47");
+            PlainsArtRefs[48] = new Sprite2d("tiles/plains/48");
+            PlainsArtRefs[49] = new Sprite2d("tiles/plains/49");
+            PlainsArtRefs[50] = new Sprite2d("tiles/plains/50");
+            PlainsArtRefs[51] = new Sprite2d("tiles/plains/51");
+            PlainsArtRefs[52] = new Sprite2d("tiles/plains/52");
+            PlainsArtRefs[53] = new Sprite2d("tiles/plains/53");
+            PlainsArtRefs[54] = new Sprite2d("tiles/plains/54");
+            PlainsArtRefs[55] = new Sprite2d("tiles/plains/55");
+            PlainsArtRefs[56] = new Sprite2d("tiles/plains/56");
+            PlainsArtRefs[57] = new Sprite2d("tiles/plains/57");
+            PlainsArtRefs[58] = new Sprite2d("tiles/plains/58");
+            PlainsArtRefs[59] = new Sprite2d("tiles/plains/59");
+            PlainsArtRefs[60] = new Sprite2d("tiles/plains/60");
+            PlainsArtRefs[61] = new Sprite2d("tiles/plains/61");
+            PlainsArtRefs[62] = new Sprite2d("tiles/plains/62");
+            PlainsArtRefs[63] = new Sprite2d("tiles/plains/63");
         }
         /// <summary>
         /// Loads the next level using the id of the current level and art references for the selected level.
         /// </summary>
         /// <param name="currentLevel"> integer value </param>
         /// <param name="noArtRefs"> Sprite2d[] array that holds the references.</param>
-        private void LoadNextLevel(string[,] currentLevel, Sprite2d[] noArtRefs)
+        private void LoadNextLevel(string[,] currentLevel, Sprite2d[] references, string[] referencetags)
         {
             Log.Info("New Level is being loaded");
             string[,] Map = currentLevel;
             currentLevelEndSize = currentLevel.GetLength(1) * 16;
+            LoadLayerNoArt(references, Map);
+            //set an object layer
+            LoadObjectLayer(Map);
+            //set a new fg layer
+            LoadLayer(references, Map, referencetags);
+            //LoadHud() method doesnt exist yet, use for loading the hud.
+            //the reason it is not existant is that loading the hud needs to stay still, relative to the player.
+            //i currently do not have a way to do this yet. and thus, requires true layer implementation.
+        }
+
+        private void LoadLayerNoArt(Sprite2d[] noArtRefs, string[,] Map)
+        {
             for (int i = 0; i < Map.GetLength(1); i++)
             {
                 for (int j = 0; j < Map.GetLength(0); j++)
@@ -713,10 +862,11 @@ namespace Plat2d_2
                         new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), noArtRefs[26], "SetLevel7")/*.CreateStatic()*/;
                     }
                 }
-
             }
-            
-            //LoadPlayerFromNextLevel(playerSpritesBitmap);
+        }
+
+        private void LoadObjectLayer(string[,] Map)
+        {
             for (int i = 0; i < Map.GetLength(1); i++)
             {
                 for (int j = 0; j < Map.GetLength(0); j++)
@@ -733,7 +883,33 @@ namespace Plat2d_2
                     }
                 }
             }
+        }
+
+        private static void LoadLayer(Sprite2d[] references, string[,] Map, string[] referencetags)
+        {
             
+            for (int i = 0; i < Map.GetLength(1); i++)
+            {
+                for (int j = 0; j < Map.GetLength(0); j++)
+                {
+                    int tile = 00;
+                    for (int k = 0; k < references.Length; k++)
+                    {
+                        if (Map[j, i] == tile.ToString())
+                        {
+                            if (referencetags[k] == "Ground")
+                            {
+                                new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), references[k], referencetags[k]).CreateStatic();
+                            }
+                            else
+                            {
+                                new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), references[k], referencetags[k])/*.CreateStatic()*/;
+                            }
+                        }
+                        tile++;
+                    }
+                }
+            }
         }
 
         //int timeframe = 0;

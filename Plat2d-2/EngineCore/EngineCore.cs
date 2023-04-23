@@ -165,12 +165,12 @@ namespace Plat2d_2.EngineCore
             g.ScaleTransform(CameraZoom.X, CameraZoom.Y);
             //try
             //{
-                foreach (Shape2d shape in AllShapes)
-                {
-                    g.FillRectangle(new SolidBrush(System.Drawing.Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
-                }
-                foreach (Sprite2d sprite in LevelSprites[DemoGame.currentLevel])
-                {
+            //foreach (Shape2d shape in AllShapes)
+            //{
+            //    g.FillRectangle(new SolidBrush(System.Drawing.Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
+            //}
+            foreach (Sprite2d sprite in LevelSprites[DemoGame.currentLevel])
+            {
                     if (!sprite.IsReference)
                     {
                         g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
