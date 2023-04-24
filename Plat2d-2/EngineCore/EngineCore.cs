@@ -43,8 +43,8 @@ namespace Plat2d_2.EngineCore
         // if bodies reach the end of the world, but it will be slower.
         AABB worldAABB = new AABB
         {
-            UpperBound = new Vec2(2000, 2000),
-            LowerBound = new Vec2(-2000, -2000)
+            UpperBound = new Vec2(15000, 15000),
+            LowerBound = new Vec2(-15000, -15000)
         };
         // Define the gravity vector.
         Vec2 gravity = new Vec2(0.0f, 560.0f);
