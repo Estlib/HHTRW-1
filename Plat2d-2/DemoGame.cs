@@ -34,9 +34,9 @@ namespace Plat2d_2
             0, //walking left animation frame end
             0, //walking right animation frame start
             0, //walking right animation frame end
-            120, //enemyleftframes
-            120, //enemyrightframes
-            0, //unused
+            30, //enemyleftframes
+            0, //enemyrightframes
+            0, //wherewalking, 0 left 1 right
             0  //unused
         };
 
@@ -622,6 +622,7 @@ namespace Plat2d_2
         {
             if (walkingenemy != null)
             {
+                Log.Info($"Enemy steps remaining: left {level1enemyanimationdefs[6]} right {level1enemyanimationdefs[7]}");
                 if (walkingenemy.Position.X > level1enemyanimationdefs[1])
                 {
                     AnimateEnemy(level1enemyanimationdefs[2], level1enemyanimationdefs[3]);
@@ -630,30 +631,53 @@ namespace Plat2d_2
                 {
                     AnimateEnemy(level1enemyanimationdefs[4], level1enemyanimationdefs[5]);
                 }
-                if (level1enemyanimationdefs[6] != 0)
+                if (level1enemyanimationdefs[8] == 0)
                 {
-                    while (level1enemyanimationdefs[6] != 0)
+                    //enemy walkleft
+                    walkingenemy.SetVelocity(new Vector2(120, walkingenemy.GetYVelocity()));
+                    level1enemyanimationdefs[6]--;
+                    level1enemyanimationdefs[7] = 30;
+                    if (level1enemyanimationdefs[6] <= 0)
                     {
-                        walkingenemy.Position.X -= 1;
-                        level1enemyanimationdefs[6]--;
-                    }
-                    if (level1enemyanimationdefs[6] == 0)
-                    {
-                        level1enemyanimationdefs[7] = 120;
+                        level1enemyanimationdefs[8] = 1;
                     }
                 }
-                if (level1enemyanimationdefs[7] != 0)
+                if (level1enemyanimationdefs[8] == 1)
                 {
-                    while (level1enemyanimationdefs[7] != 0)
+                    //enemy walkright
+                    walkingenemy.SetVelocity(new Vector2(-120, walkingenemy.GetYVelocity()));
+                    level1enemyanimationdefs[7]--;
+                    level1enemyanimationdefs[6] = 30;
+                    if (level1enemyanimationdefs[7] <= 0)
                     {
-                        walkingenemy.Position.X += 1;
-                        level1enemyanimationdefs[7]--;
-                    }
-                    if (level1enemyanimationdefs[7] == 0)
-                    {
-                        level1enemyanimationdefs[6] = 120;
+                        level1enemyanimationdefs[8] = 0;
                     }
                 }
+
+                //if (level1enemyanimationdefs[6] > 120)
+                //{
+                //    while (level1enemyanimationdefs[6] != 120)
+                //    {
+                //        walkingenemy.SetVelocity(new Vector2(-120, walkingenemy.GetYVelocity()));
+                //        level1enemyanimationdefs[6]--;
+                //    }
+                //    if (level1enemyanimationdefs[6] == 120)
+                //    {
+                //        level1enemyanimationdefs[7] = 0;
+                //    }
+                //}
+                //else
+                //{
+                //    while (level1enemyanimationdefs[7] != 120)
+                //    {
+                //        walkingenemy.SetVelocity(new Vector2(120, walkingenemy.GetYVelocity()));
+                //        level1enemyanimationdefs[7]--;
+                //    }
+                //    if (level1enemyanimationdefs[7] == 120)
+                //    {
+                //        level1enemyanimationdefs[6] = 0;
+                //    }
+                //}
             }
 
             if (levelClear[currentLevel] == true)
