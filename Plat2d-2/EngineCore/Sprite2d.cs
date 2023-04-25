@@ -151,7 +151,7 @@ namespace Plat2d_2.EngineCore
             //bodyDef = new BodyDef();
             bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
             body = EngineCore.world.CreateBody(bodyDef);
-            body.IsBullet(); //TODO: why is this here, whats it do
+            //body.IsBullet(); //TODO: why is this here, whats it do
 
             // Define another box shape for our dynamic body.
             PolygonDef shapeDef = new PolygonDef();
