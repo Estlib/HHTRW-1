@@ -9,36 +9,31 @@ using System.Windows.Forms;
 using Box2DX.Common;
 using System.IO;
 using Box2DX.Dynamics;
+using System.Diagnostics;
+using System.Threading;
 
 namespace Plat2d_2
 {
     class DemoGame : EngineCore.EngineCore
     {
-        Sprite2d player;
-        Sprite2d walkingenemy;
+        Sprite2d player; //variable to hold players sprite
+
+        //TODO: make this into a sprite2dlist that can be populated as the level needs so that the enemies are separate from oneanother and arent sharing an instance
+        public static List<Enemy> enemies = new List<Enemy>();
+
+
+        static Stopwatch stopwatch = new Stopwatch();
+
         int steps = 0;
         int slowDownFrameRate = 1;
         int playerSpeed = 10;
         int currentSprite;
         List<Bitmap> playerSpritesBitmap = new List<Bitmap>(); //holds player sprite bitmaps
         List<Bitmap> menuSpritesBitmap = new List<Bitmap>(); //holds menu object sprite bitmaps
-        List<Bitmap> walkingEnemySpritesBitmap = new List<Bitmap>(); //holds walking enemy object sprite bitmaps
-        public static int currentLevel = 0;
-        public static int currentLevelEndSize = 0;
+        List<Bitmap> walkingEnemySpritesBitmap = new List<Bitmap>(); //holds walking enemy type object sprite bitmaps
+        public static int currentLevel = 0; // integer of current level
+        public static int currentLevelEndSize = 0; // how long the level is
         bool[] levelClear = new bool[10] { false, false, false, false, false, false, false, false, false, false }; //holds the flags for levels that are cleared
-        int[] level1enemyanimationdefs = new int[10]
-        { 
-            0, //last x position
-            0, //last y position
-            0, //walking left animation frame start
-            0, //walking left animation frame end
-            0, //walking right animation frame start
-            0, //walking right animation frame end
-            30, //enemyleftframes
-            0, //enemyrightframes
-            0, //wherewalking, 0 left 1 right
-            0  //unused
-        };
 
         int facedirection; //holds value for which direction player last faced
         bool left;
@@ -51,12 +46,12 @@ namespace Plat2d_2
         bool LRDcheck;
 
         List<string[,]> levelMaps = new List<string[,]>(); // list of arrays that holds all the level maps
-        List<List<string[,]>> layeredMaps = new List<List<string[,]>>();
-        
+        List<List<string[,]>> layeredMaps = new List<List<string[,]>>(); // list lists of arrays that holds all the level maps with their layers
+        // TODO: make an array for each layer, not for each level.
 
         public Sprite2d[] NoArtRefs = new Sprite2d[30]; //array for holding the reference sprites to use for the noart tileset.
-        public Sprite2d[] PlainsArtRefs = new Sprite2d[64];
-        public Sprite2d[] TitleMenuMapRefs = new Sprite2d[64];
+        public Sprite2d[] PlainsArtRefs = new Sprite2d[64]; //array for holding the reference sprites for plains type of level
+        public Sprite2d[] TitleMenuMapRefs = new Sprite2d[64]; //array for holding the reference sprites for titlescreens and menu screens
         //public string[] PlainsArtRefsTags = new string[] {
         //    "Air","Gem","Ground","Ground","Ground","Ground","Air","Air",
         //    "Air","Air","Air","Air","Air","Air","Air","Air",
@@ -88,9 +83,9 @@ namespace Plat2d_2
         //one layer test maps
         string[,] DebugMap =
         {
-            {"00","00","00","00","00","WE","00","00","00","00","00","00","00","00","00","00","00","00","00","00" },
-            {"00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00" },
-            {"00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00" },
+            {"00","00","00","00","00","WE","00","00","00","00","00","00","00","00","WE","00","00","00","00","00" },
+            {"00","00","00","00","00","00","00","00","00","00","00","00","03","00","00","00","03","00","00","00" },
+            {"00","00","00","00","00","00","00","00","00","00","00","00","03","03","03","03","03","00","00","00" },
             {"00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00" },
             {"00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00" },
             {"00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00" },
@@ -99,7 +94,7 @@ namespace Plat2d_2
             {"00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00" },
             { "P","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00" },
             {"00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00" },
-            {"03","00","00","00","00","00","00","00","00","04","00","00","00","00","00","00","00","00","00","00" },
+            {"03","00","00","00","00","00","00","00","00","04","00","00","00","00","00","00","00","00","00","03" },
             {"03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04" },
             {"12","11","12","11","12","11","12","11","12","11","12","11","12","11","12","11","12","11","12","11" },
             {"12","11","12","11","12","11","12","11","12","11","12","11","12","11","12","11","12","11","12","11" }
@@ -407,38 +402,6 @@ namespace Plat2d_2
             BGColor = System.Drawing.Color.Black; //sets window background color to be black
             //CameraZoom = new Vector2(.1f,.1f);
             SetAllReferences(); //assings the references into arrays
-            
-            ////old way of setting references
-            //Sprite2d groundRef = NoArtRefs[0];
-            //Sprite2d airRef = NoArtRefs[1];
-            //Sprite2d coinRef = NoArtRefs[2];
-            //Sprite2d levelEndRef = NoArtRefs[3];
-            //Sprite2d tsairRef = NoArtRefs[4];
-            //Sprite2d ts1 = NoArtRefs[5];
-            //Sprite2d ts2 = NoArtRefs[6];
-            //Sprite2d ts3 = NoArtRefs[7];
-            //Sprite2d ts4 = NoArtRefs[8];
-            //Sprite2d ts5 = NoArtRefs[9];
-            //Sprite2d ts6 = NoArtRefs[10];
-            //Sprite2d ts7 = NoArtRefs[11];
-            //Sprite2d ts8 = NoArtRefs[12];
-            //Sprite2d ts9 = NoArtRefs[13];
-            //Sprite2d lss1 = NoArtRefs[14];
-            //Sprite2d lss2 = NoArtRefs[15];
-            //Sprite2d lss3 = NoArtRefs[16];
-            //Sprite2d lss4 = NoArtRefs[17];
-            //Sprite2d lss5 = NoArtRefs[18];
-            //Sprite2d lss6 = NoArtRefs[19];
-            //Sprite2d numbertile01 = NoArtRefs[20];
-            //Sprite2d numbertile02 = NoArtRefs[21];
-            //Sprite2d numbertile03 = NoArtRefs[22];
-            //Sprite2d numbertile04 = NoArtRefs[23];
-            //Sprite2d numbertile05 = NoArtRefs[24];
-            //Sprite2d numbertile06 = NoArtRefs[25];
-            //Sprite2d numbertile07 = NoArtRefs[26];
-            //Sprite2d numbertile08 = NoArtRefs[27];
-            //Sprite2d numbertile09 = NoArtRefs[28];
-            //Sprite2d numbertile0A = NoArtRefs[29];
 
             //sets the onelayer maps into a levelmaps list.
             levelMaps.Add(Map);
@@ -515,171 +478,9 @@ namespace Plat2d_2
             //currentSprite = 0; //integer value for holding the current player sprite, through which the list is accessed and player is animated through the use of
 
             LoadNextLevel(levelMaps.ElementAt(currentLevel), TitleMenuMapRefs, TitleMenuMapRefsTags);
-
-            //for (int i = 0; i < Map.GetLength(1); i++)
-            //{ //old method for drawing levels and spawning player, this is extracted into a method of its own
-            //    for (int j = 0; j < Map.GetLength(0); j++)
-            //    {
-            //        if (Map[j,i] == "G")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), groundRef, "Ground").CreateStatic();
-            //        }
-            //        if (Map[j, i] == ".")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), airRef, "Air")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "C")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), coinRef, "Coin")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "F")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), levelEndRef, "Finish")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == ":")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), tsairRef, "Air")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "1")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts1, "Air")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "2")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts2, "Air")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "3")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts3, "Air")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "4")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts4, "Air")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "5")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts5, "Air")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "6")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts6, "Air")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "7")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts7, "Air")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "8")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts8, "Air")/*.CreateStatic()*/;
-            //        }
-            //        if (Map[j, i] == "9")
-            //        {
-            //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), ts9, "Air")/*.CreateStatic()*/;
-            //        }
-            //    }
-            //}
-            //for (int i = 0; i < Map.GetLength(1); i++)
-            //{
-            //    for (int j = 0; j < Map.GetLength(0); j++)
-            //    {
-            //        if (Map[j, i] == "P")
-            //        {
-            //            player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerSpritesBitmap[0], "Player");
-            //            //player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerStand, "Player");
-            //            player.CreateDynamic();
-            //            //pass a list of sprites here, changing happens by animating list numbers, limited by if limits
-            //            //see https://www.youtube.com/results?search_query=box2d+tutorial+c%23
-            //            //playercollision = new Shape2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "Player");
-            //            //playercollision.CreateDynamic();
-            //        }
-            //    }
-            //}
-            //player = new Sprite2d(new Vector2(64, 96), new Vector2(32, 32), "player/wipspriteset/stand1", "Player");
-            //player2 = new Sprite2d(new Vector2(128, 192), new Vector2(32, 32), "player/wipspriteset/stand1", "Player2");
         }
-        /// <summary>
-        /// function to load player separately to level loading, currently unused.
-        /// </summary>
-        /// <param name="playerSpritesBitmap"> sprites for the player object </param>
-        //private void LoadPlayerFromNextLevel(List<Bitmap> playerSpritesBitmap)
-        //{
-        //    for (int i = 0; i < Map.GetLength(1); i++)
-        //    {
-        //        for (int j = 0; j < Map.GetLength(0); j++)
-        //        {
-        //            if (Map[j, i] == "P")
-        //            {
-        //                player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerSpritesBitmap[0], "Player");
-        //                player.CreateDynamic();
-        //            }
-        //        }
-        //    }
-        //}
-        /// <summary>
-        /// this function updates visuals and levels when window is being drawn
-        /// </summary>
         public override void OnDraw()
         {
-            if (walkingenemy != null)
-            {
-                Log.Info($"Enemy steps remaining: left {level1enemyanimationdefs[6]} right {level1enemyanimationdefs[7]}");
-                if (walkingenemy.Position.X > level1enemyanimationdefs[1])
-                {
-                    AnimateEnemy(level1enemyanimationdefs[2], level1enemyanimationdefs[3]);
-                }
-                else
-                {
-                    AnimateEnemy(level1enemyanimationdefs[4], level1enemyanimationdefs[5]);
-                }
-                if (level1enemyanimationdefs[8] == 0)
-                {
-                    //enemy walkleft
-                    walkingenemy.SetVelocity(new Vector2(120, walkingenemy.GetYVelocity()));
-                    level1enemyanimationdefs[6]--;
-                    level1enemyanimationdefs[7] = 30;
-                    if (level1enemyanimationdefs[6] <= 0)
-                    {
-                        level1enemyanimationdefs[8] = 1;
-                    }
-                }
-                if (level1enemyanimationdefs[8] == 1)
-                {
-                    //enemy walkright
-                    walkingenemy.SetVelocity(new Vector2(-120, walkingenemy.GetYVelocity()));
-                    level1enemyanimationdefs[7]--;
-                    level1enemyanimationdefs[6] = 30;
-                    if (level1enemyanimationdefs[7] <= 0)
-                    {
-                        level1enemyanimationdefs[8] = 0;
-                    }
-                }
-
-                //if (level1enemyanimationdefs[6] > 120)
-                //{
-                //    while (level1enemyanimationdefs[6] != 120)
-                //    {
-                //        walkingenemy.SetVelocity(new Vector2(-120, walkingenemy.GetYVelocity()));
-                //        level1enemyanimationdefs[6]--;
-                //    }
-                //    if (level1enemyanimationdefs[6] == 120)
-                //    {
-                //        level1enemyanimationdefs[7] = 0;
-                //    }
-                //}
-                //else
-                //{
-                //    while (level1enemyanimationdefs[7] != 120)
-                //    {
-                //        walkingenemy.SetVelocity(new Vector2(120, walkingenemy.GetYVelocity()));
-                //        level1enemyanimationdefs[7]--;
-                //    }
-                //    if (level1enemyanimationdefs[7] == 120)
-                //    {
-                //        level1enemyanimationdefs[6] = 0;
-                //    }
-                //}
-            }
-
             if (levelClear[currentLevel] == true)
             {
                 UnLoadCurrentLevel();
@@ -789,13 +590,14 @@ namespace Plat2d_2
         }
 
         
-
         /// <summary>
         /// Unloads all of the content on screen. Including player and level tiles
         /// </summary>
         private void UnLoadCurrentLevel()
         {
             RemoveAllSprites();
+            List<Sprite2d> enemies = new List<Sprite2d>();
+            List<int[]> enemyvalues = new List<int[]>();
         }
         private void SetAllReferences()
         {
@@ -971,6 +773,7 @@ namespace Plat2d_2
             //TitleMenuMapRefs[62] = new Sprite2d("tiles/titlemapmenu/62");
             //TitleMenuMapRefs[63] = new Sprite2d("tiles/titlemapmenu/63");
         }
+
         /// <summary>
         /// Loads the next level using the id of the current level and art references for the selected level.
         /// </summary>
@@ -1111,6 +914,7 @@ namespace Plat2d_2
 
         private void LoadObjectLayer(string[,] Map)
         {
+            int enemyelement = 0;
             for (int i = 0; i < Map.GetLength(1); i++)
             {
                 for (int j = 0; j < Map.GetLength(0); j++)
@@ -1127,8 +931,15 @@ namespace Plat2d_2
                     }
                     if (Map[j, i] == "WE")
                     {
-                        walkingenemy = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy");
-                        walkingenemy.CreateDynamic();
+                        enemies.Add(
+                            new Enemy(
+                                new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
+                                i * 16,
+                                j*16,
+                                30,
+                                0));
+                        enemies.ElementAt(enemyelement).sprite2d.CreateDynamic();
+                        enemyelement++;
                     }
                 }
             }
@@ -1136,14 +947,12 @@ namespace Plat2d_2
 
         private static void LoadLayer(Sprite2d[] references, string[,] Map, string[] referencetags)
         {
-            //TODO: loop the column instead of spritelist to find the tile
-            //TODO: loop only until one tile is found, no more tiles exist in any given spot.
             for (int i = 0; i < Map.GetLength(1); i++)
             {
                 for (int j = 0; j < Map.GetLength(0); j++)
                 {
                     //Log.Info($"Column {i + 1} row {j + 1}");
-                    Log.Info($"Value in tile {Map[j, i]}");
+                    //Log.Info($"Value in tile {Map[j, i]}");
                     int tryint = 0;
                     int result = 0;
                     if (int.TryParse(Map[j,i],out result))
@@ -1158,36 +967,6 @@ namespace Plat2d_2
                     {
                         new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), references[tryint], referencetags[tryint])/*.CreateStatic()*/;
                     }
-
-                    //Log.Info($"Column {i+1} row {j+1}");
-                    //string stringtile = "0";
-                    //int tile = 00;
-                    //for (int k = 0; k < references.Length; k++)
-                    //{
-                    //    bool tilefound = false;
-                    //    if (tile > 09)
-                    //    {
-                    //        stringtile = "";
-                    //    }
-                    //    if (Map[j, i] == stringtile + tile.ToString())
-                    //    {
-                    //        tilefound = true;
-                    //        if (referencetags[k] == "Ground")
-                    //        {
-                    //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), references[k], referencetags[k]).CreateStatic();
-                    //        }
-                    //        else
-                    //        {
-                    //            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), references[k], referencetags[k])/*.CreateStatic()*/;
-                    //        }
-                    //        if (tilefound == true)
-                    //        {
-                    //            tile++;
-                    //            break;
-                    //        }
-                    //    }
-                    //    tile++;
-                    //}
                 }
             }
         }
@@ -1200,7 +979,7 @@ namespace Plat2d_2
         int start; //used for the animateplayer function
         int end; //used for the animateplayer function
 
-        private void AnimateEnemy(int start, int end)
+        private void AnimateEnemy(int start, int end, Sprite2d enemy)
         {
             slowDownFrameRate += 1;
             if (slowDownFrameRate == 4)
@@ -1213,7 +992,51 @@ namespace Plat2d_2
                 steps = start;
             }
             //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
-            walkingenemy.Sprite = walkingEnemySpritesBitmap[steps];
+            enemy.Sprite = walkingEnemySpritesBitmap[steps];
+        }
+        private void AnimateEnemies()
+        {
+            //TODO -for vs foreach
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                if (enemies.ElementAt(i).sprite2d.Position.X > enemies.ElementAt(i).lastXpos)
+                {
+                    AnimateEnemy(enemies.ElementAt(i).walkleftanimstart, enemies.ElementAt(i).walkleftanimend, enemies.ElementAt(i).sprite2d);
+                }
+                else
+                {
+                    AnimateEnemy(enemies.ElementAt(i).walkrightanimstart, enemies.ElementAt(i).walkrightanimend, enemies.ElementAt(i).sprite2d);
+                }
+                //if (enemies.ElementAt(i).HasBody())
+                //{
+
+                //}
+
+                if (enemies.ElementAt(i).isfacingleft)
+                {
+                    //enemy walkright
+                    enemies.ElementAt(i).sprite2d.SetVelocity(new Vector2(-120, enemies.ElementAt(i).sprite2d.GetYVelocity()));
+                    enemies.ElementAt(i).enemyrightwalkframes--;
+                    enemies.ElementAt(i).enemyleftwalkframes = 30;
+                    if (enemies.ElementAt(i).enemyrightwalkframes <= 0)
+                    {
+                        enemies.ElementAt(i).isfacingleft = false;
+                    }
+                }
+                else
+                {
+                    //enemy walkleft
+                    enemies.ElementAt(i).sprite2d.SetVelocity(new Vector2(120, enemies.ElementAt(i).sprite2d.GetYVelocity()));
+                    enemies.ElementAt(i).enemyleftwalkframes--;
+                    enemies.ElementAt(i).enemyrightwalkframes = 30;
+                    if (enemies.ElementAt(i).enemyleftwalkframes <= 0)
+                    {
+                        enemies.ElementAt(i).isfacingleft = true;
+                    }
+                }
+                //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
+                enemies.ElementAt(i).sprite2d.Sprite = walkingEnemySpritesBitmap[steps];
+            }            
         }
 
         /// <summary>
@@ -1240,6 +1063,8 @@ namespace Plat2d_2
 
         int[] jumpFramesL = new int[] {7, 9 }; //frames for custom, out of order, jump animation. left facing.
         int[] jumpFramesR = new int[] {18, 20 }; //frames for custom, out of order, jump animation. right facing.
+        //TODO: fix the jumping animations pls.
+
         /// <summary>
         /// function to animate the players sprites in a one-way manner, where animation stops at the last frame and doesnt continue animating until its fully called again.
         /// currently unused
@@ -1260,6 +1085,9 @@ namespace Plat2d_2
             }
             //player.UpdateSprite(steps);
             player.Sprite = playerSpritesBitmap[steps];
+            //TODO: actually use this method to animate the jumps properly.
+            //TODO: refactor this method to be the only animation method
+            //make the integer array optional and pass in an additional optional integer value for looping point
         }
 
         /// <summary>
@@ -1269,6 +1097,41 @@ namespace Plat2d_2
         /// </summary>
         public override void OnUpdate()
         {
+            if (enemies != null)
+            {
+                //stopwatch.Start();   
+                AnimateEnemies();
+                //stopwatch.Stop();
+                //Log.Info($"Elapsed Time is {stopwatch.ElapsedMilliseconds} ms");
+
+
+
+                //if (level1enemyanimationdefs[6] > 120)
+                //{
+                //    while (level1enemyanimationdefs[6] != 120)
+                //    {
+                //        walkingenemy.SetVelocity(new Vector2(-120, walkingenemy.GetYVelocity()));
+                //        level1enemyanimationdefs[6]--;
+                //    }
+                //    if (level1enemyanimationdefs[6] == 120)
+                //    {
+                //        level1enemyanimationdefs[7] = 0;
+                //    }
+                //}
+                //else
+                //{
+                //    while (level1enemyanimationdefs[7] != 120)
+                //    {
+                //        walkingenemy.SetVelocity(new Vector2(120, walkingenemy.GetYVelocity()));
+                //        level1enemyanimationdefs[7]--;
+                //    }
+                //    if (level1enemyanimationdefs[7] == 120)
+                //    {
+                //        level1enemyanimationdefs[6] = 0;
+                //    }
+                //}
+            }
+
             if (player == null)
             {
                 //return;
@@ -1322,9 +1185,12 @@ namespace Plat2d_2
                 
             }
             player.UpdatePosition(); //updates players position
-            if (walkingenemy != null)
+            if (enemies != null)
             {
-                walkingenemy.UpdatePosition();
+                foreach (var enemyobject in enemies)
+                {
+                    enemyobject.sprite2d.UpdatePosition();
+                }                
             }
 
             Sprite2d coin = player.IsColliding("Coin", currentLevel); //checks for collisions between the player and the coin.
@@ -1442,6 +1308,9 @@ namespace Plat2d_2
                 levelClear[i] = false;
             }
             levelClear[currentLevel] = true;
+            //TODO: instead of looping through all the cleared levels in rendering,
+            //refactor the method to select a level by integer instead. so that it isnt looking for booleans
+            //but instead search for the level number in array to load instead.
         }
 
         /// <summary>
@@ -1463,6 +1332,7 @@ namespace Plat2d_2
             nokey = check;
             return nokey;
         }
+
         /// <summary>
         /// method that restricts an unwanted non-animation unintentionality.
         /// when crouching, and pressing a movement key, without this
@@ -1485,7 +1355,7 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.A) { left = true; }
             if (e.KeyCode == Keys.S) { down = true; }
             if (e.KeyCode == Keys.D) { right = true; }
-            if (e.KeyCode == Keys.Z) { jump = true; }
+            if (e.KeyCode == Keys.Space) { jump = true; }
             //if (e.KeyCode == Keys.Return) { EngineCore.EngineCore.pausebuttoninput = !pausebuttoninput; }
         }
 
@@ -1500,7 +1370,7 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.A) { left = false; }
             if (e.KeyCode == Keys.S) { down = false; }
             if (e.KeyCode == Keys.D) { right = false; }
-            if (e.KeyCode == Keys.Z) { jump = false; }
+            if (e.KeyCode == Keys.Space) { jump = false; }
         }
     }
 }
