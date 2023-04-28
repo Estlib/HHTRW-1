@@ -12,13 +12,15 @@ namespace Plat2d_2.EngineCore
     {
         public int musicNumber = 0;
         public string artSetFolder = null;
+        public string[,] artTagDefinitions = null;
         public string[,] firstMostLayer = null;
         public string[,] objectRenderLayer = null;
         public string[,] lastMostLayer = null;
         public string[,] hudLayer = null;
         public string levelType = null;
         public string levelname = null;
-        public System.Drawing.Color levelcolor = System.Drawing.Color.FromArgb(255,0,0,0);
+        public System.Drawing.Color levelColor = System.Drawing.Color.FromArgb(255,0,0,0);
+        public bool isLevelCleared = false;
 
         //public int? musicNumber {  get; set; }
         //public string artSetFolder { get; set; }

@@ -35,6 +35,7 @@ namespace Plat2d_2
         public static int currentLevel = 0; // integer of current level
         public static int currentLevelEndSize = 0; // how long the level is
         bool[] levelClear = new bool[10] { false, false, false, false, false, false, false, false, false, false }; //holds the flags for levels that are cleared
+        //<- levelclear values are now in the Level item itself. soon to be deprecated
 
         int facedirection; //holds value for which direction player last faced
         bool left;
@@ -48,11 +49,13 @@ namespace Plat2d_2
 
         List<string[,]> levelMaps = new List<string[,]>(); // list of arrays that holds all the level maps
         List<List<string[,]>> layeredMaps = new List<List<string[,]>>(); // list lists of arrays that holds all the level maps with their layers
-        // TODO: make an array for each layer, not for each level.
+        //<- these arrays are soon to be deprecated, replace with a list of Level items
 
         public Sprite2d[] NoArtRefs = new Sprite2d[30]; //array for holding the reference sprites to use for the noart tileset.
         public Sprite2d[] PlainsArtRefs = new Sprite2d[64]; //array for holding the reference sprites for plains type of level
         public Sprite2d[] TitleMenuMapRefs = new Sprite2d[64]; //array for holding the reference sprites for titlescreens and menu screens
+        //<- setting references remain at setup for the time being
+
         //public string[] PlainsArtRefsTags = new string[] {
         //    "Air","Gem","Ground","Ground","Ground","Ground","Air","Air",
         //    "Air","Air","Air","Air","Air","Air","Air","Air",
@@ -80,6 +83,7 @@ namespace Plat2d_2
             "Air","Air","Ground","Ground","Ground","Ground","Ground","Ground",
             "Ground","Ground","Ground","Ground","Ground","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air"};
+        //<- tag references are moved to the Level item.
 
         //one layer test maps
         string[,] DebugMap =
@@ -306,6 +310,8 @@ namespace Plat2d_2
             {"G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G",".",".","G",".",".",".",".",".",".",".","G","G","G","G","G","G","G",".","G","G","G","G","G","G","G",".",".","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","." },
         }; //duplicate of level 4
 
+        //<- Level maps are in level item now. 
+
         //string[,] Map ={
         //    {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
         //    {":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":",":" },
@@ -418,7 +424,7 @@ namespace Plat2d_2
             LevelSprites[8] = new List<Sprite2d>();
             LevelSprites[9] = new List<Sprite2d>();
 
-            BGColor = System.Drawing.Color.Black; //sets window background color to be black
+            BGColor = Color.Black; //sets window background color to be black
             //CameraZoom = new Vector2(.1f,.1f);
             SetAllReferences(); //assings the references into arrays
 
@@ -433,8 +439,8 @@ namespace Plat2d_2
             levelMaps.Add(Map8);
             levelMaps.Add(Map9);
             levelMaps.Add(Map10);
+            //<- replace assigning maps with assigning levels into the level array instead
 
-            
 
             //setting sprites into the playersprites bitmap list
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1.png"))); //0 - standing --------------*
@@ -496,7 +502,11 @@ namespace Plat2d_2
             //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/ALTfallFLIP.png"))); //21 - falling flipped
             //currentSprite = 0; //integer value for holding the current player sprite, through which the list is accessed and player is animated through the use of
 
+            //<- add enemy firing sprite
+
+
             LoadNextLevel(levelMaps.ElementAt(currentLevel), TitleMenuMapRefs, TitleMenuMapRefsTags);
+            //<- modify level loading so it would load using Level as parameter instead.
         }
         public override void OnDraw()
         {
@@ -504,7 +514,7 @@ namespace Plat2d_2
             {
                 UnLoadCurrentLevel();
                 currentLevel++;
-                LoadNextLevel(levelMaps.ElementAt(currentLevel),PlainsArtRefs,PlainsArtRefsTags);
+                LoadNextLevel(levelMaps.ElementAt(currentLevel), PlainsArtRefs, PlainsArtRefsTags);
             }
             if (up)
             {
@@ -580,8 +590,17 @@ namespace Plat2d_2
                     AnimatePlayer(0, 0);
                 }
             }
+            //<- repair animating of player, to be separate from enemies, currently, animating player only works if there are no enemies in the level.
 
-            // the following if structure is the player camera
+            UpdatePlayerCamera();
+
+            //Log.Info($"current level length {currentLevelEndSize}");
+            //Log.Info($"camera position: {CameraPosition.X}");
+            //Log.Info($"player position: {player.Position.X}");
+        }
+
+        private void UpdatePlayerCamera()
+        {
             if (player.Position.X <= 160)
             {
                 CameraPosition.X = 0;
@@ -599,16 +618,12 @@ namespace Plat2d_2
                 }
                 else
                 {
-                    CameraPosition.X = -(currentLevelEndSize -320);
+                    CameraPosition.X = -(currentLevelEndSize - 320);
                 }
             }
-
-            //Log.Info($"current level length {currentLevelEndSize}");
-            //Log.Info($"camera position: {CameraPosition.X}");
-            //Log.Info($"player position: {player.Position.X}");
         }
 
-        
+
         /// <summary>
         /// Unloads all of the content on screen. Including player and level tiles
         /// </summary>
@@ -816,6 +831,8 @@ namespace Plat2d_2
             //LoadHud() method doesnt exist yet, use for loading the hud.
             //the reason it is not existant is that loading the hud needs to stay still, relative to the player.
             //i currently do not have a way to do this yet. and thus, requires true layer implementation.
+
+            //this method must handle loading the levels layers, color, tags and music to play.
         }
 
         private void LoadLayerNoArt(Sprite2d[] noArtRefs, string[,] Map)
