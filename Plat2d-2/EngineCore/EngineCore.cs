@@ -104,6 +104,10 @@ namespace Plat2d_2.EngineCore
         }
         public static void UnRegisterSprite(Sprite2d sprite)
         {
+            if (sprite.Tag == "Enemy")
+            {
+                Log.Highlight("Enemy is being unregistered");
+            }
             //AllSprites.Remove(sprite);
             LevelSprites[DemoGame.currentLevel].Remove(sprite);
         }
@@ -113,9 +117,20 @@ namespace Plat2d_2.EngineCore
             {
                 if (sprite.HasBody())
                 {
+                    if (sprite.Tag == "Enemy")
+                    {
+                        Log.Highlight("DestroyStatic is destroying an Enemy");
+                    }
                     sprite.DestroyStatic(sprite);
                 }
             }
+            //foreach (var enemy in DemoGame.enemies)
+            //{
+            //    if (enemy.sprite2d.HasBody())
+            //    {
+            //        enemy.sprite2d.DestroyStatic(enemy.sprite2d);
+            //    }
+            //}
             //AllSprites = new List<Sprite2d>();
             //LevelSprites[DemoGame.currentLevel] = new List<Sprite2d>();
             //for (int i = 0; i < AllSprites.Count; i++)
@@ -169,13 +184,14 @@ namespace Plat2d_2.EngineCore
             //{
             //    g.FillRectangle(new SolidBrush(System.Drawing.Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
             //}
-            foreach (Sprite2d sprite in LevelSprites[DemoGame.currentLevel])
+            for (int i = 0; i < LevelSprites[DemoGame.currentLevel].Count; i++)
             {
-                    if (!sprite.IsReference)
-                    {
-                        g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
-                    }
+                Sprite2d sprite = LevelSprites[DemoGame.currentLevel][i];
+                if (!sprite.IsReference)
+                {
+                    g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
                 }
+            }
             //}
             //catch (Exception)
             //{

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Box2DX.Dynamics;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ namespace Plat2d_2.EngineCore
         public string[,] hudLayer = null;
         public string levelType = null;
         public string levelname = null;
+        public Box2DX.Dynamics.Color levelcolor = new Box2DX.Dynamics.Color(0f,0f,0f);
 
         //public int? musicNumber {  get; set; }
         //public string artSetFolder { get; set; }

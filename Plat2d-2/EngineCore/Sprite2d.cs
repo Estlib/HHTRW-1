@@ -47,7 +47,7 @@ namespace Plat2d_2.EngineCore
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             this.Sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
 
-            Log.Info($"[SPRITE2D]({Directory} {Tag}) has been registered");
+            Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
             EngineCore.RegisterSprite(this);
         }
         /// <summary>
@@ -66,7 +66,7 @@ namespace Plat2d_2.EngineCore
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             this.Sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
 
-            Log.Info($"[SPRITE2D]({Directory} {Tag}) has been registered");
+            Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
             EngineCore.RegisterSprite(this);
         }
         /// <summary>
@@ -87,7 +87,7 @@ namespace Plat2d_2.EngineCore
             //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
             this.Sprite = Reference.Sprite; //sets the sprite bitmap to be the one from the reference sprite
 
-            Log.Info($"[SPRITE2D]({Directory} {Tag}) has been registered");
+            Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
             EngineCore.RegisterSprite(this);
         }
         /// <summary>
@@ -113,6 +113,10 @@ namespace Plat2d_2.EngineCore
         }
         public void DestroyStatic(Sprite2d sprite)
         {
+            if (sprite.Tag == "Enemy")
+            {
+                Log.Highlight($"Enemy has invoked DestroyBody");
+            }
             EngineCore.world.DestroyBody(sprite.body);
         }
         /// <summary>
@@ -147,6 +151,7 @@ namespace Plat2d_2.EngineCore
         /// </summary>
         public void CreateDynamic()
         {
+            Log.Info($"{this.Tag} is being made dynamic");
             // Define the dynamic body. We set its position and call the body factory.
             //bodyDef = new BodyDef();
             bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
@@ -165,14 +170,23 @@ namespace Plat2d_2.EngineCore
 
             shapeDef.Restitution = 0.0f;
 
-            // Add the shape to the body.
-            body.CreateShape(shapeDef);
+            try
+            {
+                // Add the shape to the body.
+                body.CreateShape(shapeDef);  //enemy body assert error here
+
+            }
+            catch (Exception)
+            {
+                Log.Error($"Couldnt create a body for {this.Sprite}");
+            }
 
             // Now tell the dynamic body to compute it's mass properties base
             // on its shape.
             body.SetMassFromShapes();
 
             body.SetUserData(this);
+            Log.Info($"{this.Tag} has been made dynamic");
         }
         /// <summary>
         /// Method to apply an impulse to a dynamic body

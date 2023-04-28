@@ -52,6 +52,10 @@ namespace Plat2d_2.EngineCore
             this.isfacingleft = false; //current 8
 
         }
+        ~Enemy()
+        {
+
+        }
     }
     
 }
