@@ -10,7 +10,7 @@ namespace Plat2d_2.EngineCore
 {
     public class Level
     {
-        public int? musicNumber = null;
+        public int musicNumber = 0;
         public string artSetFolder = null;
         public string[,] firstMostLayer = null;
         public string[,] objectRenderLayer = null;
@@ -18,7 +18,7 @@ namespace Plat2d_2.EngineCore
         public string[,] hudLayer = null;
         public string levelType = null;
         public string levelname = null;
-        public Box2DX.Dynamics.Color levelcolor = new Box2DX.Dynamics.Color(0f,0f,0f);
+        public System.Drawing.Color levelcolor = System.Drawing.Color.FromArgb(255,0,0,0);
 
         //public int? musicNumber {  get; set; }
         //public string artSetFolder { get; set; }

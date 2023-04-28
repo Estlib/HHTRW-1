@@ -33,7 +33,7 @@ namespace Plat2d_2.EngineCore
         public static List<Sprite2d>[] LevelSprites = new List<Sprite2d>[10];
         public static bool pausebuttoninput = false;
 
-        public System.Drawing.Color BGColor = System.Drawing.Color.Green;
+        public System.Drawing.Color BGColor = System.Drawing.Color.Black;
 
         public Vector2 CameraZoom = new Vector2(1,1);
         public Vector2 CameraPosition = Vector2.Zero();
