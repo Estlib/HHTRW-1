@@ -20,6 +20,7 @@ namespace Plat2d_2
     {
         Label CrystalLabel;
         Label ScoreLabel;
+        Label HealthLabel;
         Label LivesLabel;
         Label AmmoLabel;
         Sprite2d player; //variable to hold players sprite
@@ -700,16 +701,73 @@ namespace Plat2d_2
             
             var label1 = new Label();
             label1.AutoSize = true;
-            label1.BackColor = System.Drawing.Color.Transparent;
+            label1.BackColor = System.Drawing.Color.Black;
             label1.ForeColor = System.Drawing.Color.White;
             label1.Location = new System.Drawing.Point(32, 216);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(35, 13);
+            label1.Size = new System.Drawing.Size(32, 32);
             label1.TabIndex = 0;
             label1.Text = $"{DemoGame.crystalScoreTally}";
+            //label1.Font = new Font("Arcade Legacy", 6);
+            label1.Font = new Font("Arcade Legacy", 6);
             CrystalLabel = label1;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(CrystalLabel); });
-           
+
+            var label2 = new Label();
+            label2.AutoSize = true;
+            label2.BackColor = System.Drawing.Color.Black;
+            label2.ForeColor = System.Drawing.Color.White;
+            label2.Location = new System.Drawing.Point(64, 216);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(32, 32);
+            label2.TabIndex = 0;
+            label2.Text = $"{DemoGame.pointScoreTally}";
+            //label1.Font = new Font("Arcade Legacy", 6);
+            label2.Font = new Font("Arcade Legacy", 6);
+            ScoreLabel = label2;
+            Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(ScoreLabel); });
+
+            var label3 = new Label();
+            label3.AutoSize = true;
+            label3.BackColor = System.Drawing.Color.Black;
+            label3.ForeColor = System.Drawing.Color.White;
+            label3.Location = new System.Drawing.Point(128, 216);
+            label3.Name = "label2";
+            label3.Size = new System.Drawing.Size(32, 32);
+            label3.TabIndex = 0;
+            label3.Text = $"{DemoGame.playerHealth}";
+            //label1.Font = new Font("Arcade Legacy", 6);
+            label3.Font = new Font("Arcade Legacy", 6);
+            HealthLabel = label3;
+            Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(HealthLabel); });
+
+            var label4 = new Label();
+            label4.AutoSize = true;
+            label4.BackColor = System.Drawing.Color.Black;
+            label4.ForeColor = System.Drawing.Color.White;
+            label4.Location = new System.Drawing.Point(160, 216);
+            label4.Name = "label2";
+            label4.Size = new System.Drawing.Size(128, 32);
+            label4.TabIndex = 0;
+            label4.Text = $"{DemoGame.playerLives}";
+            //label1.Font = new Font("Arcade Legacy", 6);
+            label4.Font = new Font("Arcade Legacy", 6);
+            LivesLabel = label4;
+            Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(LivesLabel); });
+
+            var label5 = new Label();
+            label5.AutoSize = true;
+            label5.BackColor = System.Drawing.Color.Black;
+            label5.ForeColor = System.Drawing.Color.White;
+            label5.Location = new System.Drawing.Point(172, 216);
+            label5.Name = "label2";
+            label5.Size = new System.Drawing.Size(128, 32);
+            label5.TabIndex = 0;
+            label5.Text = $"{DemoGame.weapon1Ammo}";
+            //label1.Font = new Font("Arcade Legacy", 6);
+            label5.Font = new Font("Arcade Legacy", 6);
+            AmmoLabel = label5;
+            Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(AmmoLabel); });
 
             Log.Highlight($"Game is starting, current game: DemoGame");
 
@@ -1476,6 +1534,7 @@ namespace Plat2d_2
         int[] jumpFramesL = new int[] {7, 9 }; //frames for custom, out of order, jump animation. left facing.
         int[] jumpFramesR = new int[] {18, 20 }; //frames for custom, out of order, jump animation. right facing.
         public static int crystalScoreTally = 0;
+        public static int pointScoreTally = 0;
         public static int playerHealth = 100;
         public static int playerLives = 5;
         public static int weapon1Ammo = -1;
@@ -1592,7 +1651,7 @@ namespace Plat2d_2
 
             if (coin != null) //if the coin is being touched
             {
-
+                pointScoreTally += 100;
                 crystalScoreTally++;
                 Log.Info($"Coin is being touched. Current Crystalcount: {crystalScoreTally}"); //then it logs a message to the console
                 coin.DestroySelf(); //and destroys the object
@@ -1778,7 +1837,23 @@ namespace Plat2d_2
             {
                 CrystalLabel.Text = $"{DemoGame.crystalScoreTally}";
             }
-            Log.Info("Crystalscore label update has been called.");
+            if (HealthLabel != null)
+            {
+                HealthLabel.Text = $"{DemoGame.playerHealth}";
+            }
+            if (LivesLabel != null)
+            {
+                LivesLabel.Text = $"{DemoGame.playerLives}";
+            }
+            if (AmmoLabel != null)
+            {
+                AmmoLabel.Text = $"{DemoGame.weapon1Ammo}";
+            }
+            if (ScoreLabel != null)
+            {
+                ScoreLabel.Text = $"{DemoGame.pointScoreTally}";
+            }
+            //Log.Info("Crystalscore label update has been called.");
             //crystalScore.BringToFront();
             //Log.Info("Crystalscore label should have been brought to the front");
         }
