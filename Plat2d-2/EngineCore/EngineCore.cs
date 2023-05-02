@@ -13,19 +13,41 @@ using System.Security.Policy;
 
 namespace Plat2d_2.EngineCore
 {
-    class Canvas : Form
+    public class Canvas : Form
     {
+        public System.Windows.Forms.Label label1;
+
         public Canvas()
         {
             this.DoubleBuffered = true;
+
+        }
+
+        public void InitializeComponent()
+        {
+            
+            this.SuspendLayout();
+            // 
+            // label1
+            // 
+            
+            // 
+            // Canvas
+            // 
+
+            this.Name = "Canvas";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
     }
     public abstract class EngineCore
     {
         private Vector2 ScreenSize = new Vector2(320, 240);
         private string Title = "HHTRW-engine1";
-        private Canvas Window = null;
+        public Canvas Window = null;
         private Thread GameLoopThread = null;
+
 
         public static List<Shape2d> AllShapes = new List<Shape2d>();
         public static List<Sprite2d> AllSprites = new List<Sprite2d>();
@@ -70,6 +92,7 @@ namespace Plat2d_2.EngineCore
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
             world = new World(worldAABB, gravity, pausebuttoninput);
+            Window.InitializeComponent();
 
             Application.Run(Window);
         }
@@ -159,7 +182,10 @@ namespace Plat2d_2.EngineCore
                     OnUpdate();
                     Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
                     Thread.Sleep(2);
-
+                    if (Window != null)
+                    {
+                        Window.BeginInvoke((MethodInvoker)delegate { UpdateHud(); });
+                    }                    
                 }
                 catch (Exception)
                 {
@@ -167,7 +193,8 @@ namespace Plat2d_2.EngineCore
                 }
             }
         }
-
+        
+        
         private void Renderer(object sender, PaintEventArgs e)
         {
             // Instruct the world to perform a single step of simulation. It is
@@ -199,11 +226,18 @@ namespace Plat2d_2.EngineCore
             //}
 
         }
+        //private void HudRendering(object sender, PaintEventArgs e)
+        //{
+        //    Graphics h = e.Graphics;
+        //    h.Clear(BGColor);
+            
+        //}
         public abstract void OnLoad();
         public abstract void OnUpdate();
         public abstract void OnDraw();
         public abstract void GetKeyDown(KeyEventArgs e);
         public abstract void GetKeyUp(KeyEventArgs e);
 
+        public abstract void UpdateHud();
     }
 }

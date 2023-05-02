@@ -12,7 +12,7 @@ namespace Plat2d_2.EngineCore
     {
         public int musicNumber = 0;
         public string artSetFolder = null;
-        public string[,] artTagDefinitions = null;
+        public string[] artTagDefinitions = null;
         public string[,] firstMostLayer = null;
         public string[,] objectRenderLayer = null;
         public string[,] lastMostLayer = null;
@@ -68,6 +68,36 @@ namespace Plat2d_2.EngineCore
             this.objectRenderLayer = LevelLayers(levelname, 1);
             this.lastMostLayer = LevelLayers(levelname, 2);
             this.hudLayer = null;
+        }
+        /// <summary>
+        /// full quality constructor
+        /// </summary>
+        /// <param name="musicNumber"></param>
+        /// <param name="artSetFolder"></param>
+        /// <param name="artTagDefinitions"></param>
+        /// <param name="firstMostLayer"></param>
+        /// <param name="objectRenderLayer"></param>
+        /// <param name="lastMostLayer"></param>
+        /// <param name="hudLayer"></param>
+        /// <param name="levelType"></param>
+        /// <param name="levelname"></param>
+        /// <param name="levelColor"></param>
+        /// <param name="isLevelCleared"></param>
+        public Level(
+            int musicNumber, string artSetFolder, string[] artTagDefinitions, string[,] firstMostLayer, string[,] objectRenderLayer, string[,] lastMostLayer, 
+            string[,] hudLayer, string levelType, string levelname, System.Drawing.Color levelColor, bool isLevelCleared) 
+        {
+            this.musicNumber = musicNumber;
+            this.artSetFolder = artSetFolder;
+            this.artTagDefinitions = artTagDefinitions;
+            this.firstMostLayer = firstMostLayer;
+            this.objectRenderLayer = objectRenderLayer;
+            this.lastMostLayer = lastMostLayer;
+            this.hudLayer = hudLayer;
+            this.levelType = levelType;
+            this.levelname = levelname;
+            this.levelColor = levelColor;
+            this.isLevelCleared = isLevelCleared;
         }
 
         public string[,] LevelLayers(string levelname, int layernumber)

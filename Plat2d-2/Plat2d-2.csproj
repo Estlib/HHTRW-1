@@ -113,5 +113,10 @@
     </Content>
     <Content Include="EngineCore\feedback.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EngineCore\EngineCore.resx">
+      <DependentUpon>EngineCore.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
