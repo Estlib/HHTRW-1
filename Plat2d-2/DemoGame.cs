@@ -42,16 +42,25 @@ namespace Plat2d_2
         public static int currentLevelEndSize = 0; // how long the level is
         bool[] levelClear = new bool[10] { false, false, false, false, false, false, false, false, false, false }; //holds the flags for levels that are cleared
         //<- levelclear values are now in the Level item itself. soon to be deprecated
+        List<Bitmap> bulletgraphics = new List<Bitmap>();
 
         int facedirection; //holds value for which direction player last faced
         bool left;
         bool right;
         bool up;
         bool down;
+        bool fire;
         bool jump;
         bool jumpmode;
         bool nokey;
         bool LRDcheck;
+        int maxbulletsallowed = 3;
+        int currentbulletsonscreen = 0;
+        bool firinglock;
+        int firinglockcounter = 10;
+        int weapon1speed = 4;
+
+        List<Bullet> bullets = new List<Bullet>();
 
         //List<string[,]> levelMaps = new List<string[,]>(); // list of arrays that holds all the level maps
         List<Level> levels = new List<Level>(); // list lists of arrays that holds all the level maps with their layers
@@ -698,7 +707,7 @@ namespace Plat2d_2
         /// </summary>
         public override void OnLoad()
         {
-            
+            //label for crystals
             var label1 = new Label();
             label1.AutoSize = true;
             label1.BackColor = System.Drawing.Color.Black;
@@ -713,6 +722,7 @@ namespace Plat2d_2
             CrystalLabel = label1;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(CrystalLabel); });
 
+            //label for points
             var label2 = new Label();
             label2.AutoSize = true;
             label2.BackColor = System.Drawing.Color.Black;
@@ -727,6 +737,7 @@ namespace Plat2d_2
             ScoreLabel = label2;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(ScoreLabel); });
 
+            //label for players health
             var label3 = new Label();
             label3.AutoSize = true;
             label3.BackColor = System.Drawing.Color.Black;
@@ -741,6 +752,7 @@ namespace Plat2d_2
             HealthLabel = label3;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(HealthLabel); });
 
+            //label for players lives
             var label4 = new Label();
             label4.AutoSize = true;
             label4.BackColor = System.Drawing.Color.Black;
@@ -755,11 +767,12 @@ namespace Plat2d_2
             LivesLabel = label4;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(LivesLabel); });
 
+            //label for weapon ammo remaining
             var label5 = new Label();
             label5.AutoSize = true;
             label5.BackColor = System.Drawing.Color.Black;
             label5.ForeColor = System.Drawing.Color.White;
-            label5.Location = new System.Drawing.Point(172, 216);
+            label5.Location = new System.Drawing.Point(188, 216);
             label5.Name = "label2";
             label5.Size = new System.Drawing.Size(128, 32);
             label5.TabIndex = 0;
@@ -804,6 +817,9 @@ namespace Plat2d_2
             levels.Add(harenimus_1_1);
             //<- replace assigning maps with assigning levels into the level array instead
 
+            //setting sprites into the bullets bitmap list
+            bulletgraphics.Add(new Bitmap(Image.FromFile($"assets/sprites/bullets/weapon1A.png")));
+            bulletgraphics.Add(new Bitmap(Image.FromFile($"assets/sprites/bullets/weapon1B.png")));
 
             //setting sprites into the playersprites bitmap list
             playerSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1.png"))); //0 - standing --------------*
@@ -1574,11 +1590,36 @@ namespace Plat2d_2
         /// </summary>
         public override void OnUpdate()
         {
+            Log.Info($"player can fire bullets: {!firinglock}. player has to wait {firinglockcounter} cycles");
             //Log.Info($"Enemies has {enemies.Count} elements");
             if (playerHealth < 1)
             {
                 playerLives--;
                 playerHealth = 100;
+            }
+
+            if (crystalScoreTally == 100)
+            {
+                crystalScoreTally = 0;
+                playerLives++;
+            }
+
+            if (firinglock)
+            {
+                if (firinglockcounter!=0)
+                {
+                    Log.Info("Subtracting one from firinglockcounter");
+                    firinglockcounter--;
+                }
+                else if (firinglockcounter == 0)
+                {
+                    firinglock = false;
+                }
+            }
+            if (firinglock == false)
+            {
+                Log.Info("setting firinglockcounter to 20");
+                firinglockcounter = 10;
             }
 
             if (enemies != null)
@@ -1592,7 +1633,36 @@ namespace Plat2d_2
                 //when player is null (as in doesnt exist) function is exited.
             }
             //times++;
-
+            if (fire == true && firinglock == false)
+            {
+                if (weapon1Ammo != 0)
+                {
+                    weapon1Ammo--;
+                    firinglock = true;
+                    if (bullets.Count <= 3 || bullets == null)
+                    {
+                        //shoot new bullet
+                        if (facedirection == 0)
+                        {
+                            Log.Info("Bullet is fired to the left");
+                            bullets.Add(new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(8, 8), bulletgraphics[0], "Bullet"), true));
+                            //shoot bullet to the left of player
+                        }
+                        else if (facedirection == 1)
+                        {
+                            Log.Info("Bullet is fired to the right");
+                            bullets.Add(new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(8, 8), bulletgraphics[0], "Bullet"), false));
+                            //shoot bullet to the right of player
+                        }
+                        currentbulletsonscreen++;
+                        Log.Info($"Bullet fired. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}");
+                    }
+                    else
+                    {
+                        Log.Warning($"Fired Bullet Limit reached. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}");
+                    }
+                }
+            }
             if (up) //applies an impulse in the up direction when up key boolean is true
             {
                 player.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
@@ -1646,6 +1716,34 @@ namespace Plat2d_2
                     enemyobject.sprite2d.UpdatePosition();
                 }                
             }
+            if (bullets != null)
+            {
+                foreach (var bullet in bullets)
+                {
+                    if (bullet.isfacingleft == true)
+                    {
+                        bullet.sprite2d.AdvanceLeft(weapon1speed);
+                    }
+                    else
+                    {
+                        bullet.sprite2d.AdvanceRight(weapon1speed);
+                    }
+                }
+                foreach (var bullet in bullets)
+                {
+                    if (bullet.sprite2d.Position.X-player.Position.X < -256 || bullet.sprite2d.Position.X-player.Position.X > 256)
+                    {
+                        bullet.sprite2d.DestroySelf();
+                        bullets.Remove(bullet);
+                    }
+                    if (bullet.sprite2d.IsColliding("Enemy", currentLevel) != null)
+                    {
+                        bullet.sprite2d.DestroySelf();
+                        bullets.Remove(bullet);
+                    }
+                }
+
+            }
 
             Sprite2d coin = player.IsColliding("Coin", currentLevel); //checks for collisions between the player and the coin.
 
@@ -1667,11 +1765,19 @@ namespace Plat2d_2
             }
 
             Sprite2d enemy = player.IsColliding("Enemy", currentLevel); //checks for collisions between the player and the level finishing trigger object.
+            Sprite2d bulletcollision = null;
 
             if (enemy != null) //if the trigger object is being touched
             {
                 playerHealth--;
-                Log.Info($"Player has touched an enemy. Health left: {playerHealth}. Lives left: {playerLives}"); //then it logs a message to the console
+                bulletcollision = enemy.IsColliding("Bullet", currentLevel);
+                //Log.Info($"Player has touched an enemy. Health left: {playerHealth}. Lives left: {playerLives}"); //then it logs a message to the console
+            }
+
+            if (bulletcollision != null)
+            {
+                pointScoreTally += 250;
+                enemy.DestroySelf();
             }
 
             Sprite2d setlevel1 = player.IsColliding("SetLevel1", currentLevel);
@@ -1810,10 +1916,11 @@ namespace Plat2d_2
         /// <param name="e"></param>
         public override void GetKeyDown(KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.W) { up = true; }
-            if (e.KeyCode == Keys.A) { left = true; }
-            if (e.KeyCode == Keys.S) { down = true; }
-            if (e.KeyCode == Keys.D) { right = true; }
+            if (e.KeyCode == Keys.Up) { up = true; }
+            if (e.KeyCode == Keys.Left) { left = true; }
+            if (e.KeyCode == Keys.Down) { down = true; }
+            if (e.KeyCode == Keys.Right) { right = true; }
+            if (e.KeyCode == Keys.Z) { fire = true; }
             if (e.KeyCode == Keys.Space) { jump = true; }
             //if (e.KeyCode == Keys.Return) { EngineCore.EngineCore.pausebuttoninput = !pausebuttoninput; }
         }
@@ -1825,10 +1932,11 @@ namespace Plat2d_2
         /// <param name="e"></param>
         public override void GetKeyUp(KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.W) { up = false; }
-            if (e.KeyCode == Keys.A) { left = false; }
-            if (e.KeyCode == Keys.S) { down = false; }
-            if (e.KeyCode == Keys.D) { right = false; }
+            if (e.KeyCode == Keys.Up) { up = false; }
+            if (e.KeyCode == Keys.Left) { left = false; }
+            if (e.KeyCode == Keys.Down) { down = false; }
+            if (e.KeyCode == Keys.Right) { right = false; }
+            if (e.KeyCode == Keys.Z) { fire = false; }
             if (e.KeyCode == Keys.Space) { jump = false; }
         }
         public override void UpdateHud()
@@ -1847,7 +1955,14 @@ namespace Plat2d_2
             }
             if (AmmoLabel != null)
             {
-                AmmoLabel.Text = $"{DemoGame.weapon1Ammo}";
+                if (weapon1Ammo < 0)
+                {
+                    AmmoLabel.Text = $"∞";
+                }
+                else
+                {
+                    AmmoLabel.Text = $"{DemoGame.weapon1Ammo}";
+                }
             }
             if (ScoreLabel != null)
             {

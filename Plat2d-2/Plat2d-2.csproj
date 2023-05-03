@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
     <Compile Include="EngineCore\ArtData.cs" />
+    <Compile Include="EngineCore\Bullet.cs" />
     <Compile Include="EngineCore\Enemy.cs" />
     <Compile Include="EngineCore\EngineCore.cs">
       <SubType>Form</SubType>

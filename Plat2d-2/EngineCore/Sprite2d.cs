@@ -346,5 +346,15 @@ namespace Plat2d_2.EngineCore
         {
             return this.body != null;
         }
+
+        internal void AdvanceLeft(int weaponspeed)
+        {
+            this.Position.X -= weaponspeed;
+        }
+
+        internal void AdvanceRight(int weaponspeed)
+        {
+            this.Position.X += weaponspeed;
+        }
     }
 }
