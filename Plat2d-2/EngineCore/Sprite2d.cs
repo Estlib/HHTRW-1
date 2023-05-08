@@ -156,14 +156,25 @@ namespace Plat2d_2.EngineCore
             //bodyDef = new BodyDef();
             bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
             body = EngineCore.world.CreateBody(bodyDef);
-            //body.IsBullet(); //TODO: why is this here, whats it do
+            //if (this.Tag == "Bullet")
+            //{
+            //    body.IsBullet();
+            //}
 
             // Define another box shape for our dynamic body.
             PolygonDef shapeDef = new PolygonDef();
             shapeDef.SetAsBox(1.0f, 1.0f);
 
             // Set the box density to be non-zero, so it will be dynamic.
-            shapeDef.Density = 1000.0f;
+            //if (this.Tag == "Bullet")
+            //{
+            //    shapeDef.Density = 0.01f;
+
+            //}
+            //else
+            //{
+                shapeDef.Density = 1000.0f;
+            //}
 
             // Override the default friction.
             shapeDef.Friction = 2.0f;
@@ -350,11 +361,13 @@ namespace Plat2d_2.EngineCore
         internal void AdvanceLeft(int weaponspeed)
         {
             this.Position.X -= weaponspeed;
+            //this.body.SetLinearVelocity(new Vec2(-240000, 0));
         }
 
         internal void AdvanceRight(int weaponspeed)
         {
             this.Position.X += weaponspeed;
+            //this.body.SetLinearVelocity(new Vec2(240000, 0));
         }
     }
 }

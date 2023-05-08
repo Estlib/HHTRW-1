@@ -23,6 +23,7 @@ namespace Plat2d_2
         Label HealthLabel;
         Label LivesLabel;
         Label AmmoLabel;
+        Label SelectedWeaponLabel;
         Sprite2d player; //variable to hold players sprite
 
         //TODO: make this into a sprite2dlist that can be populated as the level needs so that the enemies are separate from oneanother and arent sharing an instance
@@ -58,7 +59,10 @@ namespace Plat2d_2
         int currentbulletsonscreen = 0;
         bool firinglock;
         int firinglockcounter = 10;
-        int weapon1speed = 4;
+        int weapon1speed = 1;
+        int weapon1cyclespeed = 4;
+        int selectedweapon = 1;
+        public static string[] weaponnames = {"NoWeapon","Normal","Spreadshot","Plasma Rifle","Jump Bomb" };
 
         List<Bullet> bullets = new List<Bullet>();
 
@@ -708,6 +712,21 @@ namespace Plat2d_2
         public override void OnLoad()
         {
             //label for crystals
+            var label6 = new Label();
+            label6.AutoSize = true;
+            label6.BackColor = System.Drawing.Color.Black;
+            label6.ForeColor = System.Drawing.Color.White;
+            label6.Location = new System.Drawing.Point(32, 224);
+            label6.Name = "label1";
+            label6.Size = new System.Drawing.Size(32, 32);
+            label6.TabIndex = 0;
+            label6.Text = $"{DemoGame.weaponnames[selectedweapon]}";
+            //label1.Font = new Font("Arcade Legacy", 6);
+            label6.Font = new Font("Arcade Legacy", 6);
+            SelectedWeaponLabel = label6;
+            Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(SelectedWeaponLabel); });
+
+            //label for weapon name
             var label1 = new Label();
             label1.AutoSize = true;
             label1.BackColor = System.Drawing.Color.Black;
@@ -1399,7 +1418,8 @@ namespace Plat2d_2
                                 i * 16,
                                 j * 16,
                                 30,
-                                0);
+                                0/*,
+                                0*/);
                         enemy.sprite2d.CreateDynamic();
                         enemies.Add(enemy);
                     }
@@ -1415,6 +1435,11 @@ namespace Plat2d_2
                 {
                     enemies.ElementAt(i).sprite2d.DestroySelf();
                     enemies.ElementAt(i).sprite2d.DestroyStatic(enemies.ElementAt(i).sprite2d);
+                    //if (enemies.ElementAt(i) != null)
+                    //{
+                    //    enemies.ElementAt(i).sprite2d.DestroySelf();
+                    //    enemies.ElementAt(i).sprite2d.DestroyStatic(enemies.ElementAt(i).sprite2d);
+                    //}
                 }
             }
         }
@@ -1557,6 +1582,21 @@ namespace Plat2d_2
         public static int weapon1Damage = 1;
 
         //TODO: fix the jumping animations pls.
+        private void AnimateBullet(Bullet bullet, int firstframe, int lastframe)
+        {
+            slowDownFrameRate += 1;
+            if (slowDownFrameRate == 1)
+            {
+                steps++;
+                slowDownFrameRate = 0;
+            }
+            if (steps > lastframe || steps < firstframe)
+            {
+                steps = firstframe;
+            }
+            //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
+            bullet.sprite2d.Sprite = bulletgraphics[steps];
+        }
 
         /// <summary>
         /// function to animate the players sprites in a one-way manner, where animation stops at the last frame and doesnt continue animating until its fully called again.
@@ -1590,6 +1630,7 @@ namespace Plat2d_2
         /// </summary>
         public override void OnUpdate()
         {
+            currentbulletsonscreen = bullets.Count();
             Log.Info($"player can fire bullets: {!firinglock}. player has to wait {firinglockcounter} cycles");
             //Log.Info($"Enemies has {enemies.Count} elements");
             if (playerHealth < 1)
@@ -1639,19 +1680,23 @@ namespace Plat2d_2
                 {
                     weapon1Ammo--;
                     firinglock = true;
-                    if (bullets.Count <= 3 || bullets == null)
+                    if (bullets.Count <= 2 || bullets == null)
                     {
                         //shoot new bullet
                         if (facedirection == 0)
                         {
                             Log.Info("Bullet is fired to the left");
-                            bullets.Add(new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(8, 8), bulletgraphics[0], "Bullet"), true));
+                            var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y+8), new Vector2(8, 8), bulletgraphics[0], "Bullet"), true);
+                            //newbullet.sprite2d.CreateDynamic();
+                            bullets.Add(newbullet);
                             //shoot bullet to the left of player
                         }
                         else if (facedirection == 1)
                         {
                             Log.Info("Bullet is fired to the right");
-                            bullets.Add(new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(8, 8), bulletgraphics[0], "Bullet"), false));
+                            var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X+32, player.Position.Y+8), new Vector2(8, 8), bulletgraphics[0], "Bullet"), false);
+                            //newbullet.sprite2d.CreateDynamic();
+                            bullets.Add(newbullet);
                             //shoot bullet to the right of player
                         }
                         currentbulletsonscreen++;
@@ -1709,38 +1754,53 @@ namespace Plat2d_2
                 
             }
             player.UpdatePosition(); //updates players position
+
             if (enemies != null)
             {
-                foreach (var enemyobject in enemies)
+                for (int i = 0; i < enemies.Count; i++)
                 {
+                    Enemy enemyobject = enemies[i];
                     enemyobject.sprite2d.UpdatePosition();
+                    if (enemyobject.sprite2d.IsColliding("Bullet", currentLevel) != null)
+                    {
+                        pointScoreTally += 250;
+                        enemyobject.sprite2d.DestroySelf();
+                        enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
+                        enemies.Remove(enemies.ElementAt(i));
+                    }
                 }                
             }
+
             if (bullets != null)
             {
-                foreach (var bullet in bullets)
+                for (int i = 0; i < weapon1cyclespeed; i++)
                 {
-                    if (bullet.isfacingleft == true)
+                    foreach (var bullet in bullets)
                     {
-                        bullet.sprite2d.AdvanceLeft(weapon1speed);
+                        if (bullet.isfacingleft == true)
+                        {
+                            bullet.sprite2d.AdvanceLeft(weapon1speed);
+                        }
+                        else
+                        {
+                            bullet.sprite2d.AdvanceRight(weapon1speed);
+                        }
+                        //bullet.sprite2d.UpdatePosition();
                     }
-                    else
+                    foreach (var bullet in bullets)
                     {
-                        bullet.sprite2d.AdvanceRight(weapon1speed);
+                        if (bullet.sprite2d.Position.X - player.Position.X < -256 || bullet.sprite2d.Position.X - player.Position.X > 256)
+                        {
+                            bullet.sprite2d.DestroySelf();
+                            bullets.Remove(bullet);
+                        }
+                        if (bullet.sprite2d.IsColliding("Enemy", currentLevel) != null)
+                        {
+                            bullet.sprite2d.DestroySelf();
+                            bullets.Remove(bullet);
+                        }
                     }
-                }
-                foreach (var bullet in bullets)
-                {
-                    if (bullet.sprite2d.Position.X-player.Position.X < -256 || bullet.sprite2d.Position.X-player.Position.X > 256)
-                    {
-                        bullet.sprite2d.DestroySelf();
-                        bullets.Remove(bullet);
-                    }
-                    if (bullet.sprite2d.IsColliding("Enemy", currentLevel) != null)
-                    {
-                        bullet.sprite2d.DestroySelf();
-                        bullets.Remove(bullet);
-                    }
+
                 }
 
             }
@@ -1765,6 +1825,7 @@ namespace Plat2d_2
             }
 
             Sprite2d enemy = player.IsColliding("Enemy", currentLevel); //checks for collisions between the player and the level finishing trigger object.
+            
             Sprite2d bulletcollision = null;
 
             if (enemy != null) //if the trigger object is being touched

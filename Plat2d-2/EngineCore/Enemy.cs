@@ -22,7 +22,8 @@ namespace Plat2d_2.EngineCore
         public int enemyrightwalkframes;
         public int wherewalking;
         public bool isfacingleft;
-        public Enemy(Sprite2d sprite, int lastXpos, int lastYpos, int walkleftanimstart, int walkleftanimend, int walkrightanimstart, int walkrightanimend, int enemyleftwalkframes, int enemyrightwalkframes, int wherewalking, bool facedirection)
+        //public int animationsteps;
+        public Enemy(Sprite2d sprite, int lastXpos, int lastYpos, int walkleftanimstart, int walkleftanimend, int walkrightanimstart, int walkrightanimend, int enemyleftwalkframes, int enemyrightwalkframes, int wherewalking, bool facedirection/*, int animationsteps*/)
         {
             this.sprite2d = sprite;
             this.lastXpos = lastXpos; //0
@@ -35,6 +36,7 @@ namespace Plat2d_2.EngineCore
             this.enemyrightwalkframes = enemyrightwalkframes; //7
             this.wherewalking = wherewalking; //old 8
             this.isfacingleft = facedirection; //current 8
+            //this.animationsteps = animationsteps;
 
         }
         public Enemy(Sprite2d sprite, int lastXpos, int lastYpos, int enemyleftwalkframes, int enemyrightwalkframes)
