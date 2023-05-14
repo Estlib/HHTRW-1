@@ -13,11 +13,15 @@ using System.Diagnostics;
 using System.Threading;
 using Color = System.Drawing.Color;
 using System.Xml;
+using System.Drawing.Text;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Plat2d_2
 {
     class DemoGame : EngineCore.EngineCore
     {
+        string fontplace = "assets/fonts/arcade-legacy.ttf";
         Label CrystalLabel;
         Label ScoreLabel;
         Label HealthLabel;
@@ -25,6 +29,29 @@ namespace Plat2d_2
         Label AmmoLabel;
         Label SelectedWeaponLabel;
         Sprite2d player; //variable to hold players sprite
+
+
+
+        //private static void AddFontFromResource(PrivateFontCollection privateFontCollection, string fontResourceName)
+        //{
+        //    var fontBytes = GetFontResourceBytes(typeof(DemoGame).Assembly, fontResourceName);
+        //    var fontData = Marshal.AllocCoTaskMem(fontBytes.Length);
+        //    Marshal.Copy(fontBytes, 0, fontData, fontBytes.Length);
+        //    privateFontCollection.AddMemoryFont(fontData, fontBytes.Length);
+        //    // Marshal.FreeCoTaskMem(fontData);  Nasty bug alert, read the comment
+        //}
+
+        //private static byte[] GetFontResourceBytes(Assembly assembly, string fontResourceName)
+        //{
+        //    var resourceStream = assembly.GetManifestResourceStream(fontResourceName);
+        //    if (resourceStream == null)
+        //        throw new Exception(string.Format("Unable to find font '{0}' in embedded resources.", fontResourceName));
+        //    var fontBytes = new byte[resourceStream.Length];
+        //    resourceStream.Read(fontBytes, 0, (int)resourceStream.Length);
+        //    resourceStream.Close();
+        //    return fontBytes;
+        //}
+
 
         //TODO: make this into a sprite2dlist that can be populated as the level needs so that the enemies are separate from oneanother and arent sharing an instance
         public static List<Enemy> enemies = new List<Enemy>();
@@ -42,6 +69,8 @@ namespace Plat2d_2
         public static int currentLevel = 0; // integer of current level
         public static int currentLevelEndSize = 0; // how long the level is
         bool[] levelClear = new bool[10] { false, false, false, false, false, false, false, false, false, false }; //holds the flags for levels that are cleared
+        bool[] worldMap1 = new bool[6] { false, false, false, false, false, false };
+        bool[] gameWorldClear = new bool[6] { false, true, true, true, true, true };
         //<- levelclear values are now in the Level item itself. soon to be deprecated
         List<Bitmap> bulletgraphics = new List<Bitmap>();
 
@@ -62,6 +91,8 @@ namespace Plat2d_2
         int weapon1speed = 1;
         int weapon1cyclespeed = 4;
         int selectedweapon = 1;
+        bool loadfontfromfileandnotos = false;
+
         public static string[] weaponnames = {"NoWeapon","Normal","Spreadshot","Plasma Rifle","Jump Bomb" };
 
         List<Bullet> bullets = new List<Bullet>();
@@ -862,9 +893,83 @@ namespace Plat2d_2
         };
 
 
+        public static string[,] world1mapFML =
+        {
+            { "87","87","87","87","87","87","87","87","87","87","87","87","87","87","87","87","87","87","87","87" },
+            { "87","  ","  ","  ","  ","76","77","78","79","80","81","82","83","84","85","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "87","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","87" },
+            { "86","86","86","86","86","86","86","86","86","86","86","86","86","86","86","86","86","86","86","86" },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+        };
+        public static string[,] world1mapOL =
+        {
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","57","  ","58","  ","59","  ","60","  ","61","  ","62","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ", "P","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+        };
+        public static string[,] world1mapLML =
+        {
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+        };
+        public static string[,] world1mapHL =
+        {
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
+        };
+
+
         public static Sprite2d[] NoArtRefs = new Sprite2d[30]; //array for holding the reference sprites to use for the noart tileset.
         public static Sprite2d[] PlainsArtRefs = new Sprite2d[64]; //array for holding the reference sprites for plains type of level
-        public static Sprite2d[] TitleMenuMapRefs = new Sprite2d[64]; //array for holding the reference sprites for titlescreens and menu screens
+        public static Sprite2d[] TitleMenuMapRefs = new Sprite2d[89]; //array for holding the reference sprites for titlescreens and menu screens
         public static Sprite2d[] UndergroundArtRefs = new Sprite2d[64]; //array for holding the reference sprites for plains type of level
         public static Sprite2d[] DesertArtRefs = new Sprite2d[64]; //array for holding the reference sprites for plains type of level
         public static Sprite2d[] ForestArtRefs = new Sprite2d[64]; //array for holding the reference sprites for plains type of level
@@ -906,7 +1011,12 @@ namespace Plat2d_2
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Ground","Ground","Ground","Ground","Ground","Ground",
             "Ground","Ground","Ground","Ground","Ground","Air","Air","Air",
-            "Air","Finish","Air","Air","Air","Air","Air","Air"};
+            "Air","Finish","Air","Air","Air","Air","Air","Air",
+            "Air","Level1","Level2","Level3","Level4","Level5","Level6","Air",
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "Air","Air","Air","Air","Air","Air","Ground","Air",
+            "Ground"//,"Air","Air","Air","Air","Air","Air","Air" 
+        };
         public static string[] DesertArtRefsTags = new string[] {
             "Air","Coin","Ground","Ground","Ground","Ground","Ground","Air",
             "Air","Ground","Air","Air","Air","Ground","Air","Air",
@@ -934,6 +1044,15 @@ namespace Plat2d_2
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air"};
+        public static string[] MapscreenArtRefsTags = new string[] {
+            "Air","Ground","Air","Air","Air","Air","Air","Air",
+            "Level1","Level2","Level3","Level4","Level5","Level6","Air","Air",
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "Air","Air","Air","Air","Air","Air","Air","Air"};
 
         Level titlescreen = new Level(0, "screens", TitleMenuMapRefsTags, titlescreenlayerFML, titlescreenlayerOL, titlescreenlayerLML, titlescreenlayerHL, "Screen", "Title Screen", System.Drawing.Color.FromArgb(255, 0, 0, 0), false);
         Level debuglevel1 = new Level(0, "plains", PlainsArtRefsTags, debug1layerFML, debug1layerOL, debug1layerLML, debug1layerHL, "Debug", "Debug Screen", System.Drawing.Color.FromArgb(255, 56, 0, 252), false);
@@ -946,6 +1065,7 @@ namespace Plat2d_2
         Level harenimus_1_5 = new Level(0, "plains", PlainsArtRefsTags, level5FML, level5OL, level5LML, level5HL, "Level", "Harenimus 1-5 Plains 2", System.Drawing.Color.FromArgb(255, 56, 192, 252), false);
         Level harenimus_1_6_1 = new Level(0, "castle", CastleArtRefsTags, level6_1FML, level6_1OL, level6_1LML, level6_1HL, "Level", "Harenimus 1-6 Castle", System.Drawing.Color.FromArgb(255, 0, 0, 0), false);
         Level harenimus_1_6_2 = new Level(0, "castle", CastleArtRefsTags, level6_2FML, level6_2OL, level6_2LML, level6_2HL, "Level", "Harenimus 1-6 Castle", System.Drawing.Color.FromArgb(255, 0, 0, 0), false);
+        Level worldmap_harenimus = new Level(0, "map", TitleMenuMapRefsTags, world1mapFML, world1mapOL, world1mapLML, world1mapHL, "Screen", "Kingdom of Harenimus", Color.FromArgb(255, 0, 0, 0), false);
 
 
         /// <summary>
@@ -960,6 +1080,13 @@ namespace Plat2d_2
         /// </summary>
         public override void OnLoad()
         {
+            PrivateFontCollection privateFonts = new PrivateFontCollection();
+            privateFonts.AddFontFile("assets/fonts/arcade-legacy.ttf");
+            FontFamily font = privateFonts.Families[0];
+            Font debuglabelfont = new Font(font, 6);
+            Font systemdebuglabelfont = new Font("Arcade Legacy", 6);
+            
+
             //label for crystals
             var label6 = new Label();
             label6.AutoSize = true;
@@ -969,9 +1096,8 @@ namespace Plat2d_2
             label6.Name = "label1";
             label6.Size = new System.Drawing.Size(32, 32);
             label6.TabIndex = 0;
+            label6.Font = loadfontfromfileandnotos == true ? debuglabelfont : systemdebuglabelfont;
             label6.Text = $"{DemoGame.weaponnames[selectedweapon]}";
-            //label1.Font = new Font("Arcade Legacy", 6);
-            label6.Font = new Font("Arcade Legacy", 6);
             SelectedWeaponLabel = label6;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(SelectedWeaponLabel); });
 
@@ -984,9 +1110,8 @@ namespace Plat2d_2
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(32, 32);
             label1.TabIndex = 0;
+            label1.Font = loadfontfromfileandnotos == true ? debuglabelfont : systemdebuglabelfont;
             label1.Text = $"{DemoGame.crystalScoreTally}";
-            //label1.Font = new Font("Arcade Legacy", 6);
-            label1.Font = new Font("Arcade Legacy", 6);
             CrystalLabel = label1;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(CrystalLabel); });
 
@@ -999,9 +1124,8 @@ namespace Plat2d_2
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(32, 32);
             label2.TabIndex = 0;
+            label2.Font = loadfontfromfileandnotos == true ? debuglabelfont : systemdebuglabelfont;
             label2.Text = $"{DemoGame.pointScoreTally}";
-            //label1.Font = new Font("Arcade Legacy", 6);
-            label2.Font = new Font("Arcade Legacy", 6);
             ScoreLabel = label2;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(ScoreLabel); });
 
@@ -1014,9 +1138,8 @@ namespace Plat2d_2
             label3.Name = "label2";
             label3.Size = new System.Drawing.Size(32, 32);
             label3.TabIndex = 0;
+            label3.Font = loadfontfromfileandnotos == true ? debuglabelfont : systemdebuglabelfont;
             label3.Text = $"{DemoGame.playerHealth}";
-            //label1.Font = new Font("Arcade Legacy", 6);
-            label3.Font = new Font("Arcade Legacy", 6);
             HealthLabel = label3;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(HealthLabel); });
 
@@ -1029,9 +1152,8 @@ namespace Plat2d_2
             label4.Name = "label2";
             label4.Size = new System.Drawing.Size(128, 32);
             label4.TabIndex = 0;
+            label4.Font = loadfontfromfileandnotos == true ? debuglabelfont : systemdebuglabelfont;
             label4.Text = $"{DemoGame.playerLives}";
-            //label1.Font = new Font("Arcade Legacy", 6);
-            label4.Font = new Font("Arcade Legacy", 6);
             LivesLabel = label4;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(LivesLabel); });
 
@@ -1044,9 +1166,8 @@ namespace Plat2d_2
             label5.Name = "label2";
             label5.Size = new System.Drawing.Size(128, 32);
             label5.TabIndex = 0;
+            label5.Font = loadfontfromfileandnotos == true ? debuglabelfont : systemdebuglabelfont;
             label5.Text = $"{DemoGame.weapon1Ammo}";
-            //label1.Font = new Font("Arcade Legacy", 6);
-            label5.Font = new Font("Arcade Legacy", 6);
             AmmoLabel = label5;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(AmmoLabel); });
 
@@ -1082,6 +1203,7 @@ namespace Plat2d_2
             levels.Add(titlescreen);
             //levels.Add(debuglevel1);
             //levels.Add(debuglevel2);
+            levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_1);
             levels.Add(harenimus_1_2);
             levels.Add(harenimus_1_3_1);
@@ -1191,6 +1313,10 @@ namespace Plat2d_2
                 else if (levels.ElementAt(currentLevel).artSetFolder == "castle")
                 {
                     LoadNextLevel(levels.ElementAt(currentLevel), CastleArtRefs);
+                }
+                else if (levels.ElementAt(currentLevel).artSetFolder == "screens")
+                {
+                    LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
                 }
             }
             if (up)
@@ -1681,13 +1807,38 @@ namespace Plat2d_2
             TitleMenuMapRefs[54] = new Sprite2d("tiles/titlemapmenu/54");
             TitleMenuMapRefs[55] = new Sprite2d("tiles/titlemapmenu/55");
             TitleMenuMapRefs[56] = new Sprite2d("tiles/titlemapmenu/56");
-            //TitleMenuMapRefs[57] = new Sprite2d("tiles/titlemapmenu/01");
-            //TitleMenuMapRefs[58] = new Sprite2d("tiles/titlemapmenu/58");
-            //TitleMenuMapRefs[59] = new Sprite2d("tiles/titlemapmenu/59");
-            //TitleMenuMapRefs[60] = new Sprite2d("tiles/titlemapmenu/60");
-            //TitleMenuMapRefs[61] = new Sprite2d("tiles/titlemapmenu/61");
-            //TitleMenuMapRefs[62] = new Sprite2d("tiles/titlemapmenu/62");
-            //TitleMenuMapRefs[63] = new Sprite2d("tiles/titlemapmenu/63");
+            TitleMenuMapRefs[57] = new Sprite2d("tiles/titlemapmenu/01");
+            TitleMenuMapRefs[58] = new Sprite2d("tiles/titlemapmenu/58");
+            TitleMenuMapRefs[59] = new Sprite2d("tiles/titlemapmenu/59");
+            TitleMenuMapRefs[60] = new Sprite2d("tiles/titlemapmenu/60");
+            TitleMenuMapRefs[61] = new Sprite2d("tiles/titlemapmenu/61");
+            TitleMenuMapRefs[62] = new Sprite2d("tiles/titlemapmenu/62");
+            TitleMenuMapRefs[63] = new Sprite2d("tiles/titlemapmenu/63");
+            TitleMenuMapRefs[64] = new Sprite2d("tiles/titlemapmenu/64");
+            TitleMenuMapRefs[65] = new Sprite2d("tiles/titlemapmenu/65");
+            TitleMenuMapRefs[66] = new Sprite2d("tiles/titlemapmenu/66");
+            TitleMenuMapRefs[67] = new Sprite2d("tiles/titlemapmenu/67");
+            TitleMenuMapRefs[68] = new Sprite2d("tiles/titlemapmenu/68");
+            TitleMenuMapRefs[69] = new Sprite2d("tiles/titlemapmenu/69");
+            TitleMenuMapRefs[70] = new Sprite2d("tiles/titlemapmenu/70");
+            TitleMenuMapRefs[71] = new Sprite2d("tiles/titlemapmenu/71");
+            TitleMenuMapRefs[72] = new Sprite2d("tiles/titlemapmenu/72");
+            TitleMenuMapRefs[73] = new Sprite2d("tiles/titlemapmenu/73");
+            TitleMenuMapRefs[74] = new Sprite2d("tiles/titlemapmenu/74");
+            TitleMenuMapRefs[75] = new Sprite2d("tiles/titlemapmenu/75");
+            TitleMenuMapRefs[76] = new Sprite2d("tiles/titlemapmenu/76");
+            TitleMenuMapRefs[77] = new Sprite2d("tiles/titlemapmenu/77");
+            TitleMenuMapRefs[78] = new Sprite2d("tiles/titlemapmenu/78");
+            TitleMenuMapRefs[79] = new Sprite2d("tiles/titlemapmenu/79");
+            TitleMenuMapRefs[80] = new Sprite2d("tiles/titlemapmenu/80");
+            TitleMenuMapRefs[81] = new Sprite2d("tiles/titlemapmenu/81");
+            TitleMenuMapRefs[82] = new Sprite2d("tiles/titlemapmenu/82");
+            TitleMenuMapRefs[83] = new Sprite2d("tiles/titlemapmenu/83");
+            TitleMenuMapRefs[84] = new Sprite2d("tiles/titlemapmenu/84");
+            TitleMenuMapRefs[85] = new Sprite2d("tiles/titlemapmenu/85");
+            TitleMenuMapRefs[86] = new Sprite2d("tiles/titlemapmenu/86");
+            TitleMenuMapRefs[87] = new Sprite2d("tiles/titlemapmenu/87");
+            TitleMenuMapRefs[88] = new Sprite2d("tiles/titlemapmenu/88");
         }
         private void SetForestRefs()
         {
@@ -2414,13 +2565,12 @@ namespace Plat2d_2
                 enemy.DestroySelf();
             }
 
-            Sprite2d setlevel1 = player.IsColliding("SetLevel1", currentLevel);
-            Sprite2d setlevel2 = player.IsColliding("SetLevel2", currentLevel);
-            Sprite2d setlevel3 = player.IsColliding("SetLevel3", currentLevel);
-            Sprite2d setlevel4 = player.IsColliding("SetLevel4", currentLevel);
-            Sprite2d setlevel5 = player.IsColliding("SetLevel5", currentLevel);
-            Sprite2d setlevel6 = player.IsColliding("SetLevel6", currentLevel);
-            Sprite2d setlevel7 = player.IsColliding("SetLevel7", currentLevel);
+            Sprite2d setlevel1 = player.IsColliding("Level1", currentLevel);
+            Sprite2d setlevel2 = player.IsColliding("Level2", currentLevel);
+            Sprite2d setlevel3 = player.IsColliding("Level3", currentLevel);
+            Sprite2d setlevel4 = player.IsColliding("Level4", currentLevel);
+            Sprite2d setlevel5 = player.IsColliding("Level5", currentLevel);
+            Sprite2d setlevel6 = player.IsColliding("Level6", currentLevel);
             if (setlevel1 != null)
             {
                 Log.Select($"player has triggered {setlevel1}");
@@ -2457,12 +2607,6 @@ namespace Plat2d_2
                 setlevel6.DestroySelf();
                 SelectLevel(levelClear, 6); //and sets the current level as being completed
             }
-            if (setlevel7 != null)
-            {
-                Log.Select($"player has triggered {setlevel7}");
-                setlevel7.DestroySelf();
-                SelectLevel(levelClear, 7); //and sets the current level as being completed
-            }
 
 
             //if (player.IsColliding("Ground") != null)
@@ -2497,15 +2641,62 @@ namespace Plat2d_2
 
         private void SelectLevel(bool[] levelClear, int selectedlevel)
         {
-            for (int i = 0; i < selectedlevel; i++)
+            int levelInList;
+            switch (selectedlevel)
             {
-                levelClear[i] = true;
+                case 1:
+                    levelInList = 2;
+                    break;
+                case 2:
+                    levelInList = 2;
+                    break;
+                case 3:
+                    levelInList = 2;
+                    break;
+                case 4:
+                    levelInList = 2;
+                    break;
+                case 5:
+                    levelInList = 2;
+                    break;
+                case 6:
+                    levelInList = 2;
+                    break;
             }
-            for (int i = selectedlevel; i < levelClear.Length; i++)
+            UnLoadCurrentLevel();
+            if (levels.ElementAt(selectedlevel).artSetFolder == "plains")
             {
-                levelClear[i] = false;
+                LoadNextLevel(levels.ElementAt(selectedlevel), PlainsArtRefs);
             }
-            levelClear[currentLevel] = true;
+            else if (levels.ElementAt(selectedlevel).artSetFolder == "underground")
+            {
+                LoadNextLevel(levels.ElementAt(selectedlevel), UndergroundArtRefs);
+            }
+            else if (levels.ElementAt(selectedlevel).artSetFolder == "desert")
+            {
+                LoadNextLevel(levels.ElementAt(selectedlevel), DesertArtRefs);
+            }
+            else if (levels.ElementAt(selectedlevel).artSetFolder == "forest")
+            {
+                LoadNextLevel(levels.ElementAt(selectedlevel), ForestArtRefs);
+            }
+            else if (levels.ElementAt(selectedlevel).artSetFolder == "castle")
+            {
+                LoadNextLevel(levels.ElementAt(selectedlevel), CastleArtRefs);
+            }
+            else if (levels.ElementAt(currentLevel).artSetFolder == "screens")
+            {
+                LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
+            }
+            //for (int i = 0; i < selectedlevel; i++)
+            //{
+            //    levelClear[i] = true;
+            //}
+            //for (int i = selectedlevel; i < levelClear.Length; i++)
+            //{
+            //    levelClear[i] = false;
+            //}
+            //levelClear[currentLevel] = true;
             //TODO: instead of looping through all the cleared levels in rendering,
             //refactor the method to select a level by integer instead. so that it isnt looking for booleans
             //but instead search for the level number in array to load instead.
@@ -2575,48 +2766,51 @@ namespace Plat2d_2
         }
         public override void UpdateHud()
         {
-            if (levels.ElementAt(currentLevel).levelType == "Screen")
+            if (levels.ElementAt(currentLevel).levelType != null)
             {
-                CrystalLabel.BackColor = System.Drawing.Color.Transparent;
-                CrystalLabel.ForeColor = System.Drawing.Color.Transparent;
-                CrystalLabel.Location = new System.Drawing.Point(32, 512);
-                HealthLabel.BackColor = System.Drawing.Color.Transparent;
-                HealthLabel.ForeColor = System.Drawing.Color.Transparent;
-                HealthLabel.Location = new System.Drawing.Point(128, 512);
-                LivesLabel.BackColor = System.Drawing.Color.Transparent;
-                LivesLabel.ForeColor = System.Drawing.Color.Transparent;
-                LivesLabel.Location = new System.Drawing.Point(160, 512);
-                AmmoLabel.BackColor = System.Drawing.Color.Transparent;
-                AmmoLabel.ForeColor = System.Drawing.Color.Transparent;
-                AmmoLabel.Location = new System.Drawing.Point(188, 512);
-                ScoreLabel.BackColor = System.Drawing.Color.Transparent;
-                ScoreLabel.ForeColor = System.Drawing.Color.Transparent;
-                ScoreLabel.Location = new System.Drawing.Point(64, 512);
-                SelectedWeaponLabel.BackColor = System.Drawing.Color.Transparent;
-                SelectedWeaponLabel.ForeColor = System.Drawing.Color.Transparent;
-                SelectedWeaponLabel.Location = new System.Drawing.Point(32, 512);
-            }
-            else
-            {
-                CrystalLabel.BackColor = System.Drawing.Color.Black;
-                CrystalLabel.ForeColor = System.Drawing.Color.White;
-                CrystalLabel.Location = new System.Drawing.Point(32, 216);
-                HealthLabel.BackColor = System.Drawing.Color.Black;
-                HealthLabel.ForeColor = System.Drawing.Color.White;
-                HealthLabel.Location = new System.Drawing.Point(128, 216);
-                LivesLabel.BackColor = System.Drawing.Color.Black;
-                LivesLabel.ForeColor = System.Drawing.Color.White;
-                LivesLabel.Location = new System.Drawing.Point(160, 216);
-                AmmoLabel.BackColor = System.Drawing.Color.Black;
-                AmmoLabel.ForeColor = System.Drawing.Color.White;
-                AmmoLabel.Location = new System.Drawing.Point(188, 216);
-                ScoreLabel.BackColor = System.Drawing.Color.Black;
-                ScoreLabel.ForeColor = System.Drawing.Color.White;
-                ScoreLabel.Location = new System.Drawing.Point(64, 216);
-                SelectedWeaponLabel.BackColor = System.Drawing.Color.Black;
-                SelectedWeaponLabel.ForeColor = System.Drawing.Color.White;
-                SelectedWeaponLabel.Location = new System.Drawing.Point(32, 224);
-            }
+                if (levels.ElementAt(currentLevel).levelType == "Screen")
+                {
+                    CrystalLabel.BackColor = System.Drawing.Color.Transparent;
+                    CrystalLabel.ForeColor = System.Drawing.Color.Transparent;
+                    CrystalLabel.Location = new System.Drawing.Point(32, 512);
+                    HealthLabel.BackColor = System.Drawing.Color.Transparent;
+                    HealthLabel.ForeColor = System.Drawing.Color.Transparent;
+                    HealthLabel.Location = new System.Drawing.Point(128, 512);
+                    LivesLabel.BackColor = System.Drawing.Color.Transparent;
+                    LivesLabel.ForeColor = System.Drawing.Color.Transparent;
+                    LivesLabel.Location = new System.Drawing.Point(160, 512);
+                    AmmoLabel.BackColor = System.Drawing.Color.Transparent;
+                    AmmoLabel.ForeColor = System.Drawing.Color.Transparent;
+                    AmmoLabel.Location = new System.Drawing.Point(188, 512);
+                    ScoreLabel.BackColor = System.Drawing.Color.Transparent;
+                    ScoreLabel.ForeColor = System.Drawing.Color.Transparent;
+                    ScoreLabel.Location = new System.Drawing.Point(64, 512);
+                    SelectedWeaponLabel.BackColor = System.Drawing.Color.Transparent;
+                    SelectedWeaponLabel.ForeColor = System.Drawing.Color.Transparent;
+                    SelectedWeaponLabel.Location = new System.Drawing.Point(32, 512);
+                }
+                else
+                {
+                    CrystalLabel.BackColor = System.Drawing.Color.Black;
+                    CrystalLabel.ForeColor = System.Drawing.Color.White;
+                    CrystalLabel.Location = new System.Drawing.Point(32, 216);
+                    HealthLabel.BackColor = System.Drawing.Color.Black;
+                    HealthLabel.ForeColor = System.Drawing.Color.White;
+                    HealthLabel.Location = new System.Drawing.Point(128, 216);
+                    LivesLabel.BackColor = System.Drawing.Color.Black;
+                    LivesLabel.ForeColor = System.Drawing.Color.White;
+                    LivesLabel.Location = new System.Drawing.Point(160, 216);
+                    AmmoLabel.BackColor = System.Drawing.Color.Black;
+                    AmmoLabel.ForeColor = System.Drawing.Color.White;
+                    AmmoLabel.Location = new System.Drawing.Point(188, 216);
+                    ScoreLabel.BackColor = System.Drawing.Color.Black;
+                    ScoreLabel.ForeColor = System.Drawing.Color.White;
+                    ScoreLabel.Location = new System.Drawing.Point(64, 216);
+                    SelectedWeaponLabel.BackColor = System.Drawing.Color.Black;
+                    SelectedWeaponLabel.ForeColor = System.Drawing.Color.White;
+                    SelectedWeaponLabel.Location = new System.Drawing.Point(32, 224);
+                }
+            }            
             if (CrystalLabel != null)
             {
                 CrystalLabel.Text = $"{DemoGame.crystalScoreTally}";

@@ -10,6 +10,7 @@ using Box2DX.Dynamics;
 using Box2DX.Collision;
 using Box2DX.Common;
 using System.Security.Policy;
+using System.Drawing.Text;
 
 namespace Plat2d_2.EngineCore
 {
@@ -47,6 +48,8 @@ namespace Plat2d_2.EngineCore
         private string Title = "HHTRW-engine1";
         public Canvas Window = null;
         private Thread GameLoopThread = null;
+
+
 
 
         public static List<Shape2d> AllShapes = new List<Shape2d>();
