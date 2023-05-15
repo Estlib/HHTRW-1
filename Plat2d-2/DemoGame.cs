@@ -984,8 +984,8 @@ namespace Plat2d_2
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Ground","Ground","Ground","Ground","Ground","Ground",
             "Ground","Ground","Ground","Ground","Ground","Air","Air","Air",
-            "Air","Finish","Air","Air","Air","Air","Air","Air",
             "Air","Level1","Level2","Level3","Level4","Level5","Level6","Air",
+            "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Ground","Ground",
             "Air"//,"Air","Air","Air","Air","Air","Air","Air" 
@@ -1178,16 +1178,16 @@ namespace Plat2d_2
             //levels.Add(debuglevel2);
             levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_1);
-            levels.Add(worldmap_harenimus);
+            //levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_2);
-            levels.Add(worldmap_harenimus);
+            //levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_3_1);
             levels.Add(harenimus_1_3_2);
-            levels.Add(worldmap_harenimus);
+            //levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_4);
-            levels.Add(worldmap_harenimus);
+            //levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_5);
-            levels.Add(worldmap_harenimus);
+            //levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_6_1);
             levels.Add(harenimus_1_6_2);
             //<- replace assigning maps with assigning levels into the level array instead
@@ -1303,33 +1303,65 @@ namespace Plat2d_2
             //if leveltype is level, then use world1map booleans to enumerate the game, after every level, return to screen
             if (levelClear[currentLevel] == true)
             {
+                levelClear[1] = false;
                 UnLoadCurrentLevel();
                 currentLevel++;
+                if (levels.ElementAt(currentLevel-1).levelType == "LevelPart")
+                {
+                    if (levels.ElementAt(currentLevel).artSetFolder == "plains")
+                    {
+                        LoadNextLevel(levels.ElementAt(currentLevel), PlainsArtRefs);
+                    }
+                    else if (levels.ElementAt(currentLevel).artSetFolder == "underground")
+                    {
+                        LoadNextLevel(levels.ElementAt(currentLevel), UndergroundArtRefs);
+                    }
+                    else if (levels.ElementAt(currentLevel).artSetFolder == "desert")
+                    {
+                        LoadNextLevel(levels.ElementAt(currentLevel), DesertArtRefs);
+                    }
+                    else if (levels.ElementAt(currentLevel).artSetFolder == "forest")
+                    {
+                        LoadNextLevel(levels.ElementAt(currentLevel), ForestArtRefs);
+                    }
+                    else if (levels.ElementAt(currentLevel).artSetFolder == "castle")
+                    {
+                        LoadNextLevel(levels.ElementAt(currentLevel), CastleArtRefs);
+                    }
+                    else if (levels.ElementAt(currentLevel).artSetFolder == "screens")
+                    {
+                        LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
+                    }
+                }
+                else
+                {
+                    LoadNextLevel(levels.ElementAt(1), TitleMenuMapRefs);
+                }
                 //LoadNextLevel(levelMaps.ElementAt(currentLevel), PlainsArtRefsTags, PlainsArtRefs);'
-                if (levels.ElementAt(currentLevel).artSetFolder == "plains")
-                {
-                    LoadNextLevel(levels.ElementAt(currentLevel), PlainsArtRefs);
-                }
-                else if (levels.ElementAt(currentLevel).artSetFolder == "underground")
-                {
-                    LoadNextLevel(levels.ElementAt(currentLevel), UndergroundArtRefs);
-                }
-                else if (levels.ElementAt(currentLevel).artSetFolder == "desert")
-                {
-                    LoadNextLevel(levels.ElementAt(currentLevel), DesertArtRefs);
-                }
-                else if (levels.ElementAt(currentLevel).artSetFolder == "forest")
-                {
-                    LoadNextLevel(levels.ElementAt(currentLevel), ForestArtRefs);
-                }
-                else if (levels.ElementAt(currentLevel).artSetFolder == "castle")
-                {
-                    LoadNextLevel(levels.ElementAt(currentLevel), CastleArtRefs);
-                }
-                else if (levels.ElementAt(currentLevel).artSetFolder == "screens")
-                {
-                    LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
-                }
+                //if (levels.ElementAt(currentLevel).artSetFolder == "plains")
+                //{
+                //    LoadNextLevel(levels.ElementAt(currentLevel), PlainsArtRefs);
+                //}
+                //else if (levels.ElementAt(currentLevel).artSetFolder == "underground")
+                //{
+                //    LoadNextLevel(levels.ElementAt(currentLevel), UndergroundArtRefs);
+                //}
+                //else if (levels.ElementAt(currentLevel).artSetFolder == "desert")
+                //{
+                //    LoadNextLevel(levels.ElementAt(currentLevel), DesertArtRefs);
+                //}
+                //else if (levels.ElementAt(currentLevel).artSetFolder == "forest")
+                //{
+                //    LoadNextLevel(levels.ElementAt(currentLevel), ForestArtRefs);
+                //}
+                //else if (levels.ElementAt(currentLevel).artSetFolder == "castle")
+                //{
+                //    LoadNextLevel(levels.ElementAt(currentLevel), CastleArtRefs);
+                //}
+                //else if (levels.ElementAt(currentLevel).artSetFolder == "screens")
+                //{
+                //    LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
+                //}
             }
             if (up)
             {
@@ -2558,10 +2590,6 @@ namespace Plat2d_2
                 levelfinish.DestroySelf(); //destroys itself
 
                 //TODO: set level cleared in world1map boolean list
-                if (levels.ElementAt(currentLevel).levelType == "Level")
-                {
-                    //worldMap1[currentLevel] = true;
-                }
                 levelClear[currentLevel] = true;
             }
 
@@ -2592,39 +2620,40 @@ namespace Plat2d_2
             {
                 Log.Select($"player has triggered {setlevel1}");
                 setlevel1.DestroySelf();
-                SelectLevel(1); //and sets the current level as being completed
+                SelectLevel(levelClear, 1); //and sets the current level as being completed
             }
             if (setlevel2 != null)
             {
                 Log.Select($"player has triggered {setlevel2}");
                 setlevel2.DestroySelf();
-                //SelectLevel(2); //and sets the current level as being completed
-                SelectLevel(2);
+                SelectLevel(levelClear, 2); //and sets the current level as being completed
             }
             if (setlevel3 != null)
             {
                 Log.Select($"player has triggered {setlevel3}");
                 setlevel3.DestroySelf();
-                SelectLevel(3); //and sets the current level as being completed
+                SelectLevel(levelClear, 3); //and sets the current level as being completed
             }
             if (setlevel4 != null)
             {
                 Log.Select($"player has triggered {setlevel4}");
                 setlevel4.DestroySelf();
-                SelectLevel(4); //and sets the current level as being completed
+                SelectLevel(levelClear, 4); //and sets the current level as being completed
             }
             if (setlevel5 != null)
             {
                 Log.Select($"player has triggered {setlevel5}");
                 setlevel5.DestroySelf();
-                SelectLevel(5); //and sets the current level as being completed
+                SelectLevel(levelClear, 5); //and sets the current level as being completed
             }
             if (setlevel6 != null)
             {
                 Log.Select($"player has triggered {setlevel6}");
                 setlevel6.DestroySelf();
-                SelectLevel(6); //and sets the current level as being completed
+                SelectLevel(levelClear, 6); //and sets the current level as being completed
             }
+
+
 
 
             //if (player.IsColliding("Ground") != null)
@@ -2728,72 +2757,73 @@ namespace Plat2d_2
             //but instead search for the level number in array to load instead.
             //a world map item, if you will.
         }
-        private void SelectLevel(int selectedlevel)
+        private void SelectLevel(bool[] levelClear, int selectedlevel)
         {
-            //int levelInList;
+            int levelInList;
 
-            //if (selectedlevel == 1)
-            //{
-            //    levelInList = 2;
-            //}
-            //else if (selectedlevel == 2)
-            //{
-            //    levelInList = 3;
-            //}
-            //else if (selectedlevel == 3)
-            //{
-            //    levelInList = 4;
-            //}
-            //else if (selectedlevel == 4)
-            //{
-            //    levelInList = 6;
-            //}
-            //else if (selectedlevel == 5)
-            //{
-            //    levelInList = 7;
-            //}
-            //else 
-            //{
-            //    levelInList = 8;
-            //}
-            //UnLoadCurrentLevel();
-            //if (levels.ElementAt(levelInList).artSetFolder == "plains")
-            //{
-            //    LoadNextLevel(levels.ElementAt(levelInList), PlainsArtRefs);
-            //}
-            //else if (levels.ElementAt(levelInList).artSetFolder == "underground")
-            //{
-            //    LoadNextLevel(levels.ElementAt(levelInList), UndergroundArtRefs);
-            //}
-            //else if (levels.ElementAt(levelInList).artSetFolder == "desert")
-            //{
-            //    LoadNextLevel(levels.ElementAt(levelInList), DesertArtRefs);
-            //}
-            //else if (levels.ElementAt(levelInList).artSetFolder == "forest")
-            //{
-            //    LoadNextLevel(levels.ElementAt(levelInList), ForestArtRefs);
-            //}
-            //else if (levels.ElementAt(levelInList).artSetFolder == "castle")
-            //{
-            //    LoadNextLevel(levels.ElementAt(levelInList), CastleArtRefs);
-            //}
-            //else if (levels.ElementAt(levelInList).artSetFolder == "screens")
-            //{
-            //    LoadNextLevel(levels.ElementAt(levelInList), TitleMenuMapRefs);
-            //}
-            for (int i = 0; i < selectedlevel; i++)
+            if (selectedlevel == 1)
             {
-                levelClear[i] = true;
+                levelInList = 2;
             }
-            for (int i = selectedlevel; i < levelClear.Length; i++)
+            else if (selectedlevel == 2)
             {
-                levelClear[i] = false;
+                levelInList = 3;
             }
-            levelClear[currentLevel] = true;
-            //TODO: instead of looping through all the cleared levels in rendering,
-            //refactor the method to select a level by integer instead. so that it isnt looking for booleans
-            //but instead search for the level number in array to load instead.
-            //a world map item, if you will.
+            else if (selectedlevel == 3)
+            {
+                levelInList = 4;
+            }
+            else if (selectedlevel == 4)
+            {
+                levelInList = 6;
+            }
+            else if (selectedlevel == 5)
+            {
+                levelInList = 7;
+            }
+            else if (selectedlevel == 6)
+            {
+                levelInList = 8;
+            }
+            else
+            {
+                levelInList = 0;
+            }
+            UnLoadCurrentLevel();
+            currentLevel = levelInList;
+            if (levels.ElementAt(currentLevel).artSetFolder == "plains")
+            {
+                LoadNextLevel(levels.ElementAt(currentLevel), PlainsArtRefs);
+            }
+            else if (levels.ElementAt(currentLevel).artSetFolder == "underground")
+            {
+                LoadNextLevel(levels.ElementAt(currentLevel), UndergroundArtRefs);
+            }
+            else if (levels.ElementAt(currentLevel).artSetFolder == "desert")
+            {
+                LoadNextLevel(levels.ElementAt(currentLevel), DesertArtRefs);
+            }
+            else if (levels.ElementAt(currentLevel).artSetFolder == "forest")
+            {
+                LoadNextLevel(levels.ElementAt(currentLevel), ForestArtRefs);
+            }
+            else if (levels.ElementAt(currentLevel).artSetFolder == "castle")
+            {
+                LoadNextLevel(levels.ElementAt(currentLevel), CastleArtRefs);
+            }
+            else if (levels.ElementAt(currentLevel).artSetFolder == "screens")
+            {
+                LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
+            }
+            //for (int i = 0; i < selectedlevel; i++)
+            //{
+            //    levelClear[i] = true;
+            //}
+            //for (int i = selectedlevel; i < levelClear.Length; i++)
+            //{
+            //    levelClear[i] = false;
+            //}
+            //levelClear[currentLevel] = true;
         }
 
         /// <summary>
