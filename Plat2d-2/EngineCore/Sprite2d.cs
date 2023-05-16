@@ -283,7 +283,7 @@ namespace Plat2d_2.EngineCore
         //}
         public Sprite2d IsColliding(string tag, int currentLevel)
         {
-            var thisLevel = EngineCore.LevelSprites[currentLevel];
+            var thisLevel = EngineCore.AllSprites;
             for (int i = 0; i < thisLevel.Count; i++)
             {
                 Sprite2d b = thisLevel[i];
@@ -302,6 +302,25 @@ namespace Plat2d_2.EngineCore
             }
             //Log.Info($"b is null");
             return null;
+            //var thisLevel = EngineCore.LevelSprites[currentLevel];
+            //for (int i = 0; i < thisLevel.Count; i++)
+            //{
+            //    Sprite2d b = thisLevel[i];
+            //    if (b.Tag == tag)
+            //    {
+            //        if (Position.X + 8 < b.Position.X + b.Scale.X && //+8 trim off x
+            //            Position.X - 8 + Scale.X > b.Position.X &&
+            //            Position.Y < b.Position.Y + b.Scale.Y &&
+            //            Position.Y + Scale.Y > b.Position.Y)
+            //        {
+            //            //Log.Info($"i is {i}");
+            //            //Log.Info($"b is {b}");
+            //            return b;
+            //        }
+            //    }
+            //}
+            ////Log.Info($"b is null");
+            //return null;
         }
         /// <summary>
         /// Destroys a sprite that calls this method.

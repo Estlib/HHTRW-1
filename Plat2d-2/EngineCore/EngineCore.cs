@@ -54,8 +54,8 @@ namespace Plat2d_2.EngineCore
 
         public static List<Shape2d> AllShapes = new List<Shape2d>();
         public static List<Sprite2d> AllSprites = new List<Sprite2d>();
-        public static List<Shape2d>[] LevelShapes = new List<Shape2d>[10];
-        public static List<Sprite2d>[] LevelSprites = new List<Sprite2d>[10];
+        //public static List<Shape2d>[] LevelShapes = new List<Shape2d>[10];
+        //public static List<Sprite2d>[] LevelSprites = new List<Sprite2d>[10];
         public static bool pausebuttoninput = false;
 
         public System.Drawing.Color BGColor = System.Drawing.Color.Black;
@@ -125,8 +125,8 @@ namespace Plat2d_2.EngineCore
         }
         public static void RegisterSprite(Sprite2d sprite)
         {
-            //AllSprites.Add(sprite);
-            LevelSprites[DemoGame.currentLevel].Add(sprite);
+            AllSprites.Add(sprite);
+            //LevelSprites[DemoGame.currentLevel].Add(sprite);
         }
         public static void UnRegisterSprite(Sprite2d sprite)
         {
@@ -134,12 +134,23 @@ namespace Plat2d_2.EngineCore
             {
                 Log.Highlight("Enemy is being unregistered");
             }
-            //AllSprites.Remove(sprite);
-            LevelSprites[DemoGame.currentLevel].Remove(sprite);
+            AllSprites.Remove(sprite);
+            //LevelSprites[DemoGame.currentLevel].Remove(sprite);
         }
         public static void RemoveAllSprites()
         {
-            foreach (var sprite in LevelSprites[DemoGame.currentLevel])
+            //foreach (var sprite in LevelSprites[DemoGame.currentLevel])
+            //{
+            //    if (sprite.HasBody())
+            //    {
+            //        if (sprite.Tag == "Enemy")
+            //        {
+            //            Log.Highlight("DestroyStatic is destroying an Enemy");
+            //        }
+            //        sprite.DestroyStatic(sprite);
+            //    }
+            //}
+            foreach (var sprite in AllSprites)
             {
                 if (sprite.HasBody())
                 {
@@ -214,9 +225,17 @@ namespace Plat2d_2.EngineCore
             //{
             //    g.FillRectangle(new SolidBrush(System.Drawing.Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
             //}
-            for (int i = 0; i < LevelSprites[DemoGame.currentLevel].Count; i++)
+            //for (int i = 0; i < LevelSprites[DemoGame.currentLevel].Count; i++)
+            //{
+            //    Sprite2d sprite = LevelSprites[DemoGame.currentLevel][i];
+            //    if (!sprite.IsReference)
+            //    {
+            //        g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
+            //    }
+            //}
+            for (int i = 0; i < AllSprites.Count; i++)
             {
-                Sprite2d sprite = LevelSprites[DemoGame.currentLevel][i];
+                Sprite2d sprite = AllSprites[i];
                 if (!sprite.IsReference)
                 {
                     g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);

@@ -1220,16 +1220,16 @@ namespace Plat2d_2
             Log.Highlight($"Game is starting, current game: DemoGame");
 
             //sets up a levelsprites list in an array of lists. one for each existing screen.
-            LevelSprites[0] = new List<Sprite2d>();
-            LevelSprites[1] = new List<Sprite2d>();
-            LevelSprites[2] = new List<Sprite2d>();
-            LevelSprites[3] = new List<Sprite2d>();
-            LevelSprites[4] = new List<Sprite2d>();
-            LevelSprites[5] = new List<Sprite2d>();
-            LevelSprites[6] = new List<Sprite2d>();
-            LevelSprites[7] = new List<Sprite2d>();
-            LevelSprites[8] = new List<Sprite2d>();
-            LevelSprites[9] = new List<Sprite2d>();
+            //LevelSprites[0] = new List<Sprite2d>();
+            //LevelSprites[1] = new List<Sprite2d>();
+            //LevelSprites[2] = new List<Sprite2d>();
+            //LevelSprites[3] = new List<Sprite2d>();
+            //LevelSprites[4] = new List<Sprite2d>();
+            //LevelSprites[5] = new List<Sprite2d>();
+            //LevelSprites[6] = new List<Sprite2d>();
+            //LevelSprites[7] = new List<Sprite2d>();
+            //LevelSprites[8] = new List<Sprite2d>();
+            //LevelSprites[9] = new List<Sprite2d>();
 
             BGColor = Color.Black; //sets window background color to be black
             //CameraZoom = new Vector2(.1f,.1f);
