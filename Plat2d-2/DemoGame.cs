@@ -39,13 +39,17 @@ namespace Plat2d_2
         List<Bitmap> playerSpritesBitmap = new List<Bitmap>(); //holds player sprite bitmaps
         List<Bitmap> menuSpritesBitmap = new List<Bitmap>(); //holds menu object sprite bitmaps
         List<Bitmap> walkingEnemySpritesBitmap = new List<Bitmap>(); //holds walking enemy type object sprite bitmaps
+        public static bool reloadtrigger = false;
         public static int currentLevel = 0; // integer of current level
+        public static int selectedLevel = 0; // integer of current level
         public static int currentLevelEndSize = 0; // how long the level is
         bool[] levelClear = new bool[15] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false }; //holds the flags for levels that are cleared
         //bool[] worldMap1 = new bool[6] { false, false, false, false, false, false };
         //bool[] gameWorldClear = new bool[6] { false, true, true, true, true, true };
         //<- levelclear values are now in the Level item itself. soon to be deprecated
+        bool[] levelStates = new bool[15] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         List<Bitmap> bulletgraphics = new List<Bitmap>();
+        //public static List<int> levelsequence = new List<int>();
 
         int facedirection; //holds value for which direction player last faced
         bool left;
@@ -54,6 +58,7 @@ namespace Plat2d_2
         bool down;
         bool fire;
         bool jump;
+        bool respawntester;
         bool jumpmode;
         bool nokey;
         bool LRDcheck;
@@ -64,7 +69,9 @@ namespace Plat2d_2
         int weapon1speed = 1;
         int weapon1cyclespeed = 4;
         int selectedweapon = 1;
-        bool loadfontfromfileandnotos = false;
+        bool loadfontfromfileandnotos = true; 
+        int levelInList;
+        Vec2 respawnlocation;
 
         public static string[] weaponnames = {"NoWeapon","Normal","Spreadshot","Plasma Rifle","Jump Bomb" };
 
@@ -72,6 +79,8 @@ namespace Plat2d_2
 
         //List<string[,]> levelMaps = new List<string[,]>(); // list of arrays that holds all the level maps
         List<Level> levels = new List<Level>(); // list lists of arrays that holds all the level maps with their layers
+        bool isLevelPartCompleted = false;
+        bool isLevelPartLoaded = false;
 
         public static string[,] titlescreenlayerFML ={
             { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  " },
@@ -1100,18 +1109,19 @@ namespace Plat2d_2
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air"}; //not used, see TitleMenuMapRefsTags
 
-        Level titlescreen = new Level(0, "screens", TitleMenuMapRefsTags, titlescreenlayerFML, titlescreenlayerOL, titlescreenlayerLML, titlescreenlayerHL, "Screen", "Title Screen", System.Drawing.Color.FromArgb(255, 0, 0, 0), false);
-        Level debuglevel1 = new Level(0, "plains", PlainsArtRefsTags, debug1layerFML, debug1layerOL, debug1layerLML, debug1layerHL, "Debug", "Debug Screen", System.Drawing.Color.FromArgb(255, 56, 0, 252), false);
-        Level debuglevel2 = new Level(0, "plains", PlainsArtRefsTags, debug2layerFML, debug2layerOL, debug2layerLML, debug2layerHL, "Debug", "Debug Screen", System.Drawing.Color.FromArgb(255, 56, 0, 252), false);
-        Level harenimus_1_1 = new Level(0, "plains", PlainsArtRefsTags, level1FML, level1OL, level1LML, level1HL, "Level", "Harenimus 1-1 Plains", System.Drawing.Color.FromArgb(255, 56, 192, 252), false);
-        Level harenimus_1_2 = new Level(0, "underground", UndergroundArtRefsTags, level2FML, level2OL, level2LML, level2HL, "Level", "Harenimus 1-2 Plains", System.Drawing.Color.FromArgb(255, 0, 0, 0), false);
-        Level harenimus_1_3_1 = new Level(0, "forest", ForestArtRefsTags, level3FML, level3OL, level3LML, level3HL, "LevelPart", "Harenimus 1-3 Forest", System.Drawing.Color.FromArgb(255, 88, 216, 88), false);
-        Level harenimus_1_3_2 = new Level(0, "forest", ForestArtRefsTags, level3_2FML, level3_2OL, level3_2LML, level3_2HL, "Level", "Harenimus 1-3 Forest", System.Drawing.Color.FromArgb(255, 88, 216, 88), false);
-        Level harenimus_1_4 = new Level(0, "desert", DesertArtRefsTags, level4FML, level4OL, level4LML, level4HL, "Level", "Harenimus 1-4 Desert", System.Drawing.Color.FromArgb(255, 164, 232, 252), false);
-        Level harenimus_1_5 = new Level(0, "plains", PlainsArtRefsTags, level5FML, level5OL, level5LML, level5HL, "Level", "Harenimus 1-5 Plains 2", System.Drawing.Color.FromArgb(255, 56, 192, 252), false);
-        Level harenimus_1_6_1 = new Level(0, "castle", CastleArtRefsTags, level6_1FML, level6_1OL, level6_1LML, level6_1HL, "LevelPart", "Harenimus 1-6 Castle", System.Drawing.Color.FromArgb(255, 0, 0, 0), false);
-        Level harenimus_1_6_2 = new Level(0, "castle", CastleArtRefsTags, level6_2FML, level6_2OL, level6_2LML, level6_2HL, "Level", "Harenimus 1-6 Castle", System.Drawing.Color.FromArgb(255, 0, 0, 0), false);
-        Level worldmap_harenimus = new Level(0, "screens", TitleMenuMapRefsTags, world1mapFML, world1mapOL, world1mapLML, world1mapHL, "Screen", "Kingdom of Harenimus", Color.FromArgb(255, 0, 0, 0), false);
+        Level titlescreen = new Level(0, "screens", TitleMenuMapRefsTags, titlescreenlayerFML, titlescreenlayerOL, titlescreenlayerLML, titlescreenlayerHL, "Screen", "Title Screen", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, null);
+        Level debuglevel1 = new Level(0, "plains", PlainsArtRefsTags, debug1layerFML, debug1layerOL, debug1layerLML, debug1layerHL, "Debug", "Debug Screen", System.Drawing.Color.FromArgb(255, 56, 0, 252), false, null);
+        Level debuglevel2 = new Level(0, "plains", PlainsArtRefsTags, debug2layerFML, debug2layerOL, debug2layerLML, debug2layerHL, "Debug", "Debug Screen", System.Drawing.Color.FromArgb(255, 56, 0, 252), false, null);
+        Level harenimus_1_1 = new Level(0, "plains", PlainsArtRefsTags, level1FML, level1OL, level1LML, level1HL, "Level", "Harenimus 1-1 Plains", System.Drawing.Color.FromArgb(255, 56, 192, 252), false, null);
+        Level harenimus_1_2 = new Level(0, "underground", UndergroundArtRefsTags, level2FML, level2OL, level2LML, level2HL, "Level", "Harenimus 1-2 Plains", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, null);
+        public static Level harenimus_1_3_2 = new Level(0, "forest", ForestArtRefsTags, level3_2FML, level3_2OL, level3_2LML, level3_2HL, "Level", "Harenimus 1-3 Forest Part 2", System.Drawing.Color.FromArgb(255, 88, 216, 88), false, null);
+        Level harenimus_1_3_1 = new Level(0, "forest", ForestArtRefsTags, level3FML, level3OL, level3LML, level3HL, "Level", "Harenimus 1-3 Forest", System.Drawing.Color.FromArgb(255, 88, 216, 88), false, harenimus_1_3_2);
+        Level harenimus_1_4 = new Level(0, "desert", DesertArtRefsTags, level4FML, level4OL, level4LML, level4HL, "Level", "Harenimus 1-4 Desert", System.Drawing.Color.FromArgb(255, 164, 232, 252), false, null);
+        Level harenimus_1_5 = new Level(0, "plains", PlainsArtRefsTags, level5FML, level5OL, level5LML, level5HL, "Level", "Harenimus 1-5 Plains 2", System.Drawing.Color.FromArgb(255, 56, 192, 252), false, null);
+        public static Level harenimus_1_6_2 = new Level(0, "castle", CastleArtRefsTags, level6_2FML, level6_2OL, level6_2LML, level6_2HL, "Level", "Harenimus 1-6 Castle Part 2", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, null);
+        Level harenimus_1_6_1 = new Level(0, "castle", CastleArtRefsTags, level6_1FML, level6_1OL, level6_1LML, level6_1HL, "Level", "Harenimus 1-6 Castle", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, harenimus_1_6_2);
+        Level worldmap_harenimus = new Level(0, "screens", TitleMenuMapRefsTags, world1mapFML, world1mapOL, world1mapLML, world1mapHL, "Screen", "Kingdom of Harenimus", Color.FromArgb(255, 0, 0, 0), false, null);
+        
 
 
         /// <summary>
@@ -1126,6 +1136,23 @@ namespace Plat2d_2
         /// </summary>
         public override void OnLoad()
         {
+            //levelsequence.Add(0);
+            //levelsequence.Add(1);
+            //levelsequence.Add(2);
+            //levelsequence.Add(1);
+            //levelsequence.Add(3);
+            //levelsequence.Add(1);
+            //levelsequence.Add(4);
+            //levelsequence.Add(5);
+            //levelsequence.Add(1);
+            //levelsequence.Add(6);
+            //levelsequence.Add(1);
+            //levelsequence.Add(7);
+            //levelsequence.Add(1);
+            //levelsequence.Add(8);
+            //levelsequence.Add(9);
+            //levelsequence.Add(0);
+
             PrivateFontCollection privateFonts = new PrivateFontCollection();
             privateFonts.AddFontFile("assets/fonts/arcade-legacy.ttf");
             FontFamily font = privateFonts.Families[0];
@@ -1251,18 +1278,11 @@ namespace Plat2d_2
             //levels.Add(debuglevel2);
             levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_1);
-            //levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_2);
-            //levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_3_1);
-            levels.Add(harenimus_1_3_2);
-            //levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_4);
-            //levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_5);
-            //levels.Add(worldmap_harenimus);
             levels.Add(harenimus_1_6_1);
-            levels.Add(harenimus_1_6_2);
             //<- replace assigning maps with assigning levels into the level array instead
 
             //setting sprites into the bullets bitmap list
@@ -1374,12 +1394,13 @@ namespace Plat2d_2
             //level clearing new pseudocode
             //if leveltype is screen, then only trigger completion and next level function when object calls for it.
             //if leveltype is level, then use world1map booleans to enumerate the game, after every level, return to screen
-            if (levelClear[currentLevel] == true)
+            GameStateHandler();
+            /*if (levelClear[currentLevel] == true)
             {
-                levelClear[1] = false;
+                //levelClear[1] = false;
                 UnLoadCurrentLevel();
                 currentLevel++;
-                if (levels.ElementAt(currentLevel-1).levelType == "LevelPart")
+                if (levels.ElementAt(currentLevel - 1).levelType == "LevelPart")
                 {
                     if (levels.ElementAt(currentLevel).artSetFolder == "plains")
                     {
@@ -1435,7 +1456,7 @@ namespace Plat2d_2
                 //{
                 //    LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
                 //}
-            }
+            }*/
             if (up)
             {
                 if (up == true && left == true)
@@ -1518,6 +1539,356 @@ namespace Plat2d_2
             //Log.Info($"camera position: {CameraPosition.X}");
             //Log.Info($"player position: {player.Position.X}");
         }
+
+        private void GameStateHandler()
+        {
+            //reloadtrigger = false;
+            //Log.Highlight("[GSH] - GameStateHandler has been called");
+            Level nextlevel = null; //variable internal to the function for the next level to load
+            
+            if (levels[currentLevel].isLevelCleared) //check if level has been cleared, then
+            {
+                Log.Info($"Level {levels[currentLevel].levelname} (levels[{currentLevel}]) has been cleared.");
+
+
+
+                if (levels[currentLevel].nextlevelpart != null) //check if level has a sequential part, then
+                {
+                    Log.Info($"Level {levels[currentLevel].levelname} (levels[{currentLevel}]) has a sequential part. {levels[currentLevel].nextlevelpart.levelname}");
+
+
+
+                    if (levels[currentLevel].nextlevelpart.isLevelCleared == false) //check if the sequential part is not cleared,
+                    {
+                        Log.Info($"Level {levels[currentLevel].nextlevelpart.levelname} (levels[{currentLevel}]) is not cleared. "); //report level is not cleared
+                        nextlevel = levels[currentLevel].nextlevelpart; //set it as next level
+                        Log.Highlight($"Level {levels[currentLevel].nextlevelpart.levelname} (levels[{currentLevel}]) is now set as next level. "); //report that it is being loaded
+
+                        if (nextlevel == levels[currentLevel].nextlevelpart)
+                        {
+                            if (reloadtrigger)
+                            {
+                                Log.Info("Unloading current level via statehandlers call");
+                                UnLoadCurrentLevel();
+                                //currentLevel++;
+                                Log.Highlight("Loading new level PART via statehandlers call");
+                                if (nextlevel.artSetFolder == "plains")
+                                {
+                                    LoadNextLevel(nextlevel, PlainsArtRefs);
+                                }
+                                else if (nextlevel.artSetFolder == "underground")
+                                {
+                                    LoadNextLevel(nextlevel, UndergroundArtRefs);
+                                }
+                                else if (nextlevel.artSetFolder == "desert")
+                                {
+                                    LoadNextLevel(nextlevel, DesertArtRefs);
+                                }
+                                else if (nextlevel.artSetFolder == "forest")
+                                {
+                                    LoadNextLevel(nextlevel, ForestArtRefs);
+                                }
+                                else if (nextlevel.artSetFolder == "castle")
+                                {
+                                    LoadNextLevel(nextlevel, CastleArtRefs);
+                                }
+                                else if (nextlevel.artSetFolder == "screens")
+                                {
+                                    LoadNextLevel(nextlevel, TitleMenuMapRefs);
+                                }
+                                else
+                                {
+                                    LoadNextLevel(levels.ElementAt(1), TitleMenuMapRefs);
+                                }
+                                reloadtrigger = false;
+                                isLevelPartLoaded = true;
+                            }    
+                        }                        
+                    }
+                }
+                else
+                {
+                    for (int i = selectedLevel; i < levels.Count; i++) //goes through all the values of the levels in list to see which one is not cleared.
+                    {
+                        Log.Select($"[GSH] - current level being handled by for loop: {levels[i].levelname}");
+                        Level level = levels[i];
+                        //if (level.isLevelCleared == true)
+                        //{
+                        //    if (level.nextlevelpart != null)
+                        //    {
+                        //        if (level.nextlevelpart.isLevelCleared == false)
+                        //        {
+                        //            nextlevel = level.nextlevelpart;
+                        //            break;
+                        //        }
+                        //    }
+                        //}
+                        if (level.isLevelCleared == false) //if it finds a level that has not been cleared
+                        {
+                            nextlevel = level; // it then sets the found level to be the next level
+                            currentLevel = i;
+                            break;
+                        }
+                    }
+                    Log.Info("Unloading current level via statehandlers call");
+                    UnLoadCurrentLevel();
+                    //currentLevel++;
+                    Log.Info("Loading new level via statehandlers call");
+                    if (nextlevel.artSetFolder == "plains")
+                    {
+                        LoadNextLevel(nextlevel, PlainsArtRefs);
+                    }
+                    else if (nextlevel.artSetFolder == "underground")
+                    {
+                        LoadNextLevel(nextlevel, UndergroundArtRefs);
+                    }
+                    else if (nextlevel.artSetFolder == "desert")
+                    {
+                        LoadNextLevel(nextlevel, DesertArtRefs);
+                    }
+                    else if (nextlevel.artSetFolder == "forest")
+                    {
+                        LoadNextLevel(nextlevel, ForestArtRefs);
+                    }
+                    else if (nextlevel.artSetFolder == "castle")
+                    {
+                        LoadNextLevel(nextlevel, CastleArtRefs);
+                    }
+                    else if (nextlevel.artSetFolder == "screens")
+                    {
+                        LoadNextLevel(nextlevel, TitleMenuMapRefs);
+                    }
+                    else
+                    {
+                        LoadNextLevel(levels.ElementAt(1), TitleMenuMapRefs);
+                    }
+                }
+            }
+            
+
+
+            //if (levels[currentLevel].isLevelCleared == true) //checks if the value that states if the current level has been cleared is true
+            //{
+            //    Log.Select($"[GSH] - current level {levels[currentLevel].levelname} is {levels[currentLevel].isLevelCleared}");
+            //    if (levels[currentLevel].nextlevelpart == null) //checks if the level that was just completed has a sequential part or not. null = no.
+            //    {
+            //        //Log.Select($"[GSH] - nextlevelpart for current level is null");
+            //        //if (levels[selectedLevel].isLevelCleared == false)
+            //        //{
+            //        //    currentLevel = selectedLevel;
+            //        //}
+            //        if (levels[currentLevel].nextlevelpart.isLevelCleared == true)
+            //        {
+            //            for (int i = selectedLevel; i < levels.Count; i++) //goes through all the values of the levels in list to see which one is not cleared.
+            //            {
+            //                Log.Select($"[GSH] - current level being handled by for loop: {levels[i].levelname}");
+            //                Level level = levels[i];
+            //                if (level.isLevelCleared == true)
+            //                {
+            //                    if (level.nextlevelpart != null)
+            //                    {
+            //                        if (level.nextlevelpart.isLevelCleared == false)
+            //                        {
+            //                            nextlevel = level.nextlevelpart;
+            //                            break;
+            //                        }
+            //                    }
+            //                }
+            //                if (level.isLevelCleared == false) //if it finds a level that has not been cleared
+            //                {
+            //                    nextlevel = level; // it then sets the found level to be the next level
+            //                    currentLevel = i;
+            //                    break;
+            //                }
+            //            }
+            //            //nextlevel = levels.ElementAt(selectedLevel+1);
+            //        }
+
+            //    }
+            //    else
+            //    { 
+            //        Log.Select($"[GSH] - current level {levels[currentLevel].nextlevelpart} is {levels[currentLevel].nextlevelpart.levelname}");
+            //        nextlevel = levels.ElementAt(currentLevel).nextlevelpart;
+            //        Log.Select($"[GSH] - ELSE next level is {nextlevel.levelname} is {levels[currentLevel].isLevelCleared}");
+            //        //reloadtrigger = true;
+            //    }
+            //    Log.Info("Unloading current level via statehandlers call");
+            //    UnLoadCurrentLevel();
+            //    //currentLevel++;
+            //    Log.Info("Loading new level via statehandlers call");
+            //    if (nextlevel.artSetFolder == "plains")
+            //    {
+            //        LoadNextLevel(nextlevel, PlainsArtRefs);
+            //    }
+            //    else if (nextlevel.artSetFolder == "underground")
+            //    {
+            //        LoadNextLevel(nextlevel, UndergroundArtRefs);
+            //    }
+            //    else if (nextlevel.artSetFolder == "desert")
+            //    {
+            //        LoadNextLevel(nextlevel, DesertArtRefs);
+            //    }
+            //    else if (nextlevel.artSetFolder == "forest")
+            //    {
+            //        LoadNextLevel(nextlevel, ForestArtRefs);
+            //    }
+            //    else if (nextlevel.artSetFolder == "castle")
+            //    {
+            //        LoadNextLevel(nextlevel, CastleArtRefs);
+            //    }
+            //    else if (nextlevel.artSetFolder == "screens")
+            //    {
+            //        LoadNextLevel(nextlevel, TitleMenuMapRefs);
+            //    }
+            //    else
+            //    {
+            //        LoadNextLevel(levels.ElementAt(1), TitleMenuMapRefs);
+            //    }
+            //}
+        }
+
+        //private void GameStateHandler()
+        //{
+        //    //reloadtrigger = false;
+        //    //Log.Highlight("[GSH] - GameStateHandler has been called");
+        //    Level nextlevel = null; //variable internal to the function for the next level to load
+        //    if (levels[currentLevel].isLevelCleared == true) //checks if the value that states if the current level has been cleared is true
+        //    {
+        //        Log.Select($"[GSH] - current level {levels[currentLevel].levelname} is {levels[currentLevel].isLevelCleared}");
+        //        if (levels[currentLevel].nextlevelpart == null) //checks if the level that was just completed has a sequential part or not. null = no.
+        //        {
+        //            //Log.Select($"[GSH] - nextlevelpart for current level is null");
+        //            //if (levels[selectedLevel].isLevelCleared == false)
+        //            //{
+        //            //    currentLevel = selectedLevel;
+        //            //}
+        //            if (levels[currentLevel].nextlevelpart.isLevelCleared == true)
+        //            {
+        //                for (int i = selectedLevel; i < levels.Count; i++) //goes through all the values of the levels in list to see which one is not cleared.
+        //                {
+        //                    Log.Select($"[GSH] - current level being handled by for loop: {levels[i].levelname}");
+        //                    Level level = levels[i];
+        //                    if (level.isLevelCleared == true)
+        //                    {
+        //                        if (level.nextlevelpart != null)
+        //                        {
+        //                            if (level.nextlevelpart.isLevelCleared == false)
+        //                            {
+        //                                nextlevel = level.nextlevelpart;
+        //                                break;
+        //                            }
+        //                        }
+        //                    }
+        //                    if (level.isLevelCleared == false) //if it finds a level that has not been cleared
+        //                    {
+        //                        nextlevel = level; // it then sets the found level to be the next level
+        //                        currentLevel = i;
+        //                        break;
+        //                    }
+        //                }
+        //                //nextlevel = levels.ElementAt(selectedLevel+1);
+        //            }
+
+        //        }
+        //        else
+        //        {
+        //            Log.Select($"[GSH] - current level {levels[currentLevel].nextlevelpart} is {levels[currentLevel].nextlevelpart.levelname}");
+        //            nextlevel = levels.ElementAt(currentLevel).nextlevelpart;
+        //            Log.Select($"[GSH] - ELSE next level is {nextlevel.levelname} is {levels[currentLevel].isLevelCleared}");
+        //            //reloadtrigger = true;
+        //        }
+        //        Log.Info("Unloading current level via statehandlers call");
+        //        UnLoadCurrentLevel();
+        //        //currentLevel++;
+        //        Log.Info("Loading new level via statehandlers call");
+        //        if (nextlevel.artSetFolder == "plains")
+        //        {
+        //            LoadNextLevel(nextlevel, PlainsArtRefs);
+        //        }
+        //        else if (nextlevel.artSetFolder == "underground")
+        //        {
+        //            LoadNextLevel(nextlevel, UndergroundArtRefs);
+        //        }
+        //        else if (nextlevel.artSetFolder == "desert")
+        //        {
+        //            LoadNextLevel(nextlevel, DesertArtRefs);
+        //        }
+        //        else if (nextlevel.artSetFolder == "forest")
+        //        {
+        //            LoadNextLevel(nextlevel, ForestArtRefs);
+        //        }
+        //        else if (nextlevel.artSetFolder == "castle")
+        //        {
+        //            LoadNextLevel(nextlevel, CastleArtRefs);
+        //        }
+        //        else if (nextlevel.artSetFolder == "screens")
+        //        {
+        //            LoadNextLevel(nextlevel, TitleMenuMapRefs);
+        //        }
+        //        else
+        //        {
+        //            LoadNextLevel(levels.ElementAt(1), TitleMenuMapRefs);
+        //        }
+        //        //if (reloadtrigger)
+        //        //{
+        //        //    Log.Select($"[GSH] - reloadtrigger has been triggered");
+        //        //    if (nextlevel.artSetFolder == "plains")
+        //        //    {
+        //        //        LoadNextLevel(nextlevel, PlainsArtRefs);
+        //        //    }
+        //        //    else if (nextlevel.artSetFolder == "underground")
+        //        //    {
+        //        //        LoadNextLevel(nextlevel, UndergroundArtRefs);
+        //        //    }
+        //        //    else if (nextlevel.artSetFolder == "desert")
+        //        //    {
+        //        //        LoadNextLevel(nextlevel, DesertArtRefs);
+        //        //    }
+        //        //    else if (nextlevel.artSetFolder == "forest")
+        //        //    {
+        //        //        LoadNextLevel(nextlevel, ForestArtRefs);
+        //        //    }
+        //        //    else if (nextlevel.artSetFolder == "castle")
+        //        //    {
+        //        //        LoadNextLevel(nextlevel, CastleArtRefs);
+        //        //    }
+        //        //    else if (nextlevel.artSetFolder == "screens")
+        //        //    {
+        //        //        LoadNextLevel(nextlevel, TitleMenuMapRefs);
+        //        //    }
+        //        //    else
+        //        //    {
+        //        //        LoadNextLevel(levels.ElementAt(1), TitleMenuMapRefs);
+        //        //    }
+        //        //    reloadtrigger = false;
+        //        //}
+        //        //LoadNextLevel(levelMaps.ElementAt(currentLevel), PlainsArtRefsTags, PlainsArtRefs);'
+        //        //if (levels.ElementAt(currentLevel).artSetFolder == "plains")
+        //        //{
+        //        //    LoadNextLevel(levels.ElementAt(currentLevel), PlainsArtRefs);
+        //        //}
+        //        //else if (levels.ElementAt(currentLevel).artSetFolder == "underground")
+        //        //{
+        //        //    LoadNextLevel(levels.ElementAt(currentLevel), UndergroundArtRefs);
+        //        //}
+        //        //else if (levels.ElementAt(currentLevel).artSetFolder == "desert")
+        //        //{
+        //        //    LoadNextLevel(levels.ElementAt(currentLevel), DesertArtRefs);
+        //        //}
+        //        //else if (levels.ElementAt(currentLevel).artSetFolder == "forest")
+        //        //{
+        //        //    LoadNextLevel(levels.ElementAt(currentLevel), ForestArtRefs);
+        //        //}
+        //        //else if (levels.ElementAt(currentLevel).artSetFolder == "castle")
+        //        //{
+        //        //    LoadNextLevel(levels.ElementAt(currentLevel), CastleArtRefs);
+        //        //}
+        //        //else if (levels.ElementAt(currentLevel).artSetFolder == "screens")
+        //        //{
+        //        //    LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
+        //        //}
+        //    }
+        //}
 
         private void UpdatePlayerCamera()
         {
@@ -2226,6 +2597,7 @@ namespace Plat2d_2
                         //see https://www.youtube.com/results?search_query=box2d+tutorial+c%23
                         //playercollision = new Shape2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "Player");
                         //playercollision.CreateDynamic();
+                        respawnlocation = new Vec2(i * 16, j * 16);
                     }
                     if (Map[j, i] == "WE")
                     {;
@@ -2396,6 +2768,9 @@ namespace Plat2d_2
         public static int playerLives = 5;
         public static int weapon1Ammo = -1;
         public static int weapon1Damage = 1;
+        public static int weapon2Ammo = 10;
+        public static int weapon2Damage = 1;
+
 
         //TODO: fix the jumping animations pls.
         private void AnimateBullet(Bullet bullet, int firstframe, int lastframe)
@@ -2446,13 +2821,16 @@ namespace Plat2d_2
         /// </summary>
         public override void OnUpdate()
         {
+            if (player.Position.Y >= 320)
+            {
+                LoseLife();
+            }
             currentbulletsonscreen = bullets.Count();
             //Log.Info($"player can fire bullets: {!firinglock}. player has to wait {firinglockcounter} cycles");
             //Log.Info($"Enemies has {enemies.Count} elements");
             if (playerHealth < 1)
             {
-                playerLives--;
-                playerHealth = 100;
+                LoseLife();
             }
 
             if (crystalScoreTally == 100)
@@ -2549,6 +2927,10 @@ namespace Plat2d_2
                     }
                 }
             }
+            if (respawntester)
+            {
+                player.SetLocation(respawnlocation);
+            }
             if (up) //applies an impulse in the up direction when up key boolean is true
             {
                 player.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
@@ -2569,7 +2951,7 @@ namespace Plat2d_2
             }
             if (jump) //performs jumpstepping when the jump key boolean is true
             {
-                if (player.IsColliding("Ground", currentLevel)!=null) //if player is colliding with the ground, only then allow the player to jump
+                if (player.IsColliding("Ground")!=null) //if player is colliding with the ground, only then allow the player to jump
                 {
                     remainingJumpSteps = 9; //jump steps are set to 9 frames
                     remainingJumpFrames = 9; //jump aimation frames are set to 9 frames, currently unused.
@@ -2582,13 +2964,13 @@ namespace Plat2d_2
                 remainingJumpSteps--; //subtract a frame from the jumpsteps
             }
             //Sprite2d ground = player.IsColliding("Ground", currentLevel);
-            if (player.IsColliding("Ground",currentLevel) != null) //if player is colliding with ground then it sets current jumpmode to false, as player is not currently jumping and logs a message
+            if (player.IsColliding("Ground") != null) //if player is colliding with ground then it sets current jumpmode to false, as player is not currently jumping and logs a message
             {
                 jumpmode = false;
                 //Log.Info("Player is colliding with Ground");
                 //ground.DestroyStatic(player);
             }
-            else if (player.IsColliding("Ground", currentLevel) == null) //if player is not colliding with ground then it logs a warning to the console that the player cant press jump key.
+            else if (player.IsColliding("Ground") == null) //if player is not colliding with ground then it logs a warning to the console that the player cant press jump key.
             {
                 //Log.Warning("Player is not colliding with Ground and thus cannot jump.");
                 //jumpstate handling for this is done in the if() structure that checks for jumpsteps
@@ -2602,7 +2984,7 @@ namespace Plat2d_2
                 {
                     Enemy enemyobject = enemies[i];
                     enemyobject.sprite2d.UpdatePosition();
-                    if (enemyobject.sprite2d.IsColliding("Bullet", currentLevel) != null)
+                    if (enemyobject.sprite2d.IsColliding("Bullet") != null)
                     {
                         pointScoreTally += 250;
                         enemyobject.sprite2d.DestroySelf();
@@ -2635,7 +3017,7 @@ namespace Plat2d_2
                             bullet.sprite2d.DestroySelf();
                             bullets.Remove(bullet);
                         }
-                        if (bullet.sprite2d.IsColliding("Enemy", currentLevel) != null)
+                        if (bullet.sprite2d.IsColliding("Enemy") != null)
                         {
                             bullet.sprite2d.DestroySelf();
                             bullets.Remove(bullet);
@@ -2646,7 +3028,7 @@ namespace Plat2d_2
 
             }
 
-            Sprite2d coin = player.IsColliding("Coin", currentLevel); //checks for collisions between the player and the coin.
+            Sprite2d coin = player.IsColliding("Coin"); //checks for collisions between the player and the coin.
 
             if (coin != null) //if the coin is being touched
             {
@@ -2655,25 +3037,45 @@ namespace Plat2d_2
                 Log.Info($"Coin is being touched. Current Crystalcount: {crystalScoreTally}"); //then it logs a message to the console
                 coin.DestroySelf(); //and destroys the object
             }
-            Sprite2d levelfinish = player.IsColliding("Finish", currentLevel); //checks for collisions between the player and the level finishing trigger object.
+            Sprite2d levelfinish = player.IsColliding("Finish"); //checks for collisions between the player and the level finishing trigger object.
 
             if (levelfinish != null) //if the trigger object is being touched
             {
+                //reloadtrigger = true;
                 Log.Info("Player has triggered level finish"); //then it logs a message to the console
                 levelfinish.DestroySelf(); //destroys itself
 
-                //TODO: set level cleared in world1map boolean list
-                levelClear[currentLevel] = true;
+
+                if (levels.ElementAt(currentLevel).nextlevelpart == null) //if level has no other parts, do this
+                {
+                    levels.ElementAt(1).isLevelCleared = false; //sets the cleared value false for the world map.
+                    selectedLevel = 1; //next level selected is the world map
+                    levels.ElementAt(currentLevel).isLevelCleared = true;
+                    //levels.ElementAt(1).isLevelCleared = false; //sets the cleared value false for the world map.
+                    Log.Select($"[GSH] - {levels.ElementAt(1).levelname} is set to {levels.ElementAt(1).isLevelCleared}");
+                }
+                else
+                {
+                    levels.ElementAt(currentLevel).isLevelCleared = true;
+                    reloadtrigger = true;
+                    if (isLevelPartLoaded)
+                    {
+                        isLevelPartCompleted = true;
+                        levels.ElementAt(1).isLevelCleared = false; //sets the cleared value false for the world map.
+                        selectedLevel = 1; //next level selected is the world map
+                        levels.ElementAt(currentLevel).nextlevelpart = null;
+                    }
+                }
             }
 
-            Sprite2d enemy = player.IsColliding("Enemy", currentLevel); //checks for collisions between the player and the level finishing trigger object.
+            Sprite2d enemy = player.IsColliding("Enemy"); //checks for collisions between the player and the level finishing trigger object.
             
             Sprite2d bulletcollision = null;
 
             if (enemy != null) //if the trigger object is being touched
             {
                 playerHealth--;
-                bulletcollision = enemy.IsColliding("Bullet", currentLevel);
+                bulletcollision = enemy.IsColliding("Bullet");
                 //Log.Info($"Player has touched an enemy. Health left: {playerHealth}. Lives left: {playerLives}"); //then it logs a message to the console
             }
 
@@ -2683,47 +3085,67 @@ namespace Plat2d_2
                 enemy.DestroySelf();
             }
 
-            Sprite2d setlevel1 = player.IsColliding("Level1", currentLevel);
-            Sprite2d setlevel2 = player.IsColliding("Level2", currentLevel);
-            Sprite2d setlevel3 = player.IsColliding("Level3", currentLevel);
-            Sprite2d setlevel4 = player.IsColliding("Level4", currentLevel);
-            Sprite2d setlevel5 = player.IsColliding("Level5", currentLevel);
-            Sprite2d setlevel6 = player.IsColliding("Level6", currentLevel);
-            if (setlevel1 != null)
+            Sprite2d setlevel1 = player.IsColliding("Level1");
+            Sprite2d setlevel2 = player.IsColliding("Level2");
+            Sprite2d setlevel3 = player.IsColliding("Level3");
+            Sprite2d setlevel4 = player.IsColliding("Level4");
+            Sprite2d setlevel5 = player.IsColliding("Level5");
+            Sprite2d setlevel6 = player.IsColliding("Level6");
+
+            if (setlevel1 != null &&
+                levels.ElementAt(2).isLevelCleared == false)
             {
                 Log.Select($"player has triggered {setlevel1}");
                 setlevel1.DestroySelf();
-                SelectLevel(levelClear, 1); //and sets the current level as being completed
+                //SelectLevel(levelStates, 1); //and sets the current level as being completed
+                levels.ElementAt(currentLevel).isLevelCleared = true;
+                selectedLevel = 2;
             }
-            if (setlevel2 != null)
+            if (setlevel2 != null &&
+                levels.ElementAt(3).isLevelCleared == false)
             {
                 Log.Select($"player has triggered {setlevel2}");
                 setlevel2.DestroySelf();
-                SelectLevel(levelClear, 2); //and sets the current level as being completed
+                //SelectLevel(levelClear, 2); //and sets the current level as being completed
+                levels.ElementAt(currentLevel).isLevelCleared = true;
+                selectedLevel = 3;
             }
-            if (setlevel3 != null)
+            if (setlevel3 != null &&
+                levels.ElementAt(4).isLevelCleared == false)
             {
                 Log.Select($"player has triggered {setlevel3}");
                 setlevel3.DestroySelf();
-                SelectLevel(levelClear, 3); //and sets the current level as being completed
+                //SelectLevel(levelClear, 3); //and sets the current level as being completed
+                levels.ElementAt(currentLevel).isLevelCleared = true;
+                selectedLevel = 4;
             }
-            if (setlevel4 != null)
+            if (setlevel4 != null &&
+                levels.ElementAt(5).isLevelCleared == false)
             {
                 Log.Select($"player has triggered {setlevel4}");
                 setlevel4.DestroySelf();
-                SelectLevel(levelClear, 4); //and sets the current level as being completed
+                //SelectLevel(levelClear, 4); //and sets the current level as being completed
+                levels.ElementAt(currentLevel).isLevelCleared = true;
+                selectedLevel = 5;
             }
-            if (setlevel5 != null)
+            if (setlevel5 != null &&
+                levels.ElementAt(6).isLevelCleared == false)
             {
                 Log.Select($"player has triggered {setlevel5}");
                 setlevel5.DestroySelf();
-                SelectLevel(levelClear, 5); //and sets the current level as being completed
+                //SelectLevel(levelClear, 5); //and sets the current level as being completed
+                //levels.ElementAt(currentLevel).isLevelCleared = true;
+                levels.ElementAt(currentLevel).isLevelCleared = true;
+                selectedLevel = 6;
             }
-            if (setlevel6 != null)
+            if (setlevel6 != null &&
+                levels.ElementAt(7).isLevelCleared == false)
             {
                 Log.Select($"player has triggered {setlevel6}");
                 setlevel6.DestroySelf();
-                SelectLevel(levelClear, 6); //and sets the current level as being completed
+                //SelectLevel(levelClear, 6); //and sets the current level as being completed
+                levels.ElementAt(currentLevel).isLevelCleared = true;
+                selectedLevel = 7;
             }
 
 
@@ -2758,6 +3180,20 @@ namespace Plat2d_2
             // SPRITE LOGGING       Log.Info($"Currentsprite should be # {steps}");
 
         }
+
+        private void LoseLife()
+        {
+            Log.Info("LoseLife has been called");
+            playerLives--;
+            playerHealth = 100;
+            Log.Info($"X = {player.Position.X}. Y = {player.Position.Y}");
+            Log.Info($"respawn X = {respawnlocation.X}. respawnY = {respawnlocation.Y}");
+            player.SetLocation(respawnlocation);
+            Log.Info($"X = {player.Position.X}. Y = {player.Position.Y}");
+            Log.Info($"respawn X = {respawnlocation.X}. respawnY = {respawnlocation.Y}");
+            
+        }
+
         private void SelectLevelWithoutClearingMap(int selectedlevel)
         {
             int levelInList;
@@ -2830,10 +3266,8 @@ namespace Plat2d_2
             //but instead search for the level number in array to load instead.
             //a world map item, if you will.
         }
-        private void SelectLevel(bool[] levelClear, int selectedlevel)
+        private void SelectLevel(bool[] levelStates, int selectedlevel)
         {
-            int levelInList;
-
             if (selectedlevel == 1)
             {
                 levelInList = 2;
@@ -2848,45 +3282,19 @@ namespace Plat2d_2
             }
             else if (selectedlevel == 4)
             {
-                levelInList = 6;
+                levelInList = 5;
             }
             else if (selectedlevel == 5)
             {
-                levelInList = 7;
+                levelInList = 6;
             }
             else if (selectedlevel == 6)
             {
-                levelInList = 8;
+                levelInList = 7;
             }
             else
             {
                 levelInList = 0;
-            }
-            UnLoadCurrentLevel();
-            currentLevel = levelInList;
-            if (levels.ElementAt(currentLevel).artSetFolder == "plains")
-            {
-                LoadNextLevel(levels.ElementAt(currentLevel), PlainsArtRefs);
-            }
-            else if (levels.ElementAt(currentLevel).artSetFolder == "underground")
-            {
-                LoadNextLevel(levels.ElementAt(currentLevel), UndergroundArtRefs);
-            }
-            else if (levels.ElementAt(currentLevel).artSetFolder == "desert")
-            {
-                LoadNextLevel(levels.ElementAt(currentLevel), DesertArtRefs);
-            }
-            else if (levels.ElementAt(currentLevel).artSetFolder == "forest")
-            {
-                LoadNextLevel(levels.ElementAt(currentLevel), ForestArtRefs);
-            }
-            else if (levels.ElementAt(currentLevel).artSetFolder == "castle")
-            {
-                LoadNextLevel(levels.ElementAt(currentLevel), CastleArtRefs);
-            }
-            else if (levels.ElementAt(currentLevel).artSetFolder == "screens")
-            {
-                LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
             }
             //for (int i = 0; i < selectedlevel; i++)
             //{
@@ -2943,6 +3351,7 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.Right) { right = true; }
             if (e.KeyCode == Keys.Z) { fire = true; }
             if (e.KeyCode == Keys.Space) { jump = true; }
+            if (e.KeyCode == Keys.Q) { respawntester = true; }
             //if (e.KeyCode == Keys.Return) { EngineCore.EngineCore.pausebuttoninput = !pausebuttoninput; }
         }
 
@@ -2959,34 +3368,35 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.Right) { right = false; }
             if (e.KeyCode == Keys.Z) { fire = false; }
             if (e.KeyCode == Keys.Space) { jump = false; }
+            if (e.KeyCode == Keys.Q) { respawntester = false; }
         }
         public override void UpdateHud()
         {
-            if (levels.ElementAt(currentLevel).levelType != null)
-            {
-                if (levels.ElementAt(currentLevel).levelType == "Screen")
-                {
-                    CrystalLabel.BackColor = System.Drawing.Color.Transparent;
-                    CrystalLabel.ForeColor = System.Drawing.Color.Transparent;
-                    CrystalLabel.Location = new System.Drawing.Point(32, 512);
-                    HealthLabel.BackColor = System.Drawing.Color.Transparent;
-                    HealthLabel.ForeColor = System.Drawing.Color.Transparent;
-                    HealthLabel.Location = new System.Drawing.Point(128, 512);
-                    LivesLabel.BackColor = System.Drawing.Color.Transparent;
-                    LivesLabel.ForeColor = System.Drawing.Color.Transparent;
-                    LivesLabel.Location = new System.Drawing.Point(160, 512);
-                    AmmoLabel.BackColor = System.Drawing.Color.Transparent;
-                    AmmoLabel.ForeColor = System.Drawing.Color.Transparent;
-                    AmmoLabel.Location = new System.Drawing.Point(188, 512);
-                    ScoreLabel.BackColor = System.Drawing.Color.Transparent;
-                    ScoreLabel.ForeColor = System.Drawing.Color.Transparent;
-                    ScoreLabel.Location = new System.Drawing.Point(64, 512);
-                    SelectedWeaponLabel.BackColor = System.Drawing.Color.Transparent;
-                    SelectedWeaponLabel.ForeColor = System.Drawing.Color.Transparent;
-                    SelectedWeaponLabel.Location = new System.Drawing.Point(32, 512);
-                }
-                else
-                {
+            //if (levels.ElementAt(currentLevel).levelType != null)
+            //{
+            //    if (levels.ElementAt(currentLevel).levelType == "Screen")
+            //    {
+            //        CrystalLabel.BackColor = System.Drawing.Color.Transparent;
+            //        CrystalLabel.ForeColor = System.Drawing.Color.Transparent;
+            //        CrystalLabel.Location = new System.Drawing.Point(32, 512);
+            //        HealthLabel.BackColor = System.Drawing.Color.Transparent;
+            //        HealthLabel.ForeColor = System.Drawing.Color.Transparent;
+            //        HealthLabel.Location = new System.Drawing.Point(128, 512);
+            //        LivesLabel.BackColor = System.Drawing.Color.Transparent;
+            //        LivesLabel.ForeColor = System.Drawing.Color.Transparent;
+            //        LivesLabel.Location = new System.Drawing.Point(160, 512);
+            //        AmmoLabel.BackColor = System.Drawing.Color.Transparent;
+            //        AmmoLabel.ForeColor = System.Drawing.Color.Transparent;
+            //        AmmoLabel.Location = new System.Drawing.Point(188, 512);
+            //        ScoreLabel.BackColor = System.Drawing.Color.Transparent;
+            //        ScoreLabel.ForeColor = System.Drawing.Color.Transparent;
+            //        ScoreLabel.Location = new System.Drawing.Point(64, 512);
+            //        SelectedWeaponLabel.BackColor = System.Drawing.Color.Transparent;
+            //        SelectedWeaponLabel.ForeColor = System.Drawing.Color.Transparent;
+            //        SelectedWeaponLabel.Location = new System.Drawing.Point(32, 512);
+            //    }
+            //    else
+            //    {
                     CrystalLabel.BackColor = System.Drawing.Color.Black;
                     CrystalLabel.ForeColor = System.Drawing.Color.White;
                     CrystalLabel.Location = new System.Drawing.Point(32, 216);
@@ -3005,8 +3415,8 @@ namespace Plat2d_2
                     SelectedWeaponLabel.BackColor = System.Drawing.Color.Black;
                     SelectedWeaponLabel.ForeColor = System.Drawing.Color.White;
                     SelectedWeaponLabel.Location = new System.Drawing.Point(32, 224);
-                }
-            }            
+            //    }
+            //}            
             if (CrystalLabel != null)
             {
                 CrystalLabel.Text = $"{DemoGame.crystalScoreTally}";

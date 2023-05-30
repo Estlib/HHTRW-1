@@ -21,6 +21,8 @@ namespace Plat2d_2.EngineCore
         public string levelname = null;
         public System.Drawing.Color levelColor = System.Drawing.Color.FromArgb(255,0,0,0);
         public bool isLevelCleared = false;
+        //public List<Level> multipartlevelparts = new List<Level>();
+        public Level nextlevelpart = null;
 
         //public int? musicNumber {  get; set; }
         //public string artSetFolder { get; set; }
@@ -98,6 +100,24 @@ namespace Plat2d_2.EngineCore
             this.levelname = levelname;
             this.levelColor = levelColor;
             this.isLevelCleared = isLevelCleared;
+        }
+
+        public Level(
+        int musicNumber, string artSetFolder, string[] artTagDefinitions, string[,] firstMostLayer, string[,] objectRenderLayer, string[,] lastMostLayer,
+        string[,] hudLayer, string levelType, string levelname, System.Drawing.Color levelColor, bool isLevelCleared, Level nextlevelpart)
+        {
+            this.musicNumber = musicNumber;
+            this.artSetFolder = artSetFolder;
+            this.artTagDefinitions = artTagDefinitions;
+            this.firstMostLayer = firstMostLayer;
+            this.objectRenderLayer = objectRenderLayer;
+            this.lastMostLayer = lastMostLayer;
+            this.hudLayer = hudLayer;
+            this.levelType = levelType;
+            this.levelname = levelname;
+            this.levelColor = levelColor;
+            this.isLevelCleared = isLevelCleared;
+            this.nextlevelpart = nextlevelpart;
         }
 
         public string[,] LevelLayers(string levelname, int layernumber)

@@ -242,6 +242,10 @@ namespace Plat2d_2.EngineCore
         {
             return body.GetLinearVelocity().Y;
         }
+        public void SetLocation(Vec2 newlocation)
+        {
+            body.SetXForm(newlocation, 0.0f);
+        }
         /// <summary>
         /// updates player position.
         /// </summary>
@@ -281,7 +285,7 @@ namespace Plat2d_2.EngineCore
         //    //Log.Info($"b is null");
         //    return null;
         //}
-        public Sprite2d IsColliding(string tag, int currentLevel)
+        public Sprite2d IsColliding(string tag)
         {
             var thisLevel = EngineCore.AllSprites;
             for (int i = 0; i < thisLevel.Count; i++)
@@ -348,7 +352,7 @@ namespace Plat2d_2.EngineCore
         //    //}
         //    //Log.Info($"Unregistering {this}");
         //    EngineCore.world.DestroyBody(body);
-        //    EngineCore.UnRegisterSprite(this);
+        //    EngineCore.UnRegisterSprite(this);7
         //    EngineCore.LevelSprites[DemoGame.currentLevel] = new List<Sprite2d> { this };
         //}
         /// <summary>

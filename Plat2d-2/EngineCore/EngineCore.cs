@@ -168,7 +168,7 @@ namespace Plat2d_2.EngineCore
             //        enemy.sprite2d.DestroyStatic(enemy.sprite2d);
             //    }
             //}
-            //AllSprites = new List<Sprite2d>();
+            AllSprites = new List<Sprite2d>();
             //LevelSprites[DemoGame.currentLevel] = new List<Sprite2d>();
             //for (int i = 0; i < AllSprites.Count; i++)
             //{
