@@ -50,5 +50,11 @@ namespace Plat2d_2.EngineCore
             Console.WriteLine($"[PLAYER SELECT] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
         }
+        public static void DebugFunction(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"[DEBUG FUNCTION] - {msg}");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
     }
 }

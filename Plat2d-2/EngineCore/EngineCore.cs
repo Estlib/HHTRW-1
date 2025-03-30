@@ -14,12 +14,22 @@ using System.Drawing.Text;
 
 namespace Plat2d_2.EngineCore
 {
+
     public class Canvas : Form
     {
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont,
+        IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
+
+        private PrivateFontCollection fonts = new PrivateFontCollection();
+
+        Font myFont;
+
         public System.Windows.Forms.Label label1;
 
         public Canvas()
         {
+
             this.DoubleBuffered = true;
 
         }
