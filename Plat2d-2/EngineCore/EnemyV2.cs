@@ -7,6 +7,22 @@ using System.Windows.Forms.VisualStyles;
 
 namespace Plat2d_2.EngineCore
 {
+    public enum ActionState
+    {
+        // enum utility to list all the actionstates
+        StandingLeft = 0,
+        StandingRight = 1,
+        WalkingLeft = 2,
+        WalkingRight = 3,
+        JumpingLeft = 4,
+        JumpingRight = 5,
+        FiringLeft = 6,
+        FiringRight = 7,
+        GenericFlying = 8,
+        ErrorState = 9,
+
+
+    }
     public class EnemyV2
     {
         public Sprite2d sprite2d; //main sprite
@@ -23,10 +39,13 @@ namespace Plat2d_2.EngineCore
         public List<int> errorData; //int list to display an error sprite
         public int lastXpos; //last x position of enemy
         public int lastYpos; //last y position of enemy
-        public string CurrentActionState; //what the enemy should be doing right now
+        public ActionState CurrentActionState; //what the enemy should be doing right now
         public List<int> BehaviourData; //Determines how the enemy behaves, if it is not directly an "aim-at-player-only" enemy
         public bool isCollidingOrFalling; //Sets weather the enemy is currently on a surface or not
         public bool isfacingleft; //is it facing left, used to determine animation frame sides.
+        public string enemyName { get; set; } = "Unnamed Enemy"; //name of the enemy, has no particular use other than for bosses
+        public string enemyType { get; set; } = "Devtest"; //type of enemy, presently it is a string, but once the game gets everything it needs to implement all required enemy types, this will turn into an enum.
+
 
         /// <summary>
         /// Default full quality constructor
