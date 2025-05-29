@@ -41,6 +41,7 @@ namespace Plat2d_2.EngineCore
         public int lastYpos; //last y position of enemy
         public ActionState CurrentActionState; //what the enemy should be doing right now
         public List<int> BehaviourData; //Determines how the enemy behaves, if it is not directly an "aim-at-player-only" enemy
+        public int CurrentBehaviourStep; //Holds the value for what step the enemy behaviour currently is on.
         public bool isCollidingOrFalling; //Sets weather the enemy is currently on a surface or not
         public bool isfacingleft; //is it facing left, used to determine animation frame sides.
         public string enemyName { get; set; } = "Unnamed Enemy"; //name of the enemy, has no particular use other than for bosses
@@ -48,7 +49,7 @@ namespace Plat2d_2.EngineCore
 
 
         /// <summary>
-        /// Default full quality constructor
+        /// default constructor
         /// </summary>
         /// <param name="sprite2D">main sprite of object</param>
         /// <param name="animationFrames">other sprites that will replace main sprite as the enemy is animated</param>
@@ -66,8 +67,11 @@ namespace Plat2d_2.EngineCore
         /// <param name="lastYpos">last y position of enemy</param>
         /// <param name="CurrentActionState">what the enemy should be doing right now</param>
         /// <param name="BehaviourData">Determines how the enemy behaves, if it is not directly an "aim-at-player-only" enemy</param>
+        /// <param name="CurrentBehaviourStep"></param>
         /// <param name="isCollidingOrFalling">Sets weather the enemy is currently on a surface or not</param>
         /// <param name="isfacingleft">is it facing left, used to determine animation frame sides.</param>
+        /// <param name="enemyName"></param>
+        /// <param name="enemyType"></param>
         public EnemyV2(
             Sprite2d sprite2D,
             List<Sprite2d> animationFrames,
@@ -83,10 +87,13 @@ namespace Plat2d_2.EngineCore
             List<int> errorData,
             int lastXpos,
             int lastYpos,
-            string CurrentActionState,
+            ActionState CurrentActionState,
             List<int> BehaviourData,
+            int CurrentBehaviourStep,
             bool isCollidingOrFalling,
-            bool isfacingleft
+            bool isfacingleft,
+            string enemyName,
+            string enemyType
             )
         {
             this.sprite2d = sprite2D;
@@ -105,8 +112,11 @@ namespace Plat2d_2.EngineCore
             this.lastYpos = lastYpos;
             this.CurrentActionState = CurrentActionState;
             this.BehaviourData = BehaviourData;
+            this.CurrentBehaviourStep = CurrentBehaviourStep;
             this.isCollidingOrFalling = isCollidingOrFalling;
             this.isfacingleft = isfacingleft;
+            this.enemyName = enemyName;
+            this.enemyType = enemyType;
         }
     }
 }
