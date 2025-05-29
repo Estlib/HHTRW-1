@@ -2745,29 +2745,25 @@ namespace Plat2d_2
             //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
             enemy.sprite2d.Sprite = walkingEnemySpritesBitmap[enemy.animationsteps];
         }
+
+        /// <summary>
+        /// Animates a single enemy, based on what the animationclock currently is.
+        /// Is used with a different function that uses this method to animate all enemies
+        /// </summary>
+        /// <param name="enemy">Requires an enemy to be passed into it</param>
         private void AnimateThisEnemy(Enemy enemy)
         {
             Log.Info("AnimateThisEnemy()");
-            ////Log.Info("AnimatePlayer has been called");
-            //slowDownFrameRate += 1;
-            //if (slowDownFrameRate == 4)
-            //{
-            //    steps++;
-            //    slowDownFrameRate = 0;
-            //}
-            //if (steps > end || steps < start)
-            //{
-            //    steps = start;
-            //}
-            ////player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
-            //player.Sprite = playerSpritesBitmap[steps];
-            if (animationClock == 4)
+
+            if (animationClock == 4) //animates only when the animationclock is 4
             {
                 Log.Info($"enemy.animationsteps = {enemy.animationsteps}");
-                //slowDownFrameRate = 0;
+                
+                // Animation procedure when it is facing left.
                 if (enemy.isfacingleft)
                 {
                     Log.Info($"Enemy is facing left = {enemy.isfacingleft}");
+                    
                     if (enemy.animationsteps > enemy.walkleftanimend || enemy.animationsteps < enemy.walkleftanimstart)
                     {
                         if (enemy.animationsteps == enemy.walkleftanimend)
@@ -2803,23 +2799,13 @@ namespace Plat2d_2
                 {
                     //Enemy en = enemies.ElementAt(i);
                     if (enemies.ElementAt(i).sprite2d.Position.X > enemies.ElementAt(i).lastXpos)
-                    {
-                        //AnimateEnemyV1(enemies.ElementAt(i).walkleftanimstart, enemies.ElementAt(i).walkleftanimend, enemies.ElementAt(i).sprite2d);
-                        //AnimateEnemyV2(en.walkleftanimstart, en.walkleftanimend, en.sprite2d, en.animationsteps);
-                        //AnimateEnemyV3(enemies.ElementAt(i));
+                    
                         AnimateThisEnemy(enemies.ElementAt(i));
                     }
                     else
                     {
-                        //AnimateEnemyV1(enemies.ElementAt(i).walkrightanimstart, enemies.ElementAt(i).walkrightanimend, enemies.ElementAt(i).sprite2d);
-                        //AnimateEnemyV2(en.walkrightanimstart, en.walkrightanimend, en.sprite2d, en.animationsteps);
-                        //AnimateEnemyV3(enemies.ElementAt(i));
                         AnimateThisEnemy(enemies.ElementAt(i));
                     }
-                    //if (enemies.ElementAt(i).HasBody())
-                    //{
-
-                    //}
 
                     if (enemies.ElementAt(i).isfacingleft)
                     {
@@ -2848,7 +2834,7 @@ namespace Plat2d_2
                 }
                 
             }            
-        }
+        
 
         /// <summary>
         /// function to animate the players sprites. can technically be used to animate objects too, so far not implemented.
@@ -2930,6 +2916,8 @@ namespace Plat2d_2
         /// this function updates visuals and levels when window is being updated.
         /// essentially identical in purpose to OnDraw, but i have both because its convenient to group visual aspect changes into one
         /// and physical aspect changes in functioning into the other.
+        /// 
+        /// This is basically one of two methods where the game "happens".
         /// </summary>
         public override void OnUpdate()
         {
@@ -2938,7 +2926,31 @@ namespace Plat2d_2
                 animationClock = 0;
             }
             animationClock++;
-            Log.Info($"Animation clock is currently {animationClock}");
+
+
+            // visualisation for animation clock in the console
+            //Log.Info($"Animation clock is currently {animationClock}");
+            switch (animationClock)
+            {
+                case 0:
+                    Log.Error($"Animation clock is currently {animationClock} ░░ ░░ ░░ ░░ ");
+                    break;
+                case 1:
+                    Log.Info($"Animation clock is currently {animationClock} ██ ░░ ░░ ░░ ");
+                    break;
+                case 2:
+                    Log.Info($"Animation clock is currently {animationClock} ░░ ██ ░░ ░░ ");
+                    break;
+                case 3:
+                    Log.Info($"Animation clock is currently {animationClock} ░░ ░░ ██ ░░ ");
+                    break;
+                case 4:
+                    Log.Info($"Animation clock is currently {animationClock} ░░ ░░ ░░ ██ ");
+                    break;
+                default:
+                    break;
+            }
+            //Log.Info($"Animation clock is currently {animationClock}");
 
 
             if (player.Position.Y >= 320)

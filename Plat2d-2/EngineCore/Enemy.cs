@@ -23,7 +23,33 @@ namespace Plat2d_2.EngineCore
         public int wherewalking;
         public bool isfacingleft;
         public int animationsteps;
-        public Enemy(Sprite2d sprite, int lastXpos, int lastYpos, int walkleftanimstart, int walkleftanimend, int walkrightanimstart, int walkrightanimend, int enemyleftwalkframes, int enemyrightwalkframes, int wherewalking, bool facedirection/*, int animationsteps*/)
+        /// <summary>
+        /// Default enemy constructor, containing sprite and frame animation data
+        /// </summary>
+        /// <param name="sprite">enemy sprite for which animation data is given</param>
+        /// <param name="lastXpos">previous x axis position</param>
+        /// <param name="lastYpos">previous y axis position</param>
+        /// <param name="walkleftanimstart">number of frame, where left walk animation starts</param>
+        /// <param name="walkleftanimend">number of frame, where left walk animation ends</param>
+        /// <param name="walkrightanimstart">number of frame, where right walk animation starts</param>
+        /// <param name="walkrightanimend">number of frame, where right walk animation ends</param>
+        /// <param name="enemyleftwalkframes">amount of spriteframes that the left walk cycle can be animated for</param>
+        /// <param name="enemyrightwalkframes">amount of spriteframes that the right walk cycle can be animated for</param>
+        /// <param name="wherewalking">which way is the enemy walking currently</param>
+        /// <param name="facedirection">what direction is the enemy facing</param>
+        public Enemy(
+            Sprite2d sprite, 
+            int lastXpos, 
+            int lastYpos, 
+            int walkleftanimstart, 
+            int walkleftanimend, 
+            int walkrightanimstart, 
+            int walkrightanimend, 
+            int enemyleftwalkframes, 
+            int enemyrightwalkframes, 
+            int wherewalking, 
+            bool facedirection
+            /*, int animationsteps*/)
         {
             this.sprite2d = sprite;
             this.lastXpos = lastXpos; //0
@@ -39,6 +65,14 @@ namespace Plat2d_2.EngineCore
             //this.animationsteps = animationsteps;
 
         }
+        /// <summary>
+        /// Simplified enemy constructor, containing sprite and frame animation data but where starting and ending frames are set to 0 and walking direction is preset to left
+        /// </summary>
+        /// <param name="sprite">enemy sprite for which animation data is given</param>
+        /// <param name="lastXpos">previous x axis position</param>
+        /// <param name="lastYpos">previous y axis position</param>
+        /// <param name="enemyleftwalkframes">amount of spriteframes that the left walk cycle can be animated for</param>
+        /// <param name="enemyrightwalkframes">amount of spriteframes that the right walk cycle can be animated for</param>
         public Enemy(Sprite2d sprite, int lastXpos, int lastYpos, int enemyleftwalkframes, int enemyrightwalkframes)
         {
             this.sprite2d = sprite;
@@ -54,6 +88,15 @@ namespace Plat2d_2.EngineCore
             this.isfacingleft = false; //current 8
 
         }
+        /// <summary>
+        /// simplified enemy constructor, containing sprite and frame animation data but where starting and ending frames are set to 0 and walking direction is preset to left. User can set how many frames to wait for next animation.
+        /// </summary>
+        /// <param name="sprite">enemy sprite for which animation data is given</param>
+        /// <param name="lastXpos">previous x axis position</param>
+        /// <param name="lastYpos">previous y axis position</param>
+        /// <param name="enemyleftwalkframes">amount of spriteframes that the left walk cycle can be animated for</param>
+        /// <param name="enemyrightwalkframes">amount of spriteframes that the right walk cycle can be animated for</param>
+        /// <param name="animationsteps">how many rendered frames to wait to display next animation frame</param>
         public Enemy(Sprite2d sprite, int lastXpos, int lastYpos, int enemyleftwalkframes, int enemyrightwalkframes, int animationsteps)
         {
             this.sprite2d = sprite;

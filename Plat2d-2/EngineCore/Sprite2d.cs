@@ -111,6 +111,10 @@ namespace Plat2d_2.EngineCore
             Log.Info($"[SPRITE2D]({Directory} {Tag}) has been registered");
             EngineCore.RegisterSprite(this);
         }
+        /// <summary>
+        /// Destroys an enemy and its body that this method has been called on.
+        /// </summary>
+        /// <param name="sprite">Sprite with "Enemy" tag to call the method on</param>
         public void DestroyStatic(Sprite2d sprite)
         {
             if (sprite.Tag == "Enemy")
@@ -242,6 +246,10 @@ namespace Plat2d_2.EngineCore
         {
             return body.GetLinearVelocity().Y;
         }
+        /// <summary>
+        /// Teleport object on the X axis
+        /// </summary>
+        /// <param name="newlocation">New location of the object this method is called on</param>
         public void SetLocation(Vec2 newlocation)
         {
             body.SetXForm(newlocation, 0.0f);
@@ -375,12 +383,18 @@ namespace Plat2d_2.EngineCore
             //return Sprite2d(Position,Scale,Directory,Tag);
             return this;
         }
-
+        /// <summary>
+        /// Sets the body to true
+        /// </summary>
+        /// <returns>Set the body to true</returns>
         internal bool HasBody()
         {
             return this.body != null;
         }
-
+        /// <summary>
+        /// Internal method to advance 
+        /// </summary>
+        /// <param name="weaponspeed"></param>
         internal void AdvanceLeft(int weaponspeed)
         {
             this.Position.X -= weaponspeed;
