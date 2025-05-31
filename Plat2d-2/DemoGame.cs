@@ -2660,15 +2660,33 @@ namespace Plat2d_2
                     {
                         if (animationsystemtype == true)
                         {
-                            //EnemyV2 enemyv2 = new EnemyV2
-                            //    (
-                            //    new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
-                            //    walkingEnemySpritesBitmap,
-                            //    List<int> { },
-                            //    i *16,
-                            //    j*16,
-                            //    ActionState.StandingLeft
-                            //    );
+                            EnemyV2 enemyv2 = new EnemyV2
+                                (
+                                    new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
+                                    walkingEnemySpritesBitmap,
+                                    new List<int> { }, //walkleft
+                                    new List<int> { }, //walkright
+                                    new List<int> { }, //jumpleft
+                                    new List<int> { }, //jumpright
+                                    new List<int> { }, //stillleft
+                                    new List<int> { }, //stillright
+                                    new List<int> { }, //fireleft
+                                    new List<int> { }, //fireright
+                                    new List<int> { }, //fly
+                                    new List<int> { }, //error
+                                    i * 16,
+                                    j * 16,
+                                    0,
+                                    new List<int> { }, //behaviourloop
+                                    0, //where is its action currently in behaviourloop
+                                    false,
+                                    true,
+                                    "Test - Walking enemy",
+                                    "Enemy"
+                                );
+
+                            enemyv2.sprite2d.CreateDynamic();
+                            enemiesv2.Add(enemyv2);
                         }
                         else
                         {
