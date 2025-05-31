@@ -1382,7 +1382,9 @@ namespace Plat2d_2
                 walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3duckflip.png"))); //19 - crouching flipped
                 walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3jumpflip.png"))); //20 - jumping flipped
                 walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/ALTfallFLIP.png"))); //21 - falling flipped
-                
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/errorstate.png"))); //22 - errorstate sprite
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/nosprite.png"))); //23 - sprite missing sprite
+
             }
 
 
@@ -2664,16 +2666,16 @@ namespace Plat2d_2
                                 (
                                     new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
                                     walkingEnemySpritesBitmap,
-                                    new List<int> { }, //walkleft
-                                    new List<int> { }, //walkright
-                                    new List<int> { }, //jumpleft
-                                    new List<int> { }, //jumpright
-                                    new List<int> { }, //stillleft
-                                    new List<int> { }, //stillright
-                                    new List<int> { }, //fireleft
-                                    new List<int> { }, //fireright
-                                    new List<int> { }, //fly
-                                    new List<int> { }, //error
+                                    new List<int> {12,13,14,15,16,17}, //walkleft
+                                    new List<int> {1,2,3,4,5,6 }, //walkright
+                                    new List<int> {20 }, //jumpleft
+                                    new List<int> {9 }, //jumpright
+                                    new List<int> {11 }, //stillleft
+                                    new List<int> {0 }, //stillright
+                                    new List<int> {23 }, //fireleft
+                                    new List<int> {23 }, //fireright
+                                    new List<int> {23 }, //fly
+                                    new List<int> {22 }, //error
                                     i * 16,
                                     j * 16,
                                     0,

@@ -189,6 +189,8 @@ namespace Plat2d_2.EngineCore
             this.isfacingleft = isfacingleft;
             this.enemyName = enemyName;
             this.enemyType = enemyType;
+            Log.Info("An enemy v2 type enemy has been created");
         }
+        ~EnemyV2() { }
     }
 }
