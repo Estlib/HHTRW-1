@@ -31,6 +31,9 @@ namespace Plat2d_2
         Sprite2d player; //variable to hold players sprite
 
         public static List<Enemy> enemies = new List<Enemy>();
+        public static List<EnemyV2> enemiesv2 = new List<EnemyV2>();
+
+        bool animationsystemtype = false; //false v1, true v2
 
         int steps = 0;
         int slowDownFrameRate = 1;
@@ -1460,6 +1463,8 @@ namespace Plat2d_2
                 //    LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
                 //}
             }*/
+
+            // Key detection
             if (up)
             {
                 if (up == true && left == true)
@@ -1554,7 +1559,10 @@ namespace Plat2d_2
             //Log.Info($"camera position: {CameraPosition.X}");
             //Log.Info($"player position: {player.Position.X}");
         }
-
+        /// <summary>
+        /// Method which handles the game.
+        /// This primarily means level loading, setting cleared and unloading. 
+        /// </summary>
         private void GameStateHandler()
         {
             //reloadtrigger = false;
@@ -1905,6 +1913,9 @@ namespace Plat2d_2
         //    }
         //}
 
+        /// <summary>
+        /// updates the player camera in the level
+        /// </summary>
         private void UpdatePlayerCamera()
         {
             if (player.Position.X <= 160)
@@ -2615,16 +2626,31 @@ namespace Plat2d_2
                         respawnlocation = new Vec2(i * 16, j * 16);
                     }
                     if (Map[j, i] == "WE")
-                    {;
-                        Enemy enemy = new Enemy(
+                    {
+                        if (animationsystemtype == true)
+                        {
+                            EnemyV2 enemyv2 = new EnemyV2(
                                 new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
-                                i * 16,
-                                j * 16,
-                                30,
-                                0,
-                                0);
-                        enemy.sprite2d.CreateDynamic();
-                        enemies.Add(enemy);
+                                walkingEnemySpritesBitmap,
+                                List<int> { },
+                                i *16,
+                                j*16,
+                                ActionState.StandingLeft,
+                                );
+                        }
+                        else
+                        {
+                            Enemy enemy = new Enemy(
+                                    new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
+                                    i * 16,
+                                    j * 16,
+                                    30,
+                                    0,
+                                    0);
+                            enemy.sprite2d.CreateDynamic();
+                            enemies.Add(enemy);
+                        }
+
                     }
                 }
             }
