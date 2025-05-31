@@ -1330,30 +1330,61 @@ namespace Plat2d_2
             menuSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/menu/06.png"))); //6 - item 2/3 selected, level 1 options (sound test)-(subscreen)
             menuSpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/menu/07.png"))); //7 - item 3/3 selected, level 1 options (fullscreen)-(function toggle)
 
-            //setting sprites into the enemysprites bitmap list
-            //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand1.png"))); //0 - standing --------------*
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run1.png"))); //1 - running 1/6
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run2.png"))); //2 - running 2/6
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run3.png"))); //3 - running 3/6
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run4.png"))); //4 - running 4/6
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run5.png"))); //5 - running 5/6
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run6.png"))); //6 - running 6/6
-            //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand2.png"))); //7 - inbetween for standing and crouching
-            //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3duck.png"))); //8 - crouching
-            //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3jump.png"))); //9 - jumping
-            //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/ALTfall.png"))); //10 - falling
-            //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand1flip.png"))); //11 - standing flipped --------------*
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run1flip.png"))); //12 - running 1/6 flipped
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run2flip.png"))); //13 - running 2/6 flipped
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run3flip.png"))); //14 - running 3/6 flipped
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run4flip.png"))); //15 - running 4/6 flipped
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run5flip.png"))); //16 - running 5/6 flipped
-            walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run6flip.png"))); //17 - running 6/6 flipped
-            //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand2flip.png"))); //18 - inbetween for standing and crouching flipped
-            //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3duckflip.png"))); //19 - crouching flipped
-            //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3jumpflip.png"))); //20 - jumping flipped
-            //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/ALTfallFLIP.png"))); //21 - falling flipped
-            //currentSprite = 0; //integer value for holding the current player sprite, through which the list is accessed and player is animated through the use of
+            if (animationsystemtype == false)
+            {
+                //setting sprites into the enemysprites bitmap list
+                //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand1.png"))); //0 - standing --------------*
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run1.png"))); //1 - running 1/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run2.png"))); //2 - running 2/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run3.png"))); //3 - running 3/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run4.png"))); //4 - running 4/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run5.png"))); //5 - running 5/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run6.png"))); //6 - running 6/6
+                                                                                                                          //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand2.png"))); //7 - inbetween for standing and crouching
+                                                                                                                          //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3duck.png"))); //8 - crouching
+                                                                                                                          //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3jump.png"))); //9 - jumping
+                                                                                                                          //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/ALTfall.png"))); //10 - falling
+                                                                                                                          //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand1flip.png"))); //11 - standing flipped --------------*
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run1flip.png"))); //12 - running 1/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run2flip.png"))); //13 - running 2/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run3flip.png"))); //14 - running 3/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run4flip.png"))); //15 - running 4/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run5flip.png"))); //16 - running 5/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run6flip.png"))); //17 - running 6/6 flipped
+                                                                                                                              //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand2flip.png"))); //18 - inbetween for standing and crouching flipped
+                                                                                                                              //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3duckflip.png"))); //19 - crouching flipped
+                                                                                                                              //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3jumpflip.png"))); //20 - jumping flipped
+                                                                                                                              //walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/ALTfallFLIP.png"))); //21 - falling flipped
+                                                                                                                              //currentSprite = 0; //integer value for holding the current player sprite, through which the list is accessed and player is animated through the use of
+            }
+            else
+            {
+                //setting sprites into the enemysprites bitmap list
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand1.png"))); //0 - standing --------------*
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run1.png"))); //1 - running 1/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run2.png"))); //2 - running 2/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run3.png"))); //3 - running 3/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run4.png"))); //4 - running 4/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run5.png"))); //5 - running 5/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run6.png"))); //6 - running 6/6
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand2.png"))); //7 - inbetween for standing and crouching
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3duck.png"))); //8 - crouching
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3jump.png"))); //9 - jumping
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/ALTfall.png"))); //10 - falling
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand1flip.png"))); //11 - standing flipped --------------*
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run1flip.png"))); //12 - running 1/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run2flip.png"))); //13 - running 2/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run3flip.png"))); //14 - running 3/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run4flip.png"))); //15 - running 4/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run5flip.png"))); //16 - running 5/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run6flip.png"))); //17 - running 6/6 flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand2flip.png"))); //18 - inbetween for standing and crouching flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3duckflip.png"))); //19 - crouching flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3jumpflip.png"))); //20 - jumping flipped
+                walkingEnemySpritesBitmap.Add(new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/ALTfallFLIP.png"))); //21 - falling flipped
+                
+            }
+
 
             //<- add enemy firing sprite
 
@@ -2629,14 +2660,15 @@ namespace Plat2d_2
                     {
                         if (animationsystemtype == true)
                         {
-                            EnemyV2 enemyv2 = new EnemyV2(
-                                new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
-                                walkingEnemySpritesBitmap,
-                                List<int> { },
-                                i *16,
-                                j*16,
-                                ActionState.StandingLeft,
-                                );
+                            //EnemyV2 enemyv2 = new EnemyV2
+                            //    (
+                            //    new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
+                            //    walkingEnemySpritesBitmap,
+                            //    List<int> { },
+                            //    i *16,
+                            //    j*16,
+                            //    ActionState.StandingLeft
+                            //    );
                         }
                         else
                         {
