@@ -22,11 +22,13 @@ namespace Plat2d_2
     class DemoGame : EngineCore.EngineCore
     {
         string fontplace = "assets/fonts/arcade-legacy.ttf";
+        string levelclearingsforlabel = $"______  _  _";
         Label CrystalLabel;
         Label ScoreLabel;
         Label HealthLabel;
         Label LivesLabel;
         Label AmmoLabel;
+        Label LevelLabel;
         Label SelectedWeaponLabel;
         Sprite2d player; //variable to hold players sprite
 
@@ -1248,9 +1250,23 @@ namespace Plat2d_2
             label5.Font = loadfontfromfileandnotos == true ? debuglabelfont : systemdebuglabelfont;
             label5.Text = $"{DemoGame.weapon1Ammo}";
             AmmoLabel = label5;
-            Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(AmmoLabel); });
+            Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(LevelLabel); });
 
             Log.Highlight($"Game is starting, current game: DemoGame");
+
+            //debug label for level and levelpart statuses
+            var dLabel1 = new Label();
+            dLabel1.AutoSize = true;
+            dLabel1.BackColor = System.Drawing.Color.Black;
+            dLabel1.ForeColor = System.Drawing.Color.White;
+            dLabel1.Location = new System.Drawing.Point(0, 0);
+            dLabel1.Name = "label2";
+            dLabel1.Size = new System.Drawing.Size(128, 32);
+            dLabel1.TabIndex = 0;
+            dLabel1.Font = loadfontfromfileandnotos == true ? debuglabelfont : systemdebuglabelfont;
+            dLabel1.Text = $"{levelclearingsforlabel}";
+            LevelLabel = dLabel1;
+            Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(LevelLabel); });
 
             //sets up a levelsprites list in an array of lists. one for each existing screen.
             //LevelSprites[0] = new List<Sprite2d>();
@@ -3653,6 +3669,9 @@ namespace Plat2d_2
                     SelectedWeaponLabel.BackColor = System.Drawing.Color.Black;
                     SelectedWeaponLabel.ForeColor = System.Drawing.Color.White;
                     SelectedWeaponLabel.Location = new System.Drawing.Point(32, 224);
+                    LevelLabel.BackColor = System.Drawing.Color.Black;
+                    LevelLabel.ForeColor = System.Drawing.Color.Yellow;
+                    LevelLabel.Location = new System.Drawing.Point(0, 0);
             //    }
             //}            
             if (CrystalLabel != null)
@@ -3682,9 +3701,58 @@ namespace Plat2d_2
             {
                 ScoreLabel.Text = $"{DemoGame.pointScoreTally}";
             }
+            if (LevelLabel != null)
+            {
+                LevelLabel.Text = $"{CheckLevel(levelclearingsforlabel)}";
+            }
             //Log.Info("Crystalscore label update has been called.");
             //crystalScore.BringToFront();
             //Log.Info("Crystalscore label should have been brought to the front");
+        }
+
+        private string CheckLevel(string currentcontent)
+        {
+            // format for reference $"______\n  _  _"
+            char[] array = currentcontent.ToCharArray();
+
+            if (harenimus_1_1.isLevelCleared == false) {array[0] = Convert.ToChar("x");}
+            else if (harenimus_1_1.isLevelCleared == true) {array[0] = Convert.ToChar("v");}
+            else { array[0] = Convert.ToChar("?");}
+
+            if (harenimus_1_2.isLevelCleared == false) {array[1] = Convert.ToChar("x");}
+            else if (harenimus_1_2.isLevelCleared == true) {array[1] = Convert.ToChar("v");}
+            else { array[1] = Convert.ToChar("?");}
+
+            if (harenimus_1_3_1.isLevelCleared == false) {array[2] = Convert.ToChar("x");}
+            else if (harenimus_1_3_1.isLevelCleared == true) {array[2] = Convert.ToChar("v");}
+            else { array[2] = Convert.ToChar("?");}
+
+            if (harenimus_1_3_2.isLevelCleared == false) {array[8] = Convert.ToChar("x");}
+            else if (harenimus_1_3_2.isLevelCleared == true) {array[8] = Convert.ToChar("v");}
+            else { array[8] = Convert.ToChar("?");}
+
+            if (harenimus_1_4.isLevelCleared == false) {array[3] = Convert.ToChar("x");}
+            else if (harenimus_1_4.isLevelCleared == true) {array[3] = Convert.ToChar("v");}
+            else { array[3] = Convert.ToChar("?");}
+
+            if (harenimus_1_5.isLevelCleared == false) {array[4] = Convert.ToChar("x");}
+            else if (harenimus_1_5.isLevelCleared == true) {array[4] = Convert.ToChar("v");}
+            else { array[4] = Convert.ToChar("?");}
+
+            if (harenimus_1_6_1.isLevelCleared == false) {array[5] = Convert.ToChar("x");}
+            else if (harenimus_1_6_1.isLevelCleared == true) {array[5] = Convert.ToChar("v");}
+            else { array[5] = Convert.ToChar("?");}
+
+            if (harenimus_1_6_2.isLevelCleared == false) {array[11] = Convert.ToChar("x");}
+            else if (harenimus_1_6_2.isLevelCleared == true) {array[11] = Convert.ToChar("v");}
+            else { array[11] = Convert.ToChar("?");}
+
+            char[] line1Array = array.Take(array.Length / 2).ToArray();
+            char[] line2Array = array.Skip(array.Length / 2).ToArray();
+
+            //Log.Info($"{new string(line1Array)}\n{new string(line2Array)}");
+
+            return new string(line1Array)+"\n"+new string(line2Array);
         }
     }
 

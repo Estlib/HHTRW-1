@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,6 +83,20 @@ namespace Plat2d_2.EngineCore
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"[DEBUG FUNCTION] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
+        }
+    }
+    public class LogUtility
+    {
+        /// <summary>
+        /// Wrapper for Directory.EnumerateFiles to log all files in a directory
+        /// </summary>
+        /// <param name="dirloc">directory of enumeration</param>
+        public static void LogAllFilesFromDir(string dirloc)
+        {
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine($"[//LOGUTILITY] - Listing all files:");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(Directory.EnumerateFiles(dirloc));
         }
     }
 }
