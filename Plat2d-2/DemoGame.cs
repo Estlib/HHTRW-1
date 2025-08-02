@@ -3318,12 +3318,9 @@ namespace Plat2d_2
         /// </summary>
         public override void OnUpdate()
         {
-            if (framelocking)
-            {
-                var startTime = Stopwatch.GetTimestamp();
-                lastFrameTime = 0;
-                int liveFPS = 0;
-            }
+            var startTime = Stopwatch.GetTimestamp();
+            lastFrameTime = 0;
+            int liveFPS = 0;
             
             Log.runtimeframes++;
 
@@ -3526,21 +3523,49 @@ namespace Plat2d_2
                 
             }
             player.UpdatePosition(); //updates players position
+            //foreach (var bullet in bullets)
+            //{
+            //    if (bullet.sprite2d.CheckBody() != false)
+            //    {
+            //        bullet.sprite2d.UpdatePosition();
+            //    }
+            //}
 
-            if (enemies != null)
+            if (animationsystemtype)
             {
-                for (int i = 0; i < enemies.Count; i++)
+                if (enemiesv2 != null)
                 {
-                    Enemy enemyobject = enemies[i];
-                    enemyobject.sprite2d.UpdatePosition();
-                    if (enemyobject.sprite2d.IsColliding("Bullet") != null)
+                    for (int i = 0; i < enemiesv2.Count; i++)
                     {
-                        pointScoreTally += 250;
-                        enemyobject.sprite2d.DestroySelf();
-                        enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
-                        enemies.Remove(enemies.ElementAt(i));
+                        EnemyV2 enemyobject = enemiesv2[i];
+                        enemyobject.sprite2d.UpdatePosition();
+                        if (enemyobject.sprite2d.IsColliding("Bullet") != null)
+                        {
+                            pointScoreTally += 250;
+                            enemyobject.sprite2d.DestroySelf();
+                            enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
+                            enemiesv2.Remove(enemiesv2.ElementAt(i));
+                        }
                     }
-                }                
+                }
+            }
+            else 
+            {
+                if (enemies != null)
+                {
+                    for (int i = 0; i < enemies.Count; i++)
+                    {
+                        Enemy enemyobject = enemies[i];
+                        enemyobject.sprite2d.UpdatePosition();
+                        if (enemyobject.sprite2d.IsColliding("Bullet") != null)
+                        {
+                            pointScoreTally += 250;
+                            enemyobject.sprite2d.DestroySelf();
+                            enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
+                            enemies.Remove(enemies.ElementAt(i));
+                        }
+                    }
+                }
             }
 
             if (bullets != null)
@@ -3551,11 +3576,27 @@ namespace Plat2d_2
                     {
                         if (bullet.isfacingleft == true)
                         {
-                            bullet.sprite2d.AdvanceLeft(weapon1speed);
+                            if (animationsystemtype)
+                            {
+                                bullet.sprite2d.AdvanceLeft(weapon1speed);
+                            }
+                            else
+                            {
+                                bullet.sprite2d.CreateDynamic();
+                                bullet.sprite2d.SetVelocity(new Vector2(-80000, 0));
+                            }                                
                         }
                         else
                         {
-                            bullet.sprite2d.AdvanceRight(weapon1speed);
+                            if (animationsystemtype)
+                            {
+                                bullet.sprite2d.AdvanceRight(weapon1speed);
+                            }
+                            else
+                            {
+                                bullet.sprite2d.CreateDynamic();
+                                bullet.sprite2d.SetVelocity(new Vector2(80000, 0));
+                            }                                
                         }
                         //bullet.sprite2d.UpdatePosition();
                     }
@@ -3751,7 +3792,10 @@ namespace Plat2d_2
                 LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes} Frametime: {lastFrameTime / 1000}ms. LiveFPS: {liveFPS}");
                 int remainingFrameTime = (int)(ticksinframe - delta);
                 Thread.Sleep(remainingFrameTime / 200000);
-
+            }
+            else
+            {
+                LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes}");
             }
         }
 

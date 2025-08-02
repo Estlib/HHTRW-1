@@ -395,6 +395,15 @@ namespace Plat2d_2.EngineCore
             return this.body != null;
         }
         /// <summary>
+        /// Sets the body to true
+        /// </summary>
+        /// <returns>Set the body to true</returns>
+        internal bool CheckBody()
+        {
+            if (this.body != null) { return true; }
+            else { return false; }
+        }
+        /// <summary>
         /// Internal method to advance 
         /// </summary>
         /// <param name="weaponspeed"></param>
@@ -405,6 +414,17 @@ namespace Plat2d_2.EngineCore
         }
 
         internal void AdvanceRight(int weaponspeed)
+        {
+            this.Position.X += weaponspeed;
+            //this.body.SetLinearVelocity(new Vec2(240000, 0));
+        }
+
+        internal void AdvanceLeftFloat(int weaponspeed)
+        {
+            this.Position.X -= weaponspeed;
+            //this.body.SetLinearVelocity(new Vec2(-240000, 0));
+        }
+        internal void AdvanceRightFloat(int weaponspeed)
         {
             this.Position.X += weaponspeed;
             //this.body.SetLinearVelocity(new Vec2(240000, 0));
