@@ -199,12 +199,12 @@ namespace Plat2d_2.EngineCore
 
                     if (this.CurrentActionState == ActionState.StandingLeft)
                     {
-                        this.sprite2d.SetVelocity(new Vector2 { X = 0, Y = this.sprite2d.GetYVelocity() });
+                        //this.sprite2d.SetVelocity(new Vector2 { X = 0, Y = this.sprite2d.GetYVelocity() });
                         this.sprite2d.Sprite = this.animationFramesBitmap[0];
                     }
                     if (this.CurrentActionState == ActionState.StandingRight)
                     {
-                        this.sprite2d.SetVelocity(new Vector2 { X = 0, Y = this.sprite2d.GetYVelocity() });
+                        //this.sprite2d.SetVelocity(new Vector2 { X = 0, Y = this.sprite2d.GetYVelocity() });
                         this.sprite2d.Sprite = this.animationFramesBitmap[11];
                     }
                     if (this.CurrentActionState == ActionState.WalkingLeft)
@@ -269,6 +269,18 @@ namespace Plat2d_2.EngineCore
                     break;
                 default:
                     break;
+            }
+        }
+
+        internal void NextStep()
+        {
+            if (this.CurrentBehaviourStep < this.BehaviourData.Count()-1)
+            {
+                this.CurrentBehaviourStep++;
+            }
+            else if (this.CurrentBehaviourStep >= this.BehaviourData.Count()-1 || this.CurrentBehaviourStep < 0)
+            {
+                this.CurrentBehaviourStep = 0;
             }
         }
 

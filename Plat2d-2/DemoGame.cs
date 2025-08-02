@@ -1602,6 +1602,7 @@ namespace Plat2d_2
                 Log.DebugFunction("Game halted.");
                 while (pauseGameKey != false)
                 {
+
                     if (logThisEnemy == false && loggedEnemyArrayID < 0)
                     { DebugUtility.SelectEnemyToMonitor(); }
                 }
@@ -2977,6 +2978,17 @@ namespace Plat2d_2
             {
                 case "Enemy":
                     // enemy actions
+                    //if (true) //used to house loglevel as the condition
+                    //{
+                    //    Log.Warning($"at BHSTEP {enemy.CurrentBehaviourStep} " +
+                    //        $"BHData is: {enemy.BehaviourData[enemy.CurrentBehaviourStep]}" +
+                    //        $"CAState is {enemy.CurrentActionState}");
+                    //}
+                    //if (enemy.CurrentActionState != (ActionState)enemy.BehaviourData[enemy.CurrentBehaviourStep])
+                    //{
+                    //    enemy.CurrentActionState = (ActionState)enemy.BehaviourData[enemy.CurrentBehaviourStep];
+                    //}
+                    enemy.CurrentActionState = (ActionState)enemy.BehaviourData[enemy.CurrentBehaviourStep];
                     switch (enemy.CurrentActionState)
                     {
                         case (ActionState)0: //standing left
@@ -2993,14 +3005,16 @@ namespace Plat2d_2
                             enemy.SetDirection();
                             //
                             //do not move
-                            enemy.CurrentBehaviourStep += 1; // advance step
+                            enemy.NextStep();
+                            //enemy.CurrentBehaviourStep += 1; // advance step
                             break;
 
                         case (ActionState)1: //standing right
                             Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
                             if (loglevel)
                             {
-                                LogUtility.MonitorEnemy($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} with Step {tempint}");
                                 Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
                                 string behaviourDataString = string.Join(":", enemy.BehaviourData);
                                 Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
@@ -3009,17 +3023,40 @@ namespace Plat2d_2
                             enemy.SetDirection();
                             //
                             //do not move
-                            enemy.CurrentBehaviourStep += 1; // advance step
+                            enemy.NextStep();
+                            //enemy.CurrentBehaviourStep += 1; // advance step
                             break;
 
                         case (ActionState)2: //walking left
                             Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} with Step {tempint}");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
                             enemy.MoveEnemyInDirection();
-                            enemy.CurrentBehaviourStep += 1; // advance step
+                            enemy.NextStep();
+                            //enemy.CurrentBehaviourStep += 1; // advance step
 
                             break;
                         case (ActionState)3: //walking right
                             Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} with Step {tempint}");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
+                            enemy.MoveEnemyInDirection();
+                            enemy.NextStep();
+                            //enemy.CurrentBehaviourStep += 1; // advance step
 
                             break;
                         case (ActionState)4: //jumping left

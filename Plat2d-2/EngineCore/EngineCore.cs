@@ -11,6 +11,7 @@ using Box2DX.Collision;
 using Box2DX.Common;
 using System.Security.Policy;
 using System.Drawing.Text;
+using System.IO;
 
 namespace Plat2d_2.EngineCore
 {
@@ -218,6 +219,29 @@ namespace Plat2d_2.EngineCore
                     {
                         Log.Error($"Exception data: {ex.Message}" );
                     }
+                    if (ex is IndexOutOfRangeException)
+                    {
+                        Log.Error($"Exception data: {ex.Message}");
+                        Console.Clear();
+
+                        Log.Error($"Exception trace: {ex.StackTrace}");
+
+                        DemoGame.pausebuttoninput = true;
+                        //Window.BeginInvoke((MethodInvoker)delegate { Thread.Sleep(100000); });
+                    }
+                    Log.Error($"Exception trace: {ex.StackTrace}");
+
+                    //DemoGame.pausebuttoninput = true;
+                    string logPath = "error_log.txt";
+                    string dump = $"[EXCEPTION LOG - {DateTime.Now}]\n" +
+                                  $"Type: {ex.GetType()}\n" +
+                                  $"Message: {ex.Message}\n" +
+                                  $"Source: {ex.Source}\n" +
+                                  $"TargetSite: {ex.TargetSite}\n" +
+                                  $"StackTrace:\n{ex.StackTrace}\n\n";
+
+                    File.AppendAllText(logPath, dump);
+
                 }
             }
         }
