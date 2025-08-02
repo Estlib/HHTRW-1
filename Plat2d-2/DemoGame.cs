@@ -21,6 +21,10 @@ namespace Plat2d_2
 {
     class DemoGame : EngineCore.EngineCore
     {
+        public Stopwatch stopwatch = new Stopwatch();
+
+        long ticksinframe = 200000;
+        public long lastFrameTime = 0;
         public static int nextusableline = 5; // this is to save last logged line for the Logging tool
         string fontplace = "assets/fonts/arcade-legacy.ttf";
         string levelclearingsforlabel = $"______  _  _";
@@ -38,6 +42,7 @@ namespace Plat2d_2
 
         bool animationsystemtype = true; //false v1, true v2
         bool animateEnemiesV2sysVerboseLogging = false; //enables or disables verbose logging for debugging new system
+        bool framelocking = false; //enables or disables locked fps
         public static bool logThisEnemy = false;
         public static int loggedEnemyArrayID = -1;
 
@@ -1148,6 +1153,7 @@ namespace Plat2d_2
         /// </summary>
         public override void OnLoad()
         {
+            stopwatch.Start();
             //levelsequence.Add(0);
             //levelsequence.Add(1);
             //levelsequence.Add(2);
@@ -1170,6 +1176,7 @@ namespace Plat2d_2
             FontFamily font = privateFonts.Families[0];
             Font debuglabelfont = new Font(font, 6);
             Font systemdebuglabelfont = new Font("Arcade Legacy", 6);
+
             
 
             //label for crystals
@@ -3311,7 +3318,13 @@ namespace Plat2d_2
         /// </summary>
         public override void OnUpdate()
         {
-            LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes}");
+            if (framelocking)
+            {
+                var startTime = Stopwatch.GetTimestamp();
+                lastFrameTime = 0;
+                int liveFPS = 0;
+            }
+            
             Log.runtimeframes++;
 
             if (animationClock == 4)
@@ -3719,6 +3732,27 @@ namespace Plat2d_2
             //frame++;
             // SPRITE LOGGING       Log.Info($"Currentsprite should be # {steps}");
 
+            if (framelocking)
+            {
+                var endTime = Stopwatch.GetTimestamp();
+                long delta = (endTime - startTime);
+                //stopwatch.Stop();
+                //lastFrameTime = stopwatch.ElapsedMilliseconds;
+                lastFrameTime = delta;
+                stopwatch.Reset();
+                if (lastFrameTime != 0)
+                {
+                    liveFPS = (int)(1000 / (lastFrameTime / 1000));
+                }
+                else
+                {
+                    liveFPS = (int)(1000 / 1);
+                }
+                LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes} Frametime: {lastFrameTime / 1000}ms. LiveFPS: {liveFPS}");
+                int remainingFrameTime = (int)(ticksinframe - delta);
+                Thread.Sleep(remainingFrameTime / 200000);
+
+            }
         }
 
         private void AnimateBullets()
