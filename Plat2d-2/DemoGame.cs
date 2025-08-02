@@ -21,6 +21,7 @@ namespace Plat2d_2
 {
     class DemoGame : EngineCore.EngineCore
     {
+        public static int nextusableline = 5; // this is to save last logged line for the Logging tool
         string fontplace = "assets/fonts/arcade-legacy.ttf";
         string levelclearingsforlabel = $"______  _  _";
         Label CrystalLabel;
@@ -1251,8 +1252,8 @@ namespace Plat2d_2
             label5.Text = $"{DemoGame.weapon1Ammo}";
             AmmoLabel = label5;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(LevelLabel); });
-
-            Log.Highlight($"Game is starting, current game: DemoGame");
+            Log.InitiateLogWindow();
+            Log.Highlight($"Game is starting, current game: DemoGame",3);
 
             //debug label for level and levelpart statuses
             var dLabel1 = new Label();
@@ -3222,6 +3223,9 @@ namespace Plat2d_2
         /// </summary>
         public override void OnUpdate()
         {
+            LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes}");
+            Log.runtimeframes++;
+
             if (animationClock == 4)
             {
                 animationClock = 0;
@@ -3234,19 +3238,19 @@ namespace Plat2d_2
             switch (animationClock)
             {
                 case 0:
-                    Log.Error($"Animation clock is currently {animationClock} ░░ ░░ ░░ ░░ ");
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ░░ ░░ ");
                     break;
                 case 1:
-                    Log.Info($"Animation clock is currently {animationClock} ██ ░░ ░░ ░░ ");
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ██ ░░ ░░ ░░ ");
                     break;
                 case 2:
-                    Log.Info($"Animation clock is currently {animationClock} ░░ ██ ░░ ░░ ");
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ██ ░░ ░░ ");
                     break;
                 case 3:
-                    Log.Info($"Animation clock is currently {animationClock} ░░ ░░ ██ ░░ ");
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ██ ░░ ");
                     break;
                 case 4:
-                    Log.Info($"Animation clock is currently {animationClock} ░░ ░░ ░░ ██ ");
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ░░ ██ ");
                     break;
                 default:
                     break;

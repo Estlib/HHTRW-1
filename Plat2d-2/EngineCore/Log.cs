@@ -14,75 +14,124 @@ namespace Plat2d_2.EngineCore
         public int WARNINGCOUNT;
         public int ERRORCOUNT;
         public int HIGHCOUNT;
+        public int startingline = 2;
+        public static int runtimeframes = 0;
         /// <summary>
         /// log normal message to console
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Normal(string msg)
+        public static void Normal(string msg, int writeToLine = 5)
         {
+            writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"[MSG] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
+            DemoGame.nextusableline += 1;
         }
         /// <summary>
         /// log an info message to console
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Info(string msg)
+        public static void Info(string msg, int writeToLine = 5)
         {
+            writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"[INFO] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
+            DemoGame.nextusableline += 1;
         }
         /// <summary>
         /// log warning message to console
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Warning(string msg)
+        public static void Warning(string msg, int writeToLine = 5)
         {
+            writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"[WARNING] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
+            DemoGame.nextusableline += 1;
         }
         /// <summary>
         /// log error message to console
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Error(string msg)
+        public static void Error(string msg, int writeToLine = 5)
         {
+            writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"[ERROR] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
+            DemoGame.nextusableline += 1;
         }
         /// <summary>
         /// highlight a message in the console log
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Highlight(string msg)
+        public static void Highlight(string msg, int writeToLine = 5)
         {
+            writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"[HIGHLIGHTED MSG] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
+            DemoGame.nextusableline += 1;
         }
         /// <summary>
         /// log a player select message
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Select(string msg)
+        public static void Select(string msg, int writeToLine = 5)
         {
+            writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"[PLAYER SELECT] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
+            DemoGame.nextusableline += 1;
         }
         /// <summary>
         /// Log info about use of a debug message
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void DebugFunction(string msg)
+        public static void DebugFunction(string msg, int writeToLine = 5)
         {
+            writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"[DEBUG FUNCTION] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
+            DemoGame.nextusableline += 1;
+        }
+        public static void InitiateLogWindow()
+        {
+            //total usable lines 30
+            Console.SetCursorPosition(0, 0 );
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("== Harold Harrison The Rabbit Warrior ==");
+            Console.SetCursorPosition(0, 1);
+            Console.WriteLine("== == == == == == ==== == == == == == ==");
+            Console.SetCursorPosition(0, 2);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            // line 3 - game framecount
+            // line 4 - animationclock
+            // clear from 5
+
+
+        }
+        private static int ConsoleLineArrange(int writeToLine)
+        {
+            ;
+            if (DemoGame.nextusableline > 27)
+            {
+                DemoGame.nextusableline = 5;
+                Console.SetCursorPosition(0, 5);
+            }
+            else if (DemoGame.nextusableline > 5 && DemoGame.nextusableline < 27)
+            {
+                Console.SetCursorPosition(0, DemoGame.nextusableline);
+            }
+
+            return writeToLine;
         }
     }
     public class LogUtility
@@ -97,6 +146,21 @@ namespace Plat2d_2.EngineCore
             Console.WriteLine($"[//LOGUTILITY] - Listing all files:");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(Directory.EnumerateFiles(dirloc));
+        }
+        public static void LogCurrentFrame(string msg, int writeToLine = 3)
+        {
+            Console.SetCursorPosition(0,writeToLine);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"[//LOGUTILITY] - {msg}");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        public static void LogCurrentAnimationState(string msg, int writeToLine = 4)
+        {
+            Console.SetCursorPosition(0, writeToLine);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"[//LOGUTILITY] - {msg}");
+            Console.ForegroundColor = ConsoleColor.White;
+
         }
     }
 }

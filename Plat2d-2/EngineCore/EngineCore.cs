@@ -211,9 +211,10 @@ namespace Plat2d_2.EngineCore
                         Window.BeginInvoke((MethodInvoker)delegate { UpdateHud(); });
                     }                    
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Log.Error("Game has not been found.");
+                    Log.Error("Game has not been found.",3);
+                    Log.Error($"Exception data: {ex.Message}");
                 }
             }
         }
