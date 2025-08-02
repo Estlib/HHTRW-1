@@ -4,6 +4,7 @@ using Box2DX.Collision;
 using Box2DX.Dynamics;
 using Box2DX.Common;
 using System;
+using System.Threading;
 
 namespace Plat2d_2.EngineCore
 {
@@ -194,6 +195,8 @@ namespace Plat2d_2.EngineCore
             catch (Exception)
             {
                 Log.Error($"Couldnt create a body for {this.Sprite}");
+                Thread.Sleep(3000);
+
             }
 
             // Now tell the dynamic body to compute it's mass properties base

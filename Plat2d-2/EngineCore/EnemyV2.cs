@@ -191,6 +191,88 @@ namespace Plat2d_2.EngineCore
             this.enemyType = enemyType;
             Log.Info("An enemy v2 type enemy has been created");
         }
+        public void SetDirection()
+        {
+            switch (this.enemyType)
+            {
+                case "Enemy":
+
+                    if (this.CurrentActionState == ActionState.StandingLeft)
+                    {
+                        this.sprite2d.SetVelocity(new Vector2 { X = 0, Y = this.lastYpos });
+                        this.sprite2d.Sprite = this.animationFramesBitmap[0];
+                    }
+                    if (this.CurrentActionState == ActionState.StandingRight)
+                    {
+                        this.sprite2d.SetVelocity(new Vector2 { X = 0, Y = this.lastYpos });
+                        this.sprite2d.Sprite = this.animationFramesBitmap[11];
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        public void MoveEnemyInDirection()
+        {
+            switch (this.enemyType)
+            {
+                case "Enemy":
+
+                    if (this.CurrentActionState == ActionState.WalkingLeft)
+                    {
+                        //set velocity
+                        this.sprite2d.SetVelocity(new Vector2(-120, this.sprite2d.GetYVelocity()));
+
+                        foreach (var actionspritelocation in this.walkLeftData)
+                        {
+                            if (this.sprite2d.Sprite == this.animationFramesBitmap[actionspritelocation])
+                            {
+                                if (actionspritelocation >= this.walkLeftData.Count())
+                                {
+                                    this.sprite2d.Sprite = this.animationFramesBitmap[0];
+                                }
+                                else
+                                {
+                                    this.sprite2d.Sprite = this.animationFramesBitmap[actionspritelocation + 1];
+                                }
+                            }
+                        }
+                    }
+                    if (this.CurrentActionState == ActionState.WalkingRight)
+                    {
+                        //set velocity
+                        this.sprite2d.SetVelocity(new Vector2(120, this.sprite2d.GetYVelocity()));
+
+                        foreach (var actionspritelocation in this.walkRightData)
+                        {
+                            if (this.sprite2d.Sprite == this.animationFramesBitmap[actionspritelocation])
+                            {
+                                if (actionspritelocation >= this.walkRightData.Count())
+                                {
+                                    this.sprite2d.Sprite = this.animationFramesBitmap[0];
+                                }
+                                else
+                                {
+                                    this.sprite2d.Sprite = this.animationFramesBitmap[actionspritelocation + 1];
+                                }
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         ~EnemyV2() { }
+
     }
+
+    // missing actionstate methods:
+    // setDirection()
+    // moveDirection()
+    // stopMovement()
+    // fireInDirection()
+    // jump()
+    // isError() <- calls stopMovement() and should remove any damage player is able to receive from touch
 }

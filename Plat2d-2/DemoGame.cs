@@ -35,7 +35,7 @@ namespace Plat2d_2
         public static List<Enemy> enemies = new List<Enemy>();
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>();
 
-        bool animationsystemtype = false; //false v1, true v2
+        bool animationsystemtype = true; //false v1, true v2
 
         int steps = 0;
         int slowDownFrameRate = 1;
@@ -2695,7 +2695,7 @@ namespace Plat2d_2
                                     i * 16,
                                     j * 16,
                                     0,
-                                    new List<int> { }, //behaviourloop
+                                    new List<int> {2,2,2,2,2,2,3,3,3,3,3,3 }, //behaviourdata
                                     0, //where is its action currently in behaviourloop
                                     false,
                                     true,
@@ -2927,8 +2927,215 @@ namespace Plat2d_2
                     enemies.ElementAt(i).sprite2d.Sprite = walkingEnemySpritesBitmap[enemies.ElementAt(i).animationsteps];
                 }
                 
-            }            
+            }
+        private void AnimateThisV2Enemy(EnemyV2 enemy)
+        {
+            //EnemyV2 enemyv2 = new EnemyV2
+            //                    (
+            //                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
+            //                        walkingEnemySpritesBitmap,
+            //                        new List<int> { 12, 13, 14, 15, 16, 17 }, //walkleft
+            //                        new List<int> { 1, 2, 3, 4, 5, 6 }, //walkright
+            //                        new List<int> { 20 }, //jumpleft
+            //                        new List<int> { 9 }, //jumpright
+            //                        new List<int> { 11 }, //stillleft
+            //                        new List<int> { 0 }, //stillright
+            //                        new List<int> { 23 }, //fireleft
+            //                        new List<int> { 23 }, //fireright
+            //                        new List<int> { 23 }, //fly
+            //                        new List<int> { 22 }, //error
+            //                        i * 16,
+            //                        j * 16,
+            //                        0,
+            //                        new List<int> {}, //behaviourloop
+            //                        0, //where is its action currently in behaviourloop
+            //                        false,
+            //                        true,
+            //                        "Test - Walking enemy",
+            //                        "Enemy"
+            //                    );
+            //Log.Info("AnimateThisV2Enemy()");
+
+            /*
+             * 1 - determine type of enemy in switch case
+             * 2 - determine current actionstate of enemy in switch case
+             * 3 - animate the frame
+             */
+            if (enemy.CurrentBehaviourStep > enemy.BehaviourData.Count())
+            {
+                enemy.CurrentBehaviourStep = 0;
+            }
+            switch (enemy.enemyType)
+            {
+                case "Enemy":
+                    // enemy actions
+                    switch (enemy.CurrentActionState)
+                    {
+                        case (ActionState)0: //standing left
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            enemy.SetDirection();
+                            //
+                            //do not move
+                            enemy.CurrentBehaviourStep += 1; // advance step
+                            break;
+
+                        case (ActionState)1: //standing right
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            enemy.SetDirection();
+                            //
+                            //do not move
+                            enemy.CurrentBehaviourStep += 1; // advance step
+                            break;
+
+                        case (ActionState)2: //walking left
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            enemy.MoveEnemyInDirection();
+                            enemy.CurrentBehaviourStep += 1; // advance step
+
+                            break;
+                        case (ActionState)3: //walking right
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        case (ActionState)4: //jumping left
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        case (ActionState)5: //jumping right
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        case (ActionState)6: //firing left
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        case (ActionState)7: //firing right
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        case (ActionState)8: //generic flight
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        case (ActionState)9: //is error
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        default:
+                            if (enemy.CurrentBehaviourStep == null || 
+                                enemy.CurrentBehaviourStep < 0 ||
+                                enemy.CurrentBehaviourStep > enemy.BehaviourData.Count)
+                            {
+                                Log.Error($"CurrentBehaviourStep is not set. - {enemy.CurrentBehaviourStep}");
+                                Log.Error($"Setting to 0");
+                                enemy.CurrentBehaviourStep = 0;
+                            }
+                            break;
+                    }
+                    break;
+                default:
+                    if (enemy.enemyType != null)
+                    {
+                        Log.Error($"Enemy Type undeterminable. - {enemy.enemyType}");
+                    }
+                    else if (enemy.enemyType == null)
+                    {
+                        Log.Error($"Enemy Type is not set. - {enemy.enemyType}");
+                    }
+                        break;
+            }
+
+            //if (animationClock == 4) //animates only when the animationclock is 4
+            //{
+            //    Log.Info($"enemy.animationsteps = {enemy.animationsteps}");
+
+            //    // Animation procedure when it is facing left.
+            //    if (enemy.isfacingleft)
+            //    {
+            //        Log.Info($"Enemy is facing left = {enemy.isfacingleft}");
+
+            //        if (enemy.animationsteps > enemy.walkleftanimend || enemy.animationsteps < enemy.walkleftanimstart)
+            //        {
+            //            if (enemy.animationsteps == enemy.walkleftanimend)
+            //            {
+            //                enemy.animationsteps = enemy.walkleftanimstart;
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Log.Info($"Enemy is facing right = {!enemy.isfacingleft}");
+            //        if (enemy.animationsteps > enemy.walkrightanimend || enemy.animationsteps < enemy.walkrightanimstart)
+            //        {
+            //            if (enemy.animationsteps == enemy.walkrightanimend)
+            //            {
+            //                enemy.animationsteps = enemy.walkrightanimstart;
+            //            }
+            //        }
+
+            //    }
+            //    enemy.animationsteps++;
+            //    //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
+            //    enemy.sprite2d.Sprite = walkingEnemySpritesBitmap[enemy.animationsteps];
+            //    Log.Highlight($"enemy sprite needs to be {enemy.animationsteps}");
+            //}
+        }
+        private void AnimateEnemiesV2sys() 
+        {
+            Log.Info("AnimateEnemiesV2sys called");
+            //if (slowDownFrameRate == 4)
+            //{
+                Log.Info("slowdownframerate if accessed");
+                for (int i = 0; i < enemiesv2.Count; i++)
+                {
+                    Log.Info("for loop accessed");
+                    if (enemiesv2.ElementAt(i).sprite2d.HasBody())
+                    {
+                        Log.Info("sprite has body");
+                        //Enemy en = enemies.ElementAt(i);
+                        //if (enemiesv2.ElementAt(i).sprite2d.Position.X > enemiesv2.ElementAt(i).lastXpos)
+                        //{
+                            Log.Info("if within lastxpos accessed");
+                            AnimateThisV2Enemy(enemiesv2.ElementAt(i));
+                        //}
+
+                    }
+                    else
+                    {
+                        Log.Warning("sprite has no body");
+                        AnimateThisV2Enemy(enemiesv2.ElementAt(i));
+                    }
+
+                    //if (enemies.ElementAt(i).isfacingleft)
+                    //{
+                    //    //enemy walkright
+                    //    enemies.ElementAt(i).sprite2d.SetVelocity(new Vector2(-120, enemies.ElementAt(i).sprite2d.GetYVelocity()));
+                    //    enemies.ElementAt(i).enemyrightwalkframes--;
+                    //    enemies.ElementAt(i).enemyleftwalkframes = 30;
+                    //    if (enemies.ElementAt(i).enemyrightwalkframes <= 0)
+                    //    {
+                    //        enemies.ElementAt(i).isfacingleft = false;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    //enemy walkleft
+                    //    enemies.ElementAt(i).sprite2d.SetVelocity(new Vector2(120, enemies.ElementAt(i).sprite2d.GetYVelocity()));
+                    //    enemies.ElementAt(i).enemyleftwalkframes--;
+                    //    enemies.ElementAt(i).enemyrightwalkframes = 30;
+                    //    if (enemies.ElementAt(i).enemyleftwalkframes <= 0)
+                    //    {
+                    //        enemies.ElementAt(i).isfacingleft = true;
+                    //    }
+                    //}
+                    ////player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
+                    //enemies.ElementAt(i).sprite2d.Sprite = walkingEnemySpritesBitmap[enemies.ElementAt(i).animationsteps];
+                }
+
+            //}
+        }
         
+
 
         /// <summary>
         /// function to animate the players sprites. can technically be used to animate objects too, so far not implemented.
@@ -3085,7 +3292,14 @@ namespace Plat2d_2
 
             if (enemies != null)
             { 
-                AnimateEnemies();
+                if (animationsystemtype == true)
+                {
+                    AnimateEnemiesV2sys();
+                }
+                else
+                {
+                    AnimateEnemies();
+                }
             }
             if (bullets != null)
             {
