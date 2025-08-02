@@ -2703,7 +2703,7 @@ namespace Plat2d_2
                                     i * 16,
                                     j * 16,
                                     0,
-                                    new List<int> {2,2,2,2,2,2,3,3,3,3,3,3 }, //behaviourdata
+                                    EnemyV2Data.walkingEnemy, //behaviourdata
                                     0, //where is its action currently in behaviourloop
                                     false,
                                     true,
@@ -3107,6 +3107,7 @@ namespace Plat2d_2
                         break;
             }
 
+            enemy.sprite2d.UpdatePosition();
             //if (animationClock == 4) //animates only when the animationclock is 4
             //{
             //    Log.Info($"enemy.animationsteps = {enemy.animationsteps}");
