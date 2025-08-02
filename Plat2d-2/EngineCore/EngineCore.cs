@@ -214,7 +214,10 @@ namespace Plat2d_2.EngineCore
                 catch (Exception ex)
                 {
                     Log.Error("Game has not been found.",3);
-                    Log.Error($"Exception data: {ex.Message}");
+                    if (ex is ThreadAbortException)
+                    {
+                        Log.Error($"Exception data: {ex.Message}" );
+                    }
                 }
             }
         }

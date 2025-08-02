@@ -139,7 +139,7 @@ namespace Plat2d_2.EngineCore
         /// <param name="lastYpos">last y position of enemy</param>
         /// <param name="CurrentActionState">what the enemy should be doing right now</param>
         /// <param name="BehaviourData">Determines how the enemy behaves, if it is not directly an "aim-at-player-only" enemy</param>
-        /// <param name="CurrentBehaviourStep"></param>
+        /// <param name="CurrentBehaviourStep">integer of behaviourdata list position</param>
         /// <param name="isCollidingOrFalling">Sets weather the enemy is currently on a surface or not</param>
         /// <param name="isfacingleft">is it facing left, used to determine animation frame sides.</param>
         /// <param name="enemyName"></param>
@@ -199,13 +199,21 @@ namespace Plat2d_2.EngineCore
 
                     if (this.CurrentActionState == ActionState.StandingLeft)
                     {
-                        this.sprite2d.SetVelocity(new Vector2 { X = 0, Y = this.lastYpos });
+                        this.sprite2d.SetVelocity(new Vector2 { X = 0, Y = this.sprite2d.GetYVelocity() });
                         this.sprite2d.Sprite = this.animationFramesBitmap[0];
                     }
                     if (this.CurrentActionState == ActionState.StandingRight)
                     {
-                        this.sprite2d.SetVelocity(new Vector2 { X = 0, Y = this.lastYpos });
+                        this.sprite2d.SetVelocity(new Vector2 { X = 0, Y = this.sprite2d.GetYVelocity() });
                         this.sprite2d.Sprite = this.animationFramesBitmap[11];
+                    }
+                    if (this.CurrentActionState == ActionState.WalkingLeft)
+                    {
+                        this.sprite2d.SetVelocity(new Vector2 { X = -120, Y = this.sprite2d.GetYVelocity() });
+                    }
+                    if (this.CurrentActionState == ActionState.WalkingRight)
+                    {
+                        this.sprite2d.SetVelocity(new Vector2 { X = 120, Y = this.sprite2d.GetYVelocity() });
                     }
                     break;
                 default:

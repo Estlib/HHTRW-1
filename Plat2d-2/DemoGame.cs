@@ -37,6 +37,9 @@ namespace Plat2d_2
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>();
 
         bool animationsystemtype = true; //false v1, true v2
+        bool animateEnemiesV2sysVerboseLogging = false; //enables or disables verbose logging for debugging new system
+        public static bool logThisEnemy = false;
+        public static int loggedEnemyArrayID = -1;
 
         int steps = 0;
         int slowDownFrameRate = 1;
@@ -1592,12 +1595,15 @@ namespace Plat2d_2
                     AnimatePlayer(0, 0);
                 }
             }
+
+
             if (pauseGameKey)
             {
                 Log.DebugFunction("Game halted.");
                 while (pauseGameKey != false)
                 {
-
+                    if (logThisEnemy == false && loggedEnemyArrayID < 0)
+                    { DebugUtility.SelectEnemyToMonitor(); }
                 }
                 Log.DebugFunction("Halt ended.");
             }
@@ -2929,7 +2935,7 @@ namespace Plat2d_2
                 }
                 
             }
-        private void AnimateThisV2Enemy(EnemyV2 enemy)
+        private void AnimateThisV2Enemy(EnemyV2 enemy, bool loglevel = false)
         {
             //EnemyV2 enemyv2 = new EnemyV2
             //                    (
@@ -2962,6 +2968,7 @@ namespace Plat2d_2
              * 2 - determine current actionstate of enemy in switch case
              * 3 - animate the frame
              */
+
             if (enemy.CurrentBehaviourStep > enemy.BehaviourData.Count())
             {
                 enemy.CurrentBehaviourStep = 0;
@@ -2974,6 +2981,15 @@ namespace Plat2d_2
                     {
                         case (ActionState)0: //standing left
                             Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel) 
+                            {
+                                string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} with Step {tempint}");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
                             enemy.SetDirection();
                             //
                             //do not move
@@ -2982,6 +2998,14 @@ namespace Plat2d_2
 
                         case (ActionState)1: //standing right
                             Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                LogUtility.MonitorEnemy($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
                             enemy.SetDirection();
                             //
                             //do not move
@@ -3081,30 +3105,56 @@ namespace Plat2d_2
             //    Log.Highlight($"enemy sprite needs to be {enemy.animationsteps}");
             //}
         }
-        private void AnimateEnemiesV2sys() 
+        
+        private void AnimateEnemiesV2sys(bool loglevel) 
         {
-            Log.Info("AnimateEnemiesV2sys called");
+            if (loglevel)
+            {
+                Log.Info("AnimateEnemiesV2sys called");
+            }
             //if (slowDownFrameRate == 4)
             //{
-                Log.Info("slowdownframerate if accessed");
+                //if (loglevel)
+                //{
+                //    Log.Info("slowdownframerate if accessed");
+                //}
                 for (int i = 0; i < enemiesv2.Count; i++)
                 {
-                    Log.Info("for loop accessed");
+                    if (loglevel)
+                    {
+                        Log.Info("for loop accessed");
+                    }
+
                     if (enemiesv2.ElementAt(i).sprite2d.HasBody())
                     {
-                        Log.Info("sprite has body");
-                        //Enemy en = enemies.ElementAt(i);
-                        //if (enemiesv2.ElementAt(i).sprite2d.Position.X > enemiesv2.ElementAt(i).lastXpos)
+                        if (loglevel)
+                        {
+                            Log.Info("sprite has body");
+                        }
+                    //Enemy en = enemies.ElementAt(i);
+                    //if (enemiesv2.ElementAt(i).sprite2d.Position.X > enemiesv2.ElementAt(i).lastXpos)
+                    //{
+                        //if (loglevel)
                         //{
-                            Log.Info("if within lastxpos accessed");
-                            AnimateThisV2Enemy(enemiesv2.ElementAt(i));
+                        //    Log.Info("if within lastxpos accessed");
                         //}
+                            if (logThisEnemy == true && i == loggedEnemyArrayID)
+                            {
+                                loglevel = true;
+                            }
+                            else
+                            {
+                                loglevel = false;
+                            }
+                            AnimateThisV2Enemy(enemiesv2.ElementAt(i), loglevel);
+                            loglevel = false;
+                    //}
 
-                    }
+                }
                     else
                     {
                         Log.Warning("sprite has no body");
-                        AnimateThisV2Enemy(enemiesv2.ElementAt(i));
+                        AnimateThisV2Enemy(enemiesv2.ElementAt(i),loglevel);
                     }
 
                     //if (enemies.ElementAt(i).isfacingleft)
@@ -3298,7 +3348,7 @@ namespace Plat2d_2
             { 
                 if (animationsystemtype == true)
                 {
-                    AnimateEnemiesV2sys();
+                    AnimateEnemiesV2sys(animateEnemiesV2sysVerboseLogging);
                 }
                 else
                 {
@@ -3329,7 +3379,7 @@ namespace Plat2d_2
                         {
                             if (down) //fires bullet lower than when standing
                             {
-                                Log.Info("Bullet is fired to the left at a lower altitude");
+                                LogUtility.LogCurrentWeaponState("Bullet is fired to the left at a lower altitude");
                                 var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 16), new Vector2(8, 8), bulletgraphics[0], "Bullet"), true, "weapon1");
                                 //newbullet.sprite2d.CreateDynamic();
                                 bullets.Add(newbullet);
@@ -3337,7 +3387,7 @@ namespace Plat2d_2
                             }
                             else
                             {
-                                Log.Info("Bullet is fired to the left");
+                                LogUtility.LogCurrentWeaponState("Bullet is fired to the left");
                                 var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 8), new Vector2(8, 8), bulletgraphics[0], "Bullet"), true, "weapon1");
                                 //newbullet.sprite2d.CreateDynamic();
                                 bullets.Add(newbullet);
@@ -3349,7 +3399,7 @@ namespace Plat2d_2
                         {
                             if (down)//fires bullet lower than when standing
                             {
-                                Log.Info("Bullet is fired to the right at a lower altitude");
+                                LogUtility.LogCurrentWeaponState("Bullet is fired to the right at a lower altitude");
                                 var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 16), new Vector2(8, 8), bulletgraphics[0], "Bullet"), false, "weapon1");
                                 //newbullet.sprite2d.CreateDynamic();
                                 bullets.Add(newbullet);
@@ -3358,7 +3408,7 @@ namespace Plat2d_2
                             }
                             else
                             {
-                                Log.Info("Bullet is fired to the right");
+                                LogUtility.LogCurrentWeaponState("Bullet is fired to the right");
                                 var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 8), new Vector2(8, 8), bulletgraphics[0], "Bullet"), false, "weapon1");
                                 //newbullet.sprite2d.CreateDynamic();
                                 bullets.Add(newbullet);
@@ -3371,7 +3421,7 @@ namespace Plat2d_2
                     }
                     else
                     {
-                        Log.Warning($"Fired Bullet Limit reached. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}");
+                        LogUtility.LogCurrentWeaponState($"Fired Bullet Limit reached. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}",true);
                     }
                 }
             }
@@ -3472,6 +3522,10 @@ namespace Plat2d_2
                         }
                     }
 
+                }
+                if (bullets.Count() == 0)
+                {
+                    LogUtility.LogCurrentWeaponState("No bullets remain on screen");
                 }
 
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Plat2d_2.EngineCore
@@ -16,15 +17,18 @@ namespace Plat2d_2.EngineCore
         public int HIGHCOUNT;
         public int startingline = 2;
         public static int runtimeframes = 0;
+
+        public static void DoNothing(string msg = "", int writeToLine = 7) { }
         /// <summary>
         /// log normal message to console
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Normal(string msg, int writeToLine = 5)
+        public static void Normal(string msg, int writeToLine = 7)
         {
             writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"[MSG] - {msg}");
+            Console.Write(new string(' ', Console.WindowWidth));
             Console.ForegroundColor = ConsoleColor.White;
             DemoGame.nextusableline += 1;
         }
@@ -32,11 +36,12 @@ namespace Plat2d_2.EngineCore
         /// log an info message to console
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Info(string msg, int writeToLine = 5)
+        public static void Info(string msg, int writeToLine = 7)
         {
             writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"[INFO] - {msg}");
+            Console.Write(new string(' ', Console.WindowWidth));
             Console.ForegroundColor = ConsoleColor.White;
             DemoGame.nextusableline += 1;
         }
@@ -44,11 +49,12 @@ namespace Plat2d_2.EngineCore
         /// log warning message to console
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Warning(string msg, int writeToLine = 5)
+        public static void Warning(string msg, int writeToLine = 7)
         {
             writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"[WARNING] - {msg}");
+            Console.Write(new string(' ', Console.WindowWidth));
             Console.ForegroundColor = ConsoleColor.White;
             DemoGame.nextusableline += 1;
         }
@@ -56,11 +62,12 @@ namespace Plat2d_2.EngineCore
         /// log error message to console
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Error(string msg, int writeToLine = 5)
+        public static void Error(string msg, int writeToLine = 7)
         {
             writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"[ERROR] - {msg}");
+            Console.Write(new string(' ', Console.WindowWidth));
             Console.ForegroundColor = ConsoleColor.White;
             DemoGame.nextusableline += 1;
         }
@@ -68,11 +75,12 @@ namespace Plat2d_2.EngineCore
         /// highlight a message in the console log
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Highlight(string msg, int writeToLine = 5)
+        public static void Highlight(string msg, int writeToLine = 7)
         {
             writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"[HIGHLIGHTED MSG] - {msg}");
+            Console.Write(new string(' ', Console.WindowWidth));
             Console.ForegroundColor = ConsoleColor.White;
             DemoGame.nextusableline += 1;
         }
@@ -80,11 +88,12 @@ namespace Plat2d_2.EngineCore
         /// log a player select message
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void Select(string msg, int writeToLine = 5)
+        public static void Select(string msg, int writeToLine = 7)
         {
             writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"[PLAYER SELECT] - {msg}");
+            Console.Write(new string(' ', Console.WindowWidth));
             Console.ForegroundColor = ConsoleColor.White;
             DemoGame.nextusableline += 1;
         }
@@ -92,9 +101,10 @@ namespace Plat2d_2.EngineCore
         /// Log info about use of a debug message
         /// </summary>
         /// <param name="msg">message to log</param>
-        public static void DebugFunction(string msg, int writeToLine = 5)
+        public static void DebugFunction(string msg, int writeToLine = 7)
         {
             writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
+            Console.Write(new string(' ', Console.WindowWidth));
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"[DEBUG FUNCTION] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
@@ -123,10 +133,10 @@ namespace Plat2d_2.EngineCore
             ;
             if (DemoGame.nextusableline > 27)
             {
-                DemoGame.nextusableline = 5;
-                Console.SetCursorPosition(0, 5);
+                DemoGame.nextusableline = 7;
+                Console.SetCursorPosition(0, 7);
             }
-            else if (DemoGame.nextusableline > 5 && DemoGame.nextusableline < 27)
+            else if (DemoGame.nextusableline > 7 && DemoGame.nextusableline < 27)
             {
                 Console.SetCursorPosition(0, DemoGame.nextusableline);
             }
@@ -160,6 +170,62 @@ namespace Plat2d_2.EngineCore
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"[//LOGUTILITY] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
+
+        }
+        public static void LogCurrentWeaponState(string msg, bool isWarning = false, int writeToLine = 5)
+        {
+            Console.SetCursorPosition(0, writeToLine);
+            if (isWarning)
+            { Console.ForegroundColor = ConsoleColor.Yellow; }
+            else
+            { Console.ForegroundColor = ConsoleColor.White; }
+            Console.WriteLine($"[//LOGUTILITY] - {msg}");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        public static void MonitorEnemy(string msg, int writeToLine = 6)
+        {
+            Console.SetCursorPosition(0, writeToLine);
+            Console.ForegroundColor = ConsoleColor.Green; 
+            Console.WriteLine($"[//LOGUTILITY] - {msg}");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+    }
+    public class DebugUtility
+    {
+        public static void SelectEnemyToMonitor() 
+        {
+            Console.SetCursorPosition (0, 7);
+            Thread.Sleep(1);
+            for (int j = 7; j < 30; j++)
+            {
+                Console.SetCursorPosition(0, j);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
+            Console.SetCursorPosition(0, 7);
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"[//DEBUGUTILITY] - Select enemy to monitor:");
+            int i = 0;
+            foreach (var enemyToMonitor in DemoGame.enemiesv2)
+            {
+                Console.WriteLine($"{i} - {enemyToMonitor.enemyName} || {enemyToMonitor.enemyType}");
+                i++;
+            }
+            int selectedEnemy = int.Parse(Console.ReadLine());
+            if (selectedEnemy > DemoGame.enemiesv2.Count() || selectedEnemy < 0)
+            {
+                Log.Error("Value out of range");
+                DemoGame.logThisEnemy = false;
+                DemoGame.loggedEnemyArrayID = 0;
+
+            }
+            else
+            {
+                DemoGame.logThisEnemy = true;
+                DemoGame.loggedEnemyArrayID = selectedEnemy;
+            }
+            Console.BackgroundColor = ConsoleColor.Black;
 
         }
     }
