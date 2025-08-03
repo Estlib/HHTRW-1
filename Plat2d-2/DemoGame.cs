@@ -3541,10 +3541,25 @@ namespace Plat2d_2
                         enemyobject.sprite2d.UpdatePosition();
                         if (enemyobject.sprite2d.IsColliding("Bullet") != null)
                         {
+                            foreach (var bullet in bullets)
+                            {
+                                if (bullet.sprite2d.IsColliding("Enemy") != null)
+                                {
+                                    bullet.sprite2d.Tag = "RemoveThis";
+                                }
+                            }
                             pointScoreTally += 250;
                             enemyobject.sprite2d.DestroySelf();
                             enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
                             enemiesv2.Remove(enemiesv2.ElementAt(i));
+                            foreach (var bullet in bullets)
+                            {
+                                if (bullet.sprite2d.Tag != "Bullet")
+                                {
+                                    bullet.sprite2d.DestroySelf();
+                                    bullets.Remove(bullet);
+                                }
+                            }
                         }
                     }
                 }
@@ -3563,6 +3578,7 @@ namespace Plat2d_2
                             enemyobject.sprite2d.DestroySelf();
                             enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
                             enemies.Remove(enemies.ElementAt(i));
+
                         }
                     }
                 }
@@ -3607,11 +3623,11 @@ namespace Plat2d_2
                             bullet.sprite2d.DestroySelf();
                             bullets.Remove(bullet);
                         }
-                        if (bullet.sprite2d.IsColliding("Enemy") != null)
-                        {
-                            bullet.sprite2d.DestroySelf();
-                            bullets.Remove(bullet);
-                        }
+                        //if (bullet.sprite2d.IsColliding("Enemy") != null)
+                        //{
+                        //    bullet.sprite2d.DestroySelf();
+                        //    bullets.Remove(bullet);
+                        //}
                     }
 
                 }
