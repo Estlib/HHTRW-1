@@ -97,7 +97,6 @@
     <Compile Include="DemoGame.cs" />
     <Compile Include="EngineCore\ArtData.cs" />
     <Compile Include="EngineCore\Bullet.cs" />
-    <Compile Include="EngineCore\Enemy.cs" />
     <Compile Include="EngineCore\EnemyV2.cs" />
     <Compile Include="EngineCore\EnemyV2Data.cs" />
     <Compile Include="EngineCore\EngineCore.cs">

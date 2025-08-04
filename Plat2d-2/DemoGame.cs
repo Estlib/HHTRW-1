@@ -37,7 +37,6 @@ namespace Plat2d_2
         Label SelectedWeaponLabel;
         Sprite2d player; //variable to hold players sprite
 
-        public static List<Enemy> enemies = new List<Enemy>();
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>();
 
         bool animationsystemtype = true; //false v1, true v2
@@ -331,7 +330,7 @@ namespace Plat2d_2
             { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  "},
             { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  "},
             { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  "},
-            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  "},
+            { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","JE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  "},
             { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  "},
             { "  ","  ","  ","  ", "P","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  "},
             { "  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","WE","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  "},
@@ -1753,231 +1752,7 @@ namespace Plat2d_2
                     }
                 }
             }
-            
-
-
-            //if (levels[currentLevel].isLevelCleared == true) //checks if the value that states if the current level has been cleared is true
-            //{
-            //    Log.Select($"[GSH] - current level {levels[currentLevel].levelname} is {levels[currentLevel].isLevelCleared}");
-            //    if (levels[currentLevel].nextlevelpart == null) //checks if the level that was just completed has a sequential part or not. null = no.
-            //    {
-            //        //Log.Select($"[GSH] - nextlevelpart for current level is null");
-            //        //if (levels[selectedLevel].isLevelCleared == false)
-            //        //{
-            //        //    currentLevel = selectedLevel;
-            //        //}
-            //        if (levels[currentLevel].nextlevelpart.isLevelCleared == true)
-            //        {
-            //            for (int i = selectedLevel; i < levels.Count; i++) //goes through all the values of the levels in list to see which one is not cleared.
-            //            {
-            //                Log.Select($"[GSH] - current level being handled by for loop: {levels[i].levelname}");
-            //                Level level = levels[i];
-            //                if (level.isLevelCleared == true)
-            //                {
-            //                    if (level.nextlevelpart != null)
-            //                    {
-            //                        if (level.nextlevelpart.isLevelCleared == false)
-            //                        {
-            //                            nextlevel = level.nextlevelpart;
-            //                            break;
-            //                        }
-            //                    }
-            //                }
-            //                if (level.isLevelCleared == false) //if it finds a level that has not been cleared
-            //                {
-            //                    nextlevel = level; // it then sets the found level to be the next level
-            //                    currentLevel = i;
-            //                    break;
-            //                }
-            //            }
-            //            //nextlevel = levels.ElementAt(selectedLevel+1);
-            //        }
-
-            //    }
-            //    else
-            //    { 
-            //        Log.Select($"[GSH] - current level {levels[currentLevel].nextlevelpart} is {levels[currentLevel].nextlevelpart.levelname}");
-            //        nextlevel = levels.ElementAt(currentLevel).nextlevelpart;
-            //        Log.Select($"[GSH] - ELSE next level is {nextlevel.levelname} is {levels[currentLevel].isLevelCleared}");
-            //        //reloadtrigger = true;
-            //    }
-            //    Log.Info("Unloading current level via statehandlers call");
-            //    UnLoadCurrentLevel();
-            //    //currentLevel++;
-            //    Log.Info("Loading new level via statehandlers call");
-            //    if (nextlevel.artSetFolder == "plains")
-            //    {
-            //        LoadNextLevel(nextlevel, PlainsArtRefs);
-            //    }
-            //    else if (nextlevel.artSetFolder == "underground")
-            //    {
-            //        LoadNextLevel(nextlevel, UndergroundArtRefs);
-            //    }
-            //    else if (nextlevel.artSetFolder == "desert")
-            //    {
-            //        LoadNextLevel(nextlevel, DesertArtRefs);
-            //    }
-            //    else if (nextlevel.artSetFolder == "forest")
-            //    {
-            //        LoadNextLevel(nextlevel, ForestArtRefs);
-            //    }
-            //    else if (nextlevel.artSetFolder == "castle")
-            //    {
-            //        LoadNextLevel(nextlevel, CastleArtRefs);
-            //    }
-            //    else if (nextlevel.artSetFolder == "screens")
-            //    {
-            //        LoadNextLevel(nextlevel, TitleMenuMapRefs);
-            //    }
-            //    else
-            //    {
-            //        LoadNextLevel(levels.ElementAt(1), TitleMenuMapRefs);
-            //    }
-            //}
         }
-
-        //private void GameStateHandler()
-        //{
-        //    //reloadtrigger = false;
-        //    //Log.Highlight("[GSH] - GameStateHandler has been called");
-        //    Level nextlevel = null; //variable internal to the function for the next level to load
-        //    if (levels[currentLevel].isLevelCleared == true) //checks if the value that states if the current level has been cleared is true
-        //    {
-        //        Log.Select($"[GSH] - current level {levels[currentLevel].levelname} is {levels[currentLevel].isLevelCleared}");
-        //        if (levels[currentLevel].nextlevelpart == null) //checks if the level that was just completed has a sequential part or not. null = no.
-        //        {
-        //            //Log.Select($"[GSH] - nextlevelpart for current level is null");
-        //            //if (levels[selectedLevel].isLevelCleared == false)
-        //            //{
-        //            //    currentLevel = selectedLevel;
-        //            //}
-        //            if (levels[currentLevel].nextlevelpart.isLevelCleared == true)
-        //            {
-        //                for (int i = selectedLevel; i < levels.Count; i++) //goes through all the values of the levels in list to see which one is not cleared.
-        //                {
-        //                    Log.Select($"[GSH] - current level being handled by for loop: {levels[i].levelname}");
-        //                    Level level = levels[i];
-        //                    if (level.isLevelCleared == true)
-        //                    {
-        //                        if (level.nextlevelpart != null)
-        //                        {
-        //                            if (level.nextlevelpart.isLevelCleared == false)
-        //                            {
-        //                                nextlevel = level.nextlevelpart;
-        //                                break;
-        //                            }
-        //                        }
-        //                    }
-        //                    if (level.isLevelCleared == false) //if it finds a level that has not been cleared
-        //                    {
-        //                        nextlevel = level; // it then sets the found level to be the next level
-        //                        currentLevel = i;
-        //                        break;
-        //                    }
-        //                }
-        //                //nextlevel = levels.ElementAt(selectedLevel+1);
-        //            }
-
-        //        }
-        //        else
-        //        {
-        //            Log.Select($"[GSH] - current level {levels[currentLevel].nextlevelpart} is {levels[currentLevel].nextlevelpart.levelname}");
-        //            nextlevel = levels.ElementAt(currentLevel).nextlevelpart;
-        //            Log.Select($"[GSH] - ELSE next level is {nextlevel.levelname} is {levels[currentLevel].isLevelCleared}");
-        //            //reloadtrigger = true;
-        //        }
-        //        Log.Info("Unloading current level via statehandlers call");
-        //        UnLoadCurrentLevel();
-        //        //currentLevel++;
-        //        Log.Info("Loading new level via statehandlers call");
-        //        if (nextlevel.artSetFolder == "plains")
-        //        {
-        //            LoadNextLevel(nextlevel, PlainsArtRefs);
-        //        }
-        //        else if (nextlevel.artSetFolder == "underground")
-        //        {
-        //            LoadNextLevel(nextlevel, UndergroundArtRefs);
-        //        }
-        //        else if (nextlevel.artSetFolder == "desert")
-        //        {
-        //            LoadNextLevel(nextlevel, DesertArtRefs);
-        //        }
-        //        else if (nextlevel.artSetFolder == "forest")
-        //        {
-        //            LoadNextLevel(nextlevel, ForestArtRefs);
-        //        }
-        //        else if (nextlevel.artSetFolder == "castle")
-        //        {
-        //            LoadNextLevel(nextlevel, CastleArtRefs);
-        //        }
-        //        else if (nextlevel.artSetFolder == "screens")
-        //        {
-        //            LoadNextLevel(nextlevel, TitleMenuMapRefs);
-        //        }
-        //        else
-        //        {
-        //            LoadNextLevel(levels.ElementAt(1), TitleMenuMapRefs);
-        //        }
-        //        //if (reloadtrigger)
-        //        //{
-        //        //    Log.Select($"[GSH] - reloadtrigger has been triggered");
-        //        //    if (nextlevel.artSetFolder == "plains")
-        //        //    {
-        //        //        LoadNextLevel(nextlevel, PlainsArtRefs);
-        //        //    }
-        //        //    else if (nextlevel.artSetFolder == "underground")
-        //        //    {
-        //        //        LoadNextLevel(nextlevel, UndergroundArtRefs);
-        //        //    }
-        //        //    else if (nextlevel.artSetFolder == "desert")
-        //        //    {
-        //        //        LoadNextLevel(nextlevel, DesertArtRefs);
-        //        //    }
-        //        //    else if (nextlevel.artSetFolder == "forest")
-        //        //    {
-        //        //        LoadNextLevel(nextlevel, ForestArtRefs);
-        //        //    }
-        //        //    else if (nextlevel.artSetFolder == "castle")
-        //        //    {
-        //        //        LoadNextLevel(nextlevel, CastleArtRefs);
-        //        //    }
-        //        //    else if (nextlevel.artSetFolder == "screens")
-        //        //    {
-        //        //        LoadNextLevel(nextlevel, TitleMenuMapRefs);
-        //        //    }
-        //        //    else
-        //        //    {
-        //        //        LoadNextLevel(levels.ElementAt(1), TitleMenuMapRefs);
-        //        //    }
-        //        //    reloadtrigger = false;
-        //        //}
-        //        //LoadNextLevel(levelMaps.ElementAt(currentLevel), PlainsArtRefsTags, PlainsArtRefs);'
-        //        //if (levels.ElementAt(currentLevel).artSetFolder == "plains")
-        //        //{
-        //        //    LoadNextLevel(levels.ElementAt(currentLevel), PlainsArtRefs);
-        //        //}
-        //        //else if (levels.ElementAt(currentLevel).artSetFolder == "underground")
-        //        //{
-        //        //    LoadNextLevel(levels.ElementAt(currentLevel), UndergroundArtRefs);
-        //        //}
-        //        //else if (levels.ElementAt(currentLevel).artSetFolder == "desert")
-        //        //{
-        //        //    LoadNextLevel(levels.ElementAt(currentLevel), DesertArtRefs);
-        //        //}
-        //        //else if (levels.ElementAt(currentLevel).artSetFolder == "forest")
-        //        //{
-        //        //    LoadNextLevel(levels.ElementAt(currentLevel), ForestArtRefs);
-        //        //}
-        //        //else if (levels.ElementAt(currentLevel).artSetFolder == "castle")
-        //        //{
-        //        //    LoadNextLevel(levels.ElementAt(currentLevel), CastleArtRefs);
-        //        //}
-        //        //else if (levels.ElementAt(currentLevel).artSetFolder == "screens")
-        //        //{
-        //        //    LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
-        //        //}
-        //    }
-        //}
 
         /// <summary>
         /// updates the player camera in the level
@@ -2529,7 +2304,7 @@ namespace Plat2d_2
             BGColor = currentLevel.levelColor;
 
             //Log.Highlight($"Enemy count before reinitialising list {enemies.Count}");
-            enemies = new List<Enemy>();
+            enemiesv2 = new List<EnemyV2>();
             //Log.Highlight($"Enemy count after reinitialising list {enemies.Count}");
 
             Log.Info("New Level is being loaded");
@@ -2693,49 +2468,34 @@ namespace Plat2d_2
                     }
                     if (Map[j, i] == "WE")
                     {
-                        if (animationsystemtype == true)
-                        {
-                            EnemyV2 enemyv2 = new EnemyV2
-                                (
-                                    new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
-                                    walkingEnemySpritesBitmap,
-                                    new List<int> { 12, 13, 14, 15, 16, 17 }, //walkleft
-                                    new List<int> { 1, 2, 3, 4, 5, 6 }, //walkright
-                                    new List<int> { 20 }, //jumpleft
-                                    new List<int> { 9 }, //jumpright
-                                    new List<int> { 11 }, //stillleft
-                                    new List<int> { 0 }, //stillright
-                                    new List<int> { 23 }, //fireleft
-                                    new List<int> { 23 }, //fireright
-                                    new List<int> { 23 }, //fly
-                                    new List<int> { 22 }, //error
-                                    i * 16,
-                                    j * 16,
-                                    0,
-                                    EnemyV2Data.walkingEnemy, //behaviourdata
-                                    0, //where is its action currently in behaviourloop
-                                    false,
-                                    true,
-                                    "Test - Walking enemy",
-                                    "Enemy",
-                                    0
-                                );
+                        EnemyV2 enemyv2 = new EnemyV2
+                            (
+                                new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
+                                walkingEnemySpritesBitmap,
+                                new List<int> { 12, 13, 14, 15, 16, 17 }, //walkleft
+                                new List<int> { 1, 2, 3, 4, 5, 6 }, //walkright
+                                new List<int> { 20 }, //jumpleft
+                                new List<int> { 9 }, //jumpright
+                                new List<int> { 11 }, //stillleft
+                                new List<int> { 0 }, //stillright
+                                new List<int> { 23 }, //fireleft
+                                new List<int> { 23 }, //fireright
+                                new List<int> { 23 }, //fly
+                                new List<int> { 22 }, //error
+                                i * 16,
+                                j * 16,
+                                0,
+                                EnemyV2Data.walkingEnemy, //behaviourdata
+                                0, //where is its action currently in behaviourloop
+                                false,
+                                true,
+                                "Walking enemy",
+                                "Enemy",
+                                0
+                            );
 
-                            enemyv2.sprite2d.CreateDynamic();
-                            enemiesv2.Add(enemyv2);
-                        }
-                        else
-                        {
-                            Enemy enemy = new Enemy(
-                                    new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
-                                    i * 16,
-                                    j * 16,
-                                    30,
-                                    0,
-                                    0);
-                            enemy.sprite2d.CreateDynamic();
-                            enemies.Add(enemy);
-                        }
+                        enemyv2.sprite2d.CreateDynamic();
+                        enemiesv2.Add(enemyv2);
 
                     }
                     if (Map[j, i] == "JE")
@@ -2748,8 +2508,8 @@ namespace Plat2d_2
                                     walkingEnemySpritesBitmap,
                                     new List<int> { 12, 13, 14, 15, 16, 17 }, //walkleft
                                     new List<int> { 1, 2, 3, 4, 5, 6 }, //walkright
-                                    new List<int> { 20 }, //jumpleft
-                                    new List<int> { 9 }, //jumpright
+                                    new List<int> { 18, 20 }, //jumpleft
+                                    new List<int> { 7, 9 }, //jumpright
                                     new List<int> { 11 }, //stillleft
                                     new List<int> { 0 }, //stillright
                                     new List<int> { 23 }, //fireleft
@@ -2763,7 +2523,7 @@ namespace Plat2d_2
                                     0, //where is its action currently in behaviourloop
                                     false,
                                     true,
-                                    "Test - Walking enemy",
+                                    "Test - Jumping enemy",
                                     "Enemy",
                                     0
                                 );
@@ -2780,12 +2540,12 @@ namespace Plat2d_2
 
         private static void RemoveEnemies()
         {
-            if (enemies.Count != 0)
+            if (enemiesv2.Count != 0)
             {
-                for (int i = 0; i < enemies.Count; i++)
+                for (int i = 0; i < enemiesv2.Count; i++)
                 {
-                    enemies.ElementAt(i).sprite2d.DestroySelf();
-                    enemies.ElementAt(i).sprite2d.DestroyStatic(enemies.ElementAt(i).sprite2d);
+                    enemiesv2.ElementAt(i).sprite2d.DestroySelf();
+                    enemiesv2.ElementAt(i).sprite2d.DestroyStatic(enemiesv2.ElementAt(i).sprite2d);
                     //if (enemies.ElementAt(i) != null)
                     //{
                     //    enemies.ElementAt(i).sprite2d.DestroySelf();
@@ -2836,152 +2596,7 @@ namespace Plat2d_2
         int remainingJumpFrames = 0; //unused, custom animation function variable for the jump
         int start; //used for the animateplayer function
         int end; //used for the animateplayer function
-
-        private void AnimateEnemyV1(int start, int end, Sprite2d enemy)
-        {
-            //slowDownFrameRate += 1;
-            if (slowDownFrameRate == 4)
-            {
-                steps++;
-                //slowDownFrameRate = 0;
-            }
-            if (steps > end || steps < start)
-            {
-                steps = start;
-            }
-            //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
-            enemy.Sprite = walkingEnemySpritesBitmap[steps];
-        }
-        private void AnimateEnemyV2(int start, int end, Sprite2d enemy, int animationsteps)
-        {
-            //slowDownFrameRate += 1;
-            if (slowDownFrameRate == 4)
-            {
-                animationsteps++;
-                //slowDownFrameRate = 0;
-            }
-            if (animationsteps > end || animationsteps < start)
-            {
-                animationsteps = start;
-            }
-            //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
-            enemy.Sprite = walkingEnemySpritesBitmap[animationsteps];
-        }
-
-        private void AnimateEnemyV3(Enemy enemy)
-        {
-            if (slowDownFrameRate == 4)
-            {
-                enemy.animationsteps++;
-                //slowDownFrameRate = 0;
-            }
-            if (enemy.isfacingleft)
-            {
-                if (enemy.animationsteps > enemy.walkleftanimend || enemy.animationsteps < enemy.walkleftanimstart)
-                {
-                    enemy.animationsteps = enemy.walkleftanimstart;
-                }
-            }
-            else
-            {
-                if (enemy.animationsteps > enemy.walkrightanimend || enemy.animationsteps < enemy.walkrightanimstart)
-                {
-                    enemy.animationsteps = enemy.walkrightanimstart;
-                }
-
-            }
-            //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
-            enemy.sprite2d.Sprite = walkingEnemySpritesBitmap[enemy.animationsteps];
-        }
-
-        /// <summary>
-        /// Animates a single enemy, based on what the animationclock currently is.
-        /// Is used with a different function that uses this method to animate all enemies
-        /// </summary>
-        /// <param name="enemy">Requires an enemy to be passed into it</param>
-        private void AnimateThisEnemy(Enemy enemy)
-        {
-            Log.Info("AnimateThisEnemy()");
-
-            if (animationClock == 4) //animates only when the animationclock is 4
-            {
-                Log.Info($"enemy.animationsteps = {enemy.animationsteps}");
-                
-                // Animation procedure when it is facing left.
-                if (enemy.isfacingleft)
-                {
-                    Log.Info($"Enemy is facing left = {enemy.isfacingleft}");
-                    
-                    if (enemy.animationsteps > enemy.walkleftanimend || enemy.animationsteps < enemy.walkleftanimstart)
-                    {
-                        if (enemy.animationsteps == enemy.walkleftanimend)
-                        {
-                            enemy.animationsteps = enemy.walkleftanimstart;
-                        }
-                    }
-                }
-                else
-                {
-                    Log.Info($"Enemy is facing right = {!enemy.isfacingleft}");
-                    if (enemy.animationsteps > enemy.walkrightanimend || enemy.animationsteps < enemy.walkrightanimstart)
-                    {
-                        if (enemy.animationsteps == enemy.walkrightanimend)
-                        {
-                            enemy.animationsteps = enemy.walkrightanimstart;
-                        }
-                    }
-
-                }
-                enemy.animationsteps++;
-                //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
-                enemy.sprite2d.Sprite = walkingEnemySpritesBitmap[enemy.animationsteps];
-                Log.Highlight($"enemy sprite needs to be {enemy.animationsteps}");
-            }
-        }
-        private void AnimateEnemies()
-        {
-            //Log.Info("AnimateEnemies()");
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                if (enemies.ElementAt(i).sprite2d.HasBody())
-                {
-                    //Enemy en = enemies.ElementAt(i);
-                    if (enemies.ElementAt(i).sprite2d.Position.X > enemies.ElementAt(i).lastXpos)
-                    
-                        AnimateThisEnemy(enemies.ElementAt(i));
-                    }
-                    else
-                    {
-                        AnimateThisEnemy(enemies.ElementAt(i));
-                    }
-
-                    if (enemies.ElementAt(i).isfacingleft)
-                    {
-                        //enemy walkright
-                        enemies.ElementAt(i).sprite2d.SetVelocity(new Vector2(-120, enemies.ElementAt(i).sprite2d.GetYVelocity()));
-                        enemies.ElementAt(i).enemyrightwalkframes--;
-                        enemies.ElementAt(i).enemyleftwalkframes = 30;
-                        if (enemies.ElementAt(i).enemyrightwalkframes <= 0)
-                        {
-                            enemies.ElementAt(i).isfacingleft = false;
-                        }
-                    }
-                    else
-                    {
-                        //enemy walkleft
-                        enemies.ElementAt(i).sprite2d.SetVelocity(new Vector2(120, enemies.ElementAt(i).sprite2d.GetYVelocity()));
-                        enemies.ElementAt(i).enemyleftwalkframes--;
-                        enemies.ElementAt(i).enemyrightwalkframes = 30;
-                        if (enemies.ElementAt(i).enemyleftwalkframes <= 0)
-                        {
-                            enemies.ElementAt(i).isfacingleft = true;
-                        }
-                    }
-                    //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
-                    enemies.ElementAt(i).sprite2d.Sprite = walkingEnemySpritesBitmap[enemies.ElementAt(i).animationsteps];
-                }
-                
-            }
+        
         private void AnimateThisV2Enemy(EnemyV2 enemy, bool loglevel = false)
         {
             //EnemyV2 enemyv2 = new EnemyV2
@@ -3117,11 +2732,44 @@ namespace Plat2d_2
 
                             break;
                         case (ActionState)4: //jumping left
-                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                //string tempint = enemy.CurrentBehaviourStep.ToString() + "     ";
 
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} " +
+                                    //$"with Step {tempint} " +
+                                    $"arrayframe {enemy.currentFrame}" +
+                                    $"arraylength {enemy.walkRightData.Count()}" +
+                                    $"actualframe {enemy.animationFramesBitmap.IndexOf(enemy.sprite2d.Sprite)}" +
+                                    $"");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
+                            enemy.JumpEnemyInDirection(animationClock);
+                            enemy.NextStep();
                             break;
                         case (ActionState)5: //jumping right
-                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                //string tempint = enemy.CurrentBehaviourStep.ToString() + "     ";
+
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} " +
+                                    //$"with Step {tempint} " +
+                                    $"arrayframe {enemy.currentFrame}" +
+                                    $"arraylength {enemy.walkRightData.Count()}" +
+                                    $"actualframe {enemy.animationFramesBitmap.IndexOf(enemy.sprite2d.Sprite)}" +
+                                    $"");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
+                            enemy.JumpEnemyInDirection(animationClock);
+                            enemy.NextStep();
 
                             break;
                         case (ActionState)6: //firing left
@@ -3442,16 +3090,9 @@ namespace Plat2d_2
                 firinglockcounter = 10;
             }
 
-            if (enemies != null)
+            if (enemiesv2 != null)
             { 
-                if (animationsystemtype == true)
-                {
-                    AnimateEnemiesV2sys(animateEnemiesV2sysVerboseLogging);
-                }
-                else
-                {
-                    AnimateEnemies();
-                }
+                AnimateEnemiesV2sys(animateEnemiesV2sysVerboseLogging);
             }
             if (bullets != null)
             {
@@ -3581,54 +3222,32 @@ namespace Plat2d_2
             //    }
             //}
 
-            if (animationsystemtype)
+            if (enemiesv2 != null)
             {
-                if (enemiesv2 != null)
+                for (int i = 0; i < enemiesv2.Count; i++)
                 {
-                    for (int i = 0; i < enemiesv2.Count; i++)
+                    EnemyV2 enemyobject = enemiesv2[i];
+                    enemyobject.sprite2d.UpdatePosition();
+                    if (enemyobject.sprite2d.IsColliding("Bullet") != null)
                     {
-                        EnemyV2 enemyobject = enemiesv2[i];
-                        enemyobject.sprite2d.UpdatePosition();
-                        if (enemyobject.sprite2d.IsColliding("Bullet") != null)
+                        foreach (var bullet in bullets)
                         {
-                            foreach (var bullet in bullets)
+                            if (bullet.sprite2d.IsColliding("Enemy") != null)
                             {
-                                if (bullet.sprite2d.IsColliding("Enemy") != null)
-                                {
-                                    bullet.sprite2d.Tag = "RemoveThis";
-                                }
-                            }
-                            pointScoreTally += 250;
-                            enemyobject.sprite2d.DestroySelf();
-                            enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
-                            enemiesv2.Remove(enemiesv2.ElementAt(i));
-                            foreach (var bullet in bullets)
-                            {
-                                if (bullet.sprite2d.Tag != "Bullet")
-                                {
-                                    bullet.sprite2d.DestroySelf();
-                                    bullets.Remove(bullet);
-                                }
+                                bullet.sprite2d.Tag = "RemoveThis";
                             }
                         }
-                    }
-                }
-            }
-            else 
-            {
-                if (enemies != null)
-                {
-                    for (int i = 0; i < enemies.Count; i++)
-                    {
-                        Enemy enemyobject = enemies[i];
-                        enemyobject.sprite2d.UpdatePosition();
-                        if (enemyobject.sprite2d.IsColliding("Bullet") != null)
+                        pointScoreTally += 250;
+                        enemyobject.sprite2d.DestroySelf();
+                        enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
+                        enemiesv2.Remove(enemiesv2.ElementAt(i));
+                        foreach (var bullet in bullets)
                         {
-                            pointScoreTally += 250;
-                            enemyobject.sprite2d.DestroySelf();
-                            enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
-                            enemies.Remove(enemies.ElementAt(i));
-
+                            if (bullet.sprite2d.Tag != "Bullet")
+                            {
+                                bullet.sprite2d.DestroySelf();
+                                bullets.Remove(bullet);
+                            }
                         }
                     }
                 }

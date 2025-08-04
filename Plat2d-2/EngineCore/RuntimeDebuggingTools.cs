@@ -98,8 +98,105 @@ namespace Plat2d_2.EngineCore
                 $"1 - Generic error messages =       {EngineCore.showRuntimeGenericError}             N/A\n" +
                 $"2 - Add traces to error messages = {EngineCore.addTraceCLI}             {EngineCore.addTraceTXT}\n" +
                 $"3 - IndexOutOfRange =              {EngineCore.logIndexCLI}             {EngineCore.logIndexTXT}\n" +
-                $"4 - ThreadAbort =                  {EngineCore.logAbortCLI}             {EngineCore.logAbortTXT}\n");
-            string settingOption = Console.ReadLine();
+                $"4 - ThreadAbort =                  {EngineCore.logAbortCLI}             {EngineCore.logAbortTXT}\n" +
+                $"5 - InvalidOperation =             {EngineCore.logIopexCLI}             {EngineCore.logIopexTXT}\n\\/");
+            string settingOption = "sysdefault";
+            do
+            {
+                settingOption = Console.ReadLine();
+                if (settingOption == "")
+                {
+                    Console.WriteLine("Input is empty, try again");
+                }
+                if (settingOption == "sysdefault")
+                {
+                    settingOption = Console.ReadLine();
+                }
+                if (settingOption != "sysdefault") 
+                {
+                    switch (settingOption[0])
+                    {
+                        case var digit when !char.IsDigit(digit):
+                            Console.WriteLine("not a digit.");
+                            exitSettings = false;
+                            break;
+                        case '1':
+                            if (settingOption.Count() > 2)
+                            {
+                                Console.WriteLine("Too many parameters, please check the input and try again");
+                                break;
+                            }
+                            if (settingOption.ToLower()[1] == 'y')
+                            { EngineCore.showRuntimeGenericError = true; }
+                            else if (settingOption.ToLower()[1] == 'n')
+                            { EngineCore.showRuntimeGenericError = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            break;
+                        case '2':
+                            if (settingOption.Count() > 3)
+                            {
+                                Console.WriteLine("Too many parameters, please check the input and try again");
+                                break;
+                            }
+                            if (settingOption.ToLower()[1] == 'y')
+                            { EngineCore.addTraceCLI = true; }
+                            else if (settingOption.ToLower()[1] == 'n')
+                            { EngineCore.addTraceCLI = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            if (settingOption.ToLower()[2] == 'y')
+                            { EngineCore.addTraceTXT = true; }
+                            else if (settingOption.ToLower()[2] == 'n')
+                            { EngineCore.addTraceTXT = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            break;
+                        case '3':
+                            if (settingOption.Count() > 3)
+                            {
+                                Console.WriteLine("Too many parameters, please check the input and try again");
+                                break;
+                            }
+                            if (settingOption.ToLower()[1] == 'y')
+                            { EngineCore.logIndexCLI = true; }
+                            else if (settingOption.ToLower()[1] == 'n')
+                            { EngineCore.logIndexCLI = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            if (settingOption.ToLower()[2] == 'y')
+                            { EngineCore.logIndexTXT = true; }
+                            else if (settingOption.ToLower()[2] == 'n')
+                            { EngineCore.logIndexTXT = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            break;
+                        case '4':
+                            if (settingOption.Count() > 3)
+                            {
+                                Console.WriteLine("Too many parameters, please check the input and try again");
+                                settingOption = "";
+                                break;
+                            }
+                            if (settingOption.ToLower()[1] == 'y')
+                            { EngineCore.logAbortCLI = true; }
+                            else if (settingOption.ToLower()[1] == 'n')
+                            { EngineCore.logAbortCLI = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            if (settingOption.ToLower()[2] == 'y')
+                            { EngineCore.logAbortTXT = true; }
+                            else if (settingOption.ToLower()[2] == 'n')
+                            { EngineCore.logAbortTXT = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            break;
+                        default:
+                            Console.WriteLine($"invalid option {settingOption[0]}");
+                            break;
+                    } 
+                }
+            } while (settingOption.ToLower() != "exit");
             if (settingOption.ToLower() == "exit")
             {
                 Console.BackgroundColor = ConsoleColor.Black;
@@ -108,90 +205,14 @@ namespace Plat2d_2.EngineCore
                     Console.SetCursorPosition(0, j);
                     Console.Write(new string(' ', Console.WindowWidth));
                 }
-                DemoGame.exitTool = true;
+                exitSettings = true;
             }
             else
             {
-                switch (settingOption[0])
-                {
-                    case var digit when !char.IsDigit(digit):
-                        Console.WriteLine("not a digit.");
-                        break;
-                    case '1':
-                        if (settingOption.Count() > 2)
-                        {
-                            Console.WriteLine("Too many parameters, please check the input and try again");
-                            break;
-                        }
-                        if (settingOption.ToLower()[1] == 'y')
-                        { EngineCore.showRuntimeGenericError = true; }
-                        else if (settingOption.ToLower()[1] =='n')
-                        { EngineCore.showRuntimeGenericError = false; }
-                        else
-                        { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
-                        break;
-                    case '2':
-                        if (settingOption.Count() > 3)
-                        {
-                            Console.WriteLine("Too many parameters, please check the input and try again");
-                            break;
-                        }
-                        if (settingOption.ToLower()[1] == 'y')
-                        { EngineCore.addTraceCLI = true; }
-                        else if (settingOption.ToLower()[1] == 'n')
-                        { EngineCore.addTraceCLI = false; }
-                        else
-                        { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
-                        if (settingOption.ToLower()[2] == 'y')
-                        { EngineCore.addTraceTXT = true; }
-                        else if (settingOption.ToLower()[2] == 'n')
-                        { EngineCore.addTraceTXT = false; }
-                        else
-                        { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
-                        break;
-                    case '3':
-                        if (settingOption.Count() > 3)
-                        {
-                            Console.WriteLine("Too many parameters, please check the input and try again");
-                            break;
-                        }
-                        if (settingOption.ToLower()[1] == 'y')
-                        { EngineCore.logIndexCLI = true; }
-                        else if (settingOption.ToLower()[1] == 'n')
-                        { EngineCore.logIndexCLI = false; }
-                        else
-                        { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
-                        if (settingOption.ToLower()[2] == 'y')
-                        { EngineCore.logIndexTXT = true; }
-                        else if (settingOption.ToLower()[2] == 'n')
-                        { EngineCore.logIndexTXT = false; }
-                        else
-                        { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
-                        break;
-                    case '4':
-                        if (settingOption.Count() > 3)
-                        {
-                            Console.WriteLine("Too many parameters, please check the input and try again");
-                            break;
-                        }
-                        if (settingOption.ToLower()[1] == 'y')
-                        { EngineCore.logAbortCLI = true; }
-                        else if (settingOption.ToLower()[1] == 'n')
-                        { EngineCore.logAbortCLI = false; }
-                        else
-                        { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
-                        if (settingOption.ToLower()[2] == 'y')
-                        { EngineCore.logAbortTXT = true; }
-                        else if (settingOption.ToLower()[2] == 'n')
-                        { EngineCore.logAbortTXT = false; }
-                        else
-                        { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
-                        break;
-                    default:
-                        Console.WriteLine($"invalid option {settingOption[0]}");
-                        break;
-                }
+                exitSettings = false;
             }
+            Console.ReadLine();
+            return;
         }
 
         /// <summary>

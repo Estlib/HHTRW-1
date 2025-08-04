@@ -254,7 +254,8 @@ namespace Plat2d_2.EngineCore
         {
             if (this.sprite2d.IsColliding("Ground") != null) //only jump if enemy on floor.
             {
-                
+                this.sprite2d.SetVelocity(new Vector2(this.sprite2d.GetXVelocity(), -12800));
+                AdvanceAnimation(animationClock);
             }
         }
 
@@ -289,8 +290,30 @@ namespace Plat2d_2.EngineCore
                     }
                     break;
                 case ActionState.JumpingLeft:
+                    var jumpleftanimation = this.jumpLeftData;
+                    if (animationClock == 4)
+                    {
+                        if (this.currentFrame >= jumpleftanimation.Count() - 1)
+                        { this.currentFrame = 0; }
+                        else if (this.currentFrame != this.jumpLeftData.Last())
+                        {
+                            { this.currentFrame++; }
+                            this.sprite2d.Sprite = this.animationFramesBitmap[this.jumpLeftData[this.currentFrame]];
+                        }
+                    }
                     break;
                 case ActionState.JumpingRight:
+                    var jumprightanimation = this.jumpRightData;
+                    if (animationClock == 4)
+                    {
+                        if (this.currentFrame >= jumprightanimation.Count() - 1)
+                        { this.currentFrame = 0; }
+                        else if (this.currentFrame != this.jumpRightData.Last())
+                        {
+                            { this.currentFrame++; }
+                            this.sprite2d.Sprite = this.animationFramesBitmap[this.jumpRightData[this.currentFrame]];
+                        }
+                    }
                     break;
                 case ActionState.FiringLeft:
                     break;
