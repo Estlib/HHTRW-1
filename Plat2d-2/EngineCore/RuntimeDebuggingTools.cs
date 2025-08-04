@@ -191,6 +191,26 @@ namespace Plat2d_2.EngineCore
                             else
                             { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
                             break;
+                        case '5':
+                            if (settingOption.Count() > 3)
+                            {
+                                Console.WriteLine("Too many parameters, please check the input and try again");
+                                settingOption = "";
+                                break;
+                            }
+                            if (settingOption.ToLower()[1] == 'y')
+                            { EngineCore.logIopexCLI = true; }
+                            else if (settingOption.ToLower()[1] == 'n')
+                            { EngineCore.logIopexCLI = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            if (settingOption.ToLower()[2] == 'y')
+                            { EngineCore.logIopexTXT = true; }
+                            else if (settingOption.ToLower()[2] == 'n')
+                            { EngineCore.logIopexTXT = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            break;
                         default:
                             Console.WriteLine($"invalid option {settingOption[0]}");
                             break;

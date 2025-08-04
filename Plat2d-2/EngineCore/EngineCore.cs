@@ -115,6 +115,7 @@ namespace Plat2d_2.EngineCore
             GameLoopThread.Start();
             world = new World(worldAABB, gravity, pausebuttoninput);
             Window.InitializeComponent();
+            //SetFullscreen();
 
             Application.Run(Window);
         }
@@ -252,8 +253,8 @@ namespace Plat2d_2.EngineCore
                     }
                     else
                     {
-                        Log.Error("Unknown Exception.", 3);
-                        Log.Error($"Exception trace: {ex.StackTrace}");
+                        //Log.Error("Unknown Exception.", 3);
+                        //Log.Error($"Exception trace: {ex.StackTrace}");
                     }
 
                     //DemoGame.pausebuttoninput = true;
@@ -284,6 +285,21 @@ namespace Plat2d_2.EngineCore
             File.AppendAllText(logPath, dump);
         }
 
+        public void SetFullscreen()
+        {
+            this.Window.FormBorderStyle = FormBorderStyle.None;
+            this.Window.WindowState = FormWindowState.Normal; // Reset first
+            this.Window.Bounds = Screen.PrimaryScreen.Bounds; // Set size to entire screen
+            this.Window.StartPosition = FormStartPosition.Manual;
+            this.Window.Location = new Point(0, 0);
+            this.Window.WindowState = FormWindowState.Maximized;
+            this.Window.TopMost = true; // Optional
+        }
+        public void FullscreenMode()
+        {
+            this.Window.FormBorderStyle = FormBorderStyle.None;
+        }
+
         private void Renderer(object sender, PaintEventArgs e)
         {
             // Instruct the world to perform a single step of simulation. It is
@@ -291,9 +307,19 @@ namespace Plat2d_2.EngineCore
             Graphics g = e.Graphics;
             g.Clear(BGColor);
             //GameLoopThread.Abort();
+
+            //float scaleX = (float)Window.ClientSize.Width / ScreenSize.X;
+            //float scaleY = (float)Window.ClientSize.Height / ScreenSize.Y;
+            //float scale = System.Math.Min(scaleX, scaleY); // Keep aspect ratio
+                //// new code for pixellated fullscreen
+                //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                //g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+
             g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
             g.RotateTransform(CameraAngle);
             g.ScaleTransform(CameraZoom.X, CameraZoom.Y);
+
+                //g.ScaleTransform(scale, scale);
             //try
             //{
             //foreach (Shape2d shape in AllShapes)

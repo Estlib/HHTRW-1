@@ -1153,6 +1153,7 @@ namespace Plat2d_2
         /// </summary>
         public override void OnLoad()
         {
+            //FullscreenMode();
             stopwatch.Start();
             //levelsequence.Add(0);
             //levelsequence.Add(1);
