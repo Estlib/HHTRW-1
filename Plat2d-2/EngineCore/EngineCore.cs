@@ -59,7 +59,13 @@ namespace Plat2d_2.EngineCore
         private string Title = "HHTRW-engine1";
         public Canvas Window = null;
         private Thread GameLoopThread = null;
-
+        public static bool showRuntimeGenericError = true;
+        public static bool logAbortCLI = false;
+        public static bool logAbortTXT = false;
+        public static bool logIndexCLI = false;
+        public static bool logIndexTXT = false;
+        public static bool addTraceCLI = false;
+        public static bool addTraceTXT = false;
 
 
 
@@ -197,6 +203,8 @@ namespace Plat2d_2.EngineCore
         int positionIterations = 16;
         void GameLoop()
         {
+
+            
             OnLoad();
             while (GameLoopThread.IsAlive)
             {
@@ -214,39 +222,58 @@ namespace Plat2d_2.EngineCore
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Game has not been found.",3);
-                    if (ex is ThreadAbortException)
+                    if (showRuntimeGenericError)
                     {
-                        Log.Error($"Exception data: {ex.Message}" );
+                        Log.Error("Game has not been found.", 3);
                     }
-                    if (ex is IndexOutOfRangeException)
+                    if (ex is ThreadAbortException && logAbortCLI == true)
                     {
                         Log.Error($"Exception data: {ex.Message}");
-                        Console.Clear();
+                        if (logAbortTXT == true) { TXTexport(ex, addTraceTXT); }
+                        if (addTraceCLI == true) { LogTrace(ex); }
+                    }
+                    else if (ex is IndexOutOfRangeException && logIndexCLI == true)
+                    {
+                        Log.Error($"Exception data: {ex.Message}");
+                        if (logIndexTXT == true) { TXTexport(ex, addTraceTXT); }
+                        if (addTraceCLI == true) { LogTrace(ex); }
 
-                        Log.Error($"Exception trace: {ex.StackTrace}");
-
-                        DemoGame.pausebuttoninput = true;
                         //Window.BeginInvoke((MethodInvoker)delegate { Thread.Sleep(100000); });
                     }
-                    Log.Error($"Exception trace: {ex.StackTrace}");
+                    else
+                    {
+                        Log.Error("Unknown Exception.", 3);
+                        Log.Error($"Exception trace: {ex.StackTrace}");
+                    }
 
                     //DemoGame.pausebuttoninput = true;
-                    string logPath = "error_log.txt";
-                    string dump = $"[EXCEPTION LOG - {DateTime.Now}]\n" +
-                                  $"Type: {ex.GetType()}\n" +
-                                  $"Message: {ex.Message}\n" +
-                                  $"Source: {ex.Source}\n" +
-                                  $"TargetSite: {ex.TargetSite}\n" +
-                                  $"StackTrace:\n{ex.StackTrace}\n\n";
-
-                    File.AppendAllText(logPath, dump);
+                    TXTexport(ex);
 
                 }
             }
         }
-        
-        
+
+        private static void LogTrace(Exception ex)
+        {
+            Log.Error($"Exception trace: {ex.StackTrace}");
+        }
+
+        private static void TXTexport(Exception ex, bool addTraceTXT = false)
+        {
+            string logPath = "error_log.txt";
+            string dump = $"[EXCEPTION LOG - {DateTime.Now}]\n" +
+                          $"Type: {ex.GetType()}\n" +
+                          $"Message: {ex.Message}\n";
+            if (addTraceTXT)
+            {
+                dump += $"Source: {ex.Source}\n" +
+                        $"TargetSite: {ex.TargetSite}\n" +
+                        $"StackTrace:\n{ex.StackTrace}\n\n";
+            }
+
+            File.AppendAllText(logPath, dump);
+        }
+
         private void Renderer(object sender, PaintEventArgs e)
         {
             // Instruct the world to perform a single step of simulation. It is

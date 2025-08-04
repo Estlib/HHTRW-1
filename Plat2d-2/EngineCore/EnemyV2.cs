@@ -48,6 +48,7 @@ namespace Plat2d_2.EngineCore
         public bool isfacingleft; //is it facing left, used to determine animation frame sides.
         public string enemyName { get; set; } = "Unnamed Enemy"; //name of the enemy, has no particular use other than for bosses
         public string enemyType { get; set; } = "Devtest"; //type of enemy, presently it is a string, but once the game gets everything it needs to implement all required enemy types, this will turn into an enum.
+        public int currentFrame { get; set; } //value for current animation frame.
 
 
         /// <summary>
@@ -119,6 +120,7 @@ namespace Plat2d_2.EngineCore
             this.isfacingleft = isfacingleft;
             this.enemyName = enemyName;
             this.enemyType = enemyType;
+            Log.Info("An enemy v2 type enemy has been created, ctor 1");
         }
         /// <summary>
         /// default constructor
@@ -165,7 +167,8 @@ namespace Plat2d_2.EngineCore
             bool isCollidingOrFalling,
             bool isfacingleft,
             string enemyName,
-            string enemyType
+            string enemyType,
+            int currentframe
             )
         {
             this.sprite2d = sprite2D;
@@ -189,7 +192,9 @@ namespace Plat2d_2.EngineCore
             this.isfacingleft = isfacingleft;
             this.enemyName = enemyName;
             this.enemyType = enemyType;
-            Log.Info("An enemy v2 type enemy has been created");
+            this.currentFrame = currentframe;
+
+            Log.Info("An enemy v2 type enemy has been created, ctor2");
         }
         public void SetDirection()
         {
@@ -220,7 +225,7 @@ namespace Plat2d_2.EngineCore
                     break;
             }
         }
-        public void MoveEnemyInDirection()
+        public void MoveEnemyInDirection(int animationClock = 4)
         {
             switch (this.enemyType)
             {
@@ -231,45 +236,74 @@ namespace Plat2d_2.EngineCore
                         //set velocity
                         this.sprite2d.SetVelocity(new Vector2(-120, this.sprite2d.GetYVelocity()));
 
-                        foreach (var actionspritelocation in this.walkLeftData)
-                        {
-                            if (this.sprite2d.Sprite == this.animationFramesBitmap[actionspritelocation])
-                            {
-                                if (actionspritelocation >= this.walkLeftData.Count())
-                                {
-                                    this.sprite2d.Sprite = this.animationFramesBitmap[0];
-                                }
-                                else
-                                {
-                                    this.sprite2d.Sprite = this.animationFramesBitmap[actionspritelocation + 1];
-                                }
-                            }
-                        }
+                        AdvanceAnimation(animationClock);
                     }
                     if (this.CurrentActionState == ActionState.WalkingRight)
                     {
                         //set velocity
                         this.sprite2d.SetVelocity(new Vector2(120, this.sprite2d.GetYVelocity()));
 
-                        foreach (var actionspritelocation in this.walkRightData)
-                        {
-                            if (this.sprite2d.Sprite == this.animationFramesBitmap[actionspritelocation])
-                            {
-                                if (actionspritelocation >= this.walkRightData.Count())
-                                {
-                                    this.sprite2d.Sprite = this.animationFramesBitmap[0];
-                                }
-                                else
-                                {
-                                    this.sprite2d.Sprite = this.animationFramesBitmap[actionspritelocation + 1];
-                                }
-                            }
-                        }
+                        AdvanceAnimation(animationClock);
                     }
                     break;
                 default:
                     break;
             }
+        }
+        public void JumpEnemyInDirection(int animationClock = 4)
+        {
+            if (this.sprite2d.IsColliding("Ground") != null) //only jump if enemy on floor.
+            {
+                
+            }
+        }
+
+        private void AdvanceAnimation(int animationClock)
+        {
+            switch (this.CurrentActionState)
+            {
+                case ActionState.StandingLeft:
+                    break;
+                case ActionState.StandingRight:
+                    break;
+                case ActionState.WalkingLeft:
+                    var walkleftanimation = this.walkLeftData;
+                    if (animationClock == 4)
+                    {
+                        if (this.currentFrame >= walkleftanimation.Count()-1)
+                        { this.currentFrame = 0; }
+                        else
+                        { this.currentFrame++; }
+                        this.sprite2d.Sprite = this.animationFramesBitmap[this.walkLeftData[this.currentFrame]];
+                    }
+                    break;
+                case ActionState.WalkingRight:
+                    var walkrightanimation = this.walkRightData;
+                    if (animationClock == 4)
+                    {
+                        if (this.currentFrame >= walkrightanimation.Count()-1)
+                        { this.currentFrame = 0; }
+                        else
+                        { this.currentFrame++; }
+                        this.sprite2d.Sprite = this.animationFramesBitmap[this.walkRightData[this.currentFrame]];
+                    }
+                    break;
+                case ActionState.JumpingLeft:
+                    break;
+                case ActionState.JumpingRight:
+                    break;
+                case ActionState.FiringLeft:
+                    break;
+                case ActionState.FiringRight:
+                    break;
+                case ActionState.GenericFlying:
+                    break;
+                case ActionState.ErrorState:
+                    break;
+                default:
+                    break;
+            }
+            
         }
 
         internal void NextStep()

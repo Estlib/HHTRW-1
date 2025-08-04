@@ -45,6 +45,7 @@ namespace Plat2d_2
         bool framelocking = false; //enables or disables locked fps
         public static bool logThisEnemy = false;
         public static int loggedEnemyArrayID = -1;
+        public static bool exitTool = false;
 
         int steps = 0;
         int slowDownFrameRate = 1;
@@ -1609,9 +1610,10 @@ namespace Plat2d_2
                 Log.DebugFunction("Game halted.");
                 while (pauseGameKey != false)
                 {
-
-                    if (logThisEnemy == false && loggedEnemyArrayID < 0)
-                    { DebugUtility.SelectEnemyToMonitor(); }
+                    if (exitTool != true)
+                    {
+                        DebugUtility.ToolMenu();
+                    }
                 }
                 Log.DebugFunction("Halt ended.");
             }
@@ -2697,16 +2699,16 @@ namespace Plat2d_2
                                 (
                                     new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
                                     walkingEnemySpritesBitmap,
-                                    new List<int> {12,13,14,15,16,17}, //walkleft
-                                    new List<int> {1,2,3,4,5,6 }, //walkright
-                                    new List<int> {20 }, //jumpleft
-                                    new List<int> {9 }, //jumpright
-                                    new List<int> {11 }, //stillleft
-                                    new List<int> {0 }, //stillright
-                                    new List<int> {23 }, //fireleft
-                                    new List<int> {23 }, //fireright
-                                    new List<int> {23 }, //fly
-                                    new List<int> {22 }, //error
+                                    new List<int> { 12, 13, 14, 15, 16, 17 }, //walkleft
+                                    new List<int> { 1, 2, 3, 4, 5, 6 }, //walkright
+                                    new List<int> { 20 }, //jumpleft
+                                    new List<int> { 9 }, //jumpright
+                                    new List<int> { 11 }, //stillleft
+                                    new List<int> { 0 }, //stillright
+                                    new List<int> { 23 }, //fireleft
+                                    new List<int> { 23 }, //fireright
+                                    new List<int> { 23 }, //fly
+                                    new List<int> { 22 }, //error
                                     i * 16,
                                     j * 16,
                                     0,
@@ -2715,7 +2717,8 @@ namespace Plat2d_2
                                     false,
                                     true,
                                     "Test - Walking enemy",
-                                    "Enemy"
+                                    "Enemy",
+                                    0
                                 );
 
                             enemyv2.sprite2d.CreateDynamic();
@@ -2735,9 +2738,45 @@ namespace Plat2d_2
                         }
 
                     }
+                    if (Map[j, i] == "JE")
+                    {
+                        if (animationsystemtype == true)
+                        {
+                            EnemyV2 enemyv2 = new EnemyV2
+                                (
+                                    new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
+                                    walkingEnemySpritesBitmap,
+                                    new List<int> { 12, 13, 14, 15, 16, 17 }, //walkleft
+                                    new List<int> { 1, 2, 3, 4, 5, 6 }, //walkright
+                                    new List<int> { 20 }, //jumpleft
+                                    new List<int> { 9 }, //jumpright
+                                    new List<int> { 11 }, //stillleft
+                                    new List<int> { 0 }, //stillright
+                                    new List<int> { 23 }, //fireleft
+                                    new List<int> { 23 }, //fireright
+                                    new List<int> { 23 }, //fly
+                                    new List<int> { 22 }, //error
+                                    i * 16,
+                                    j * 16,
+                                    0,
+                                    EnemyV2Data.jumpingEnemy, //behaviourdata
+                                    0, //where is its action currently in behaviourloop
+                                    false,
+                                    true,
+                                    "Test - Walking enemy",
+                                    "Enemy",
+                                    0
+                                );
+
+                            enemyv2.sprite2d.CreateDynamic();
+                            enemiesv2.Add(enemyv2);
+                        }
+                    }
+
                 }
             }
         }
+
 
         private static void RemoveEnemies()
         {
@@ -2999,7 +3038,7 @@ namespace Plat2d_2
                     switch (enemy.CurrentActionState)
                     {
                         case (ActionState)0: //standing left
-                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
                             if (loglevel) 
                             {
                                 string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
@@ -3017,7 +3056,7 @@ namespace Plat2d_2
                             break;
 
                         case (ActionState)1: //standing right
-                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
                             if (loglevel)
                             {
                                 string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
@@ -3035,33 +3074,44 @@ namespace Plat2d_2
                             break;
 
                         case (ActionState)2: //walking left
-                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
                             if (loglevel)
                             {
-                                string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
-                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} with Step {tempint}");
+                                //string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} " +
+                                    //$"with Step {tempint} " +
+                                    $"arrayframe {enemy.currentFrame}" +
+                                    $"arraylength {enemy.walkRightData.Count()}" +
+                                    $"actualframe {enemy.animationFramesBitmap.IndexOf(enemy.sprite2d.Sprite)}" +
+                                    $"");
                                 Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
                                 string behaviourDataString = string.Join(":", enemy.BehaviourData);
                                 Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
                                 Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
                             }
-                            enemy.MoveEnemyInDirection();
+                            enemy.MoveEnemyInDirection(animationClock);
                             enemy.NextStep();
                             //enemy.CurrentBehaviourStep += 1; // advance step
 
                             break;
                         case (ActionState)3: //walking right
-                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
                             if (loglevel)
                             {
-                                string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
-                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} with Step {tempint}");
+                                //string tempint = enemy.CurrentBehaviourStep.ToString() + "     ";
+
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} " +
+                                    //$"with Step {tempint} " +
+                                    $"arrayframe {enemy.currentFrame}" +
+                                    $"arraylength {enemy.walkRightData.Count()}" +
+                                    $"actualframe {enemy.animationFramesBitmap.IndexOf(enemy.sprite2d.Sprite)}" +
+                                    $"");
                                 Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
                                 string behaviourDataString = string.Join(":", enemy.BehaviourData);
                                 Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
                                 Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
                             }
-                            enemy.MoveEnemyInDirection();
+                            enemy.MoveEnemyInDirection(animationClock);
                             enemy.NextStep();
                             //enemy.CurrentBehaviourStep += 1; // advance step
 

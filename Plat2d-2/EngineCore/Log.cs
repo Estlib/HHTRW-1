@@ -191,42 +191,8 @@ namespace Plat2d_2.EngineCore
         }
 
     }
-    public class DebugUtility
+    public class DebugUtility : RuntimeDebuggingTools
     {
-        public static void SelectEnemyToMonitor() 
-        {
-            Console.SetCursorPosition (0, 7);
-            Thread.Sleep(1);
-            for (int j = 7; j < 30; j++)
-            {
-                Console.SetCursorPosition(0, j);
-                Console.Write(new string(' ', Console.WindowWidth));
-            }
-            Console.SetCursorPosition(0, 7);
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"[//DEBUGUTILITY] - Select enemy to monitor:");
-            int i = 0;
-            foreach (var enemyToMonitor in DemoGame.enemiesv2)
-            {
-                Console.WriteLine($"{i} - {enemyToMonitor.enemyName} || {enemyToMonitor.enemyType}");
-                i++;
-            }
-            int selectedEnemy = int.Parse(Console.ReadLine());
-            if (selectedEnemy > DemoGame.enemiesv2.Count() || selectedEnemy < 0)
-            {
-                Log.Error("Value out of range");
-                DemoGame.logThisEnemy = false;
-                DemoGame.loggedEnemyArrayID = 0;
-
-            }
-            else
-            {
-                DemoGame.logThisEnemy = true;
-                DemoGame.loggedEnemyArrayID = selectedEnemy;
-            }
-            Console.BackgroundColor = ConsoleColor.Black;
-
-        }
+        // See RuntimeDebuggingTools for tools, this class is an appendix remainder
     }
 }
