@@ -14,7 +14,7 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -77,6 +77,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\Box2DX.dll</HintPath>
     </Reference>
+    <Reference Include="Python.Runtime, Version=3.0.5.0, Culture=neutral, PublicKeyToken=5000fea6cba702dd, processorArchitecture=MSIL">
+      <HintPath>..\packages\pythonnet.3.0.5\lib\netstandard2.0\Python.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -96,6 +99,7 @@
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
     <Compile Include="EngineCore\ArtData.cs" />
+    <Compile Include="EngineCore\AudioController.cs" />
     <Compile Include="EngineCore\Bullet.cs" />
     <Compile Include="EngineCore\EnemyV2.cs" />
     <Compile Include="EngineCore\EnemyV2Data.cs" />
@@ -117,6 +121,9 @@
     <EmbeddedResource Include="Resources\arcade-legacy.ttf" />
     <None Include="assets\fonts\arcade-legacy.ttf" />
     <None Include="packages.config" />
+    <None Include="pyaudio\pynsf\.gitignore" />
+    <None Include="pyaudio\pynsf\LICENSE" />
+    <None Include="pyaudio\pynsf\README.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\sprites\bullets\weapon1A.png" />
@@ -650,6 +657,17 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="EngineCore\feedback.txt" />
+    <Resource Include="EngineCore\helloworldpython.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="pyaudio\pynsf\pynes\addressmode.py" />
+    <Content Include="pyaudio\pynsf\pynes\core6502.py" />
+    <Content Include="pyaudio\pynsf\pynes\corestatus.py" />
+    <Content Include="pyaudio\pynsf\pynes\instruction.py" />
+    <Content Include="pyaudio\pynsf\pynes\instructions.py" />
+    <Content Include="pyaudio\pynsf\pynes\nsfinfo.py" />
+    <Content Include="pyaudio\pynsf\pynes\stack.py" />
+    <Content Include="pyaudio\pynsf\pynes\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EngineCore\EngineCore.resx">

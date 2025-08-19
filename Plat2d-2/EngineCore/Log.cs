@@ -46,6 +46,21 @@ namespace Plat2d_2.EngineCore
             DemoGame.nextusableline += 1;
         }
         /// <summary>
+        /// log an info message, specified on python debugging, to console
+        /// </summary>
+        /// <param name="msg">message to log</param>
+        public static void InfoPython(string msg, int writeToLine = 7)
+        {
+            writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"[PYTHON] - {msg.TrimEnd(' ')}");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(new string(' ', Console.WindowWidth));
+            DemoGame.nextusableline += 1;
+        }
+        /// <summary>
         /// log warning message to console
         /// </summary>
         /// <param name="msg">message to log</param>

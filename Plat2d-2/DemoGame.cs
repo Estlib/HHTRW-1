@@ -16,6 +16,7 @@ using System.Xml;
 using System.Drawing.Text;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Python.Runtime;
 
 namespace Plat2d_2
 {
@@ -1423,6 +1424,7 @@ namespace Plat2d_2
             //<- modify level loading so it would load using Level as parameter instead.
             LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
             //<- modify level loading so it would load using Level as parameter instead.
+            AudioController.RunScript("helloworldpython");
         }
         public override void OnDraw()
         {
@@ -1462,6 +1464,7 @@ namespace Plat2d_2
             //if leveltype is screen, then only trigger completion and next level function when object calls for it.
             //if leveltype is level, then use world1map booleans to enumerate the game, after every level, return to screen
             GameStateHandler();
+
             /*if (levelClear[currentLevel] == true)
             {
                 //levelClear[1] = false;
