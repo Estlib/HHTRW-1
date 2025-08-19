@@ -124,6 +124,7 @@
     <None Include="pyaudio\pynsf\.gitignore" />
     <None Include="pyaudio\pynsf\LICENSE" />
     <None Include="pyaudio\pynsf\README.md" />
+    <None Include="test.nsf" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\sprites\bullets\weapon1A.png" />
@@ -660,14 +661,30 @@
     <Resource Include="EngineCore\helloworldpython.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Content Include="pyaudio\pynsf\pynes\addressmode.py" />
-    <Content Include="pyaudio\pynsf\pynes\core6502.py" />
-    <Content Include="pyaudio\pynsf\pynes\corestatus.py" />
-    <Content Include="pyaudio\pynsf\pynes\instruction.py" />
-    <Content Include="pyaudio\pynsf\pynes\instructions.py" />
-    <Content Include="pyaudio\pynsf\pynes\nsfinfo.py" />
-    <Content Include="pyaudio\pynsf\pynes\stack.py" />
-    <Content Include="pyaudio\pynsf\pynes\__init__.py" />
+    <Content Include="pyaudio\pynsf\pynes\addressmode.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pyaudio\pynsf\pynes\core6502.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pyaudio\pynsf\pynes\corestatus.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pyaudio\pynsf\pynes\instruction.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pyaudio\pynsf\pynes\instructions.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pyaudio\pynsf\pynes\nsfinfo.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pyaudio\pynsf\pynes\stack.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pyaudio\pynsf\pynes\__init__.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EngineCore\EngineCore.resx">

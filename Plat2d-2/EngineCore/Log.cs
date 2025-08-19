@@ -170,7 +170,12 @@ namespace Plat2d_2.EngineCore
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine($"[//LOGUTILITY] - Listing all files:");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(Directory.EnumerateFiles(dirloc));
+            var items = Directory.EnumerateFiles(dirloc);
+            foreach (var item in items)
+            {
+                Console.WriteLine(item.ToString());
+            }
+
         }
         public static void LogCurrentFrame(string msg, int writeToLine = 3)
         {

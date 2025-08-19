@@ -1,6 +1,7 @@
 ﻿using Python.Runtime;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Plat2d_2.EngineCore
 {
     public class AudioController
     {
+        public static string MusicFile { get; set; }
         /// <summary>
         ///     CTOR
         /// </summary>
@@ -51,6 +53,45 @@ namespace Plat2d_2.EngineCore
                 
             }
             PythonEngine.Shutdown();
+        }
+        public static void ConfigureAudio(string thisScript)
+        {
+            var scriptDir = AppDomain.CurrentDomain.BaseDirectory;
+            var engineDir = scriptDir + @"pyaudio\pynsf\pynes\";
+            Log.Highlight($"{engineDir}");
+            LogUtility.LogAllFilesFromDir(engineDir);
+            MusicFile = $"{scriptDir}test.nsf";
+            Log.Info($"Musicfile: {MusicFile}");
+            Runtime.PythonDLL = @"C:\Program Files (x86)\Python313-32\python313.dll";
+            PythonEngine.Initialize();
+            using (Py.GIL())
+            {
+                try
+                {
+                    dynamic sys = Py.Import("sys");
+                    sys.path.append(engineDir);
+
+                    var pythonScript = Py.Import(thisScript);
+                    var filename = new PyString(MusicFile);
+                    pythonScript.InvokeMethod("__init__", filename);
+
+                    dynamic nsfClass = pythonScript.GetAttr("NSFFile");
+                    dynamic nsfObject = nsfClass.Invoke(new PyString(MusicFile));
+                    string artist = nsfObject.GetAttr("artist_name").ToString();  
+
+                    //var result = pythonScript.InvokeMethod("self.artist_name");
+                    Log.InfoPython($"{artist}");
+                }
+                catch (Exception ex)
+                {
+                    DemoGame.pausebuttoninput = true;
+                    Log.Error("Python has encountered an error:");
+                    Log.Error(ex.ToString());
+                }
+
+            }
+            PythonEngine.Shutdown();
+
         }
     }
 }

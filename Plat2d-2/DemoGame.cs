@@ -1425,6 +1425,7 @@ namespace Plat2d_2
             LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
             //<- modify level loading so it would load using Level as parameter instead.
             AudioController.RunScript("helloworldpython");
+            AudioController.ConfigureAudio("nsfinfo");
         }
         public override void OnDraw()
         {
