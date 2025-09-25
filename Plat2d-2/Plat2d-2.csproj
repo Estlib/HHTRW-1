@@ -110,9 +110,11 @@
     <Compile Include="EngineCore\LevelData.cs" />
     <Compile Include="EngineCore\Log.cs" />
     <Compile Include="EngineCore\RuntimeDebuggingTools.cs" />
-    <Compile Include="EngineCore\SFXEngine.cs">
+    <Compile Include="EngineCore\SFX.cs" />
+    <Compile Include="EngineCore\SFXEngineA.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="EngineCore\SFXEngineB.cs" />
     <Compile Include="EngineCore\Shape2d.cs" />
     <Compile Include="EngineCore\Sprite2d.cs" />
     <Compile Include="EngineCore\Vector2.cs" />
@@ -130,6 +132,14 @@
     <None Include="test.nsf" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\audio\sfx\rabbit game ost V4_SFXONLY-2025 - Track 01 %28%28SFX%29 - jump%29.wav" />
+    <Content Include="assets\audio\sfx\rabbit game ost V4_SFXONLY-2025 - Track 02 %28%28SFX%29 - land%29.wav" />
+    <Content Include="assets\audio\sfx\rabbit game ost V4_SFXONLY-2025 - Track 04 %28%28SFX%29 - Gem collect%29.wav" />
+    <Content Include="assets\audio\sfx\rabbit game ost V4_SFXONLY-2025 - Track 06 %28%28SFX%29 - hit block from below%29.wav" />
+    <Content Include="assets\audio\sfx\rabbit game ost V4_SFXONLY-2025 - Track 07 %28%28SFX%29 - GEMS 1-up%29.wav" />
+    <Content Include="assets\audio\sfx\rabbit game ost V4_SFXONLY-2025 - Track 13 %28%28SFX%29 - W1 - single shot%29.wav" />
+    <Content Include="assets\audio\sfx\rabbit game ost V4_SFXONLY-2025 - Track 22 %28%28SFX%29 - enemy ow%29.wav" />
+    <Content Include="assets\audio\sfx\rabbit game ost V4_SFXONLY-2025 - Track 25 %28%28SFX%29 - block remove%29.wav" />
     <Content Include="assets\sprites\bullets\weapon1A.png" />
     <Content Include="assets\sprites\bullets\weapon1B.png" />
     <Content Include="assets\sprites\enemy\wipspriteset\ALTfall.png" />
@@ -695,6 +705,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="assets\audio\bgm\" />
     <Folder Include="assets\sprites\backgrounds\" />
     <Folder Include="assets\sprites\generic\" />
   </ItemGroup>

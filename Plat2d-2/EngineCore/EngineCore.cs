@@ -66,6 +66,8 @@ namespace Plat2d_2.EngineCore
         public static bool logIndexTXT = false;
         public static bool logIopexCLI = false;
         public static bool logIopexTXT = false;
+        public static bool logAplayCLI = false;
+        public static bool logAplayTXT = false;
         public static bool addTraceCLI = false;
         public static bool addTraceTXT = false;
 
@@ -247,6 +249,14 @@ namespace Plat2d_2.EngineCore
                     {
                         Log.Error($"Exception data: {ex.Message}");
                         if (logIopexTXT == true) { TXTexport(ex, addTraceTXT); }
+                        if (addTraceCLI == true) { LogTrace(ex); }
+
+                        //Window.BeginInvoke((MethodInvoker)delegate { Thread.Sleep(100000); });
+                    }
+                    else if (ex is InvalidOperationException && logAplayCLI == true)
+                    {
+                        Log.Error($"Exception data: {ex.Message}");
+                        if (logAplayTXT == true) { TXTexport(ex, addTraceTXT); }
                         if (addTraceCLI == true) { LogTrace(ex); }
 
                         //Window.BeginInvoke((MethodInvoker)delegate { Thread.Sleep(100000); });

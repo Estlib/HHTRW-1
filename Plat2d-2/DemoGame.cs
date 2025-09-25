@@ -22,6 +22,14 @@ namespace Plat2d_2
 {
     class DemoGame : EngineCore.EngineCore
     {
+        /*
+         * 
+         * 
+         * properties, parameters, variables
+         * 
+         * 
+         */
+
         public Stopwatch stopwatch = new Stopwatch();
 
         long ticksinframe = 200000;
@@ -1139,7 +1147,10 @@ namespace Plat2d_2
         public static Level harenimus_1_6_2 = new Level(0, "castle", CastleArtRefsTags, level6_2FML, level6_2OL, level6_2LML, level6_2HL, "Level", "Harenimus 1-6 Castle Part 2", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, null);
         Level harenimus_1_6_1 = new Level(0, "castle", CastleArtRefsTags, level6_1FML, level6_1OL, level6_1LML, level6_1HL, "Level", "Harenimus 1-6 Castle", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, harenimus_1_6_2);
         Level worldmap_harenimus = new Level(0, "screens", TitleMenuMapRefsTags, world1mapFML, world1mapOL, world1mapLML, world1mapHL, "Screen", "Kingdom of Harenimus", Color.FromArgb(255, 0, 0, 0), false, null);
-        
+
+        List<SFX> allSFX = new List<SFX>();
+        string sfxPath = "assets/audio/sfx";
+        private SFXEngineB sfxInstance;
 
 
         /// <summary>
@@ -1154,6 +1165,34 @@ namespace Plat2d_2
         /// </summary>
         public override void OnLoad()
         {
+            sfxInstance = SFXEngineB.Instance;
+            foreach (string file in Directory.GetFiles(sfxPath))
+            {
+                string deconstructable = Path.GetFileName(file);
+                string partialName = "Track";
+                int locatedIndex = deconstructable.IndexOf(partialName, StringComparison.OrdinalIgnoreCase);
+                int veerID = 1;
+                int readForXCharCountID = 2;
+                int veerName = 13;
+                int readForXCharCountName = -1;
+                int ss1 = locatedIndex + partialName.Length + veerName;
+                int ss2 = deconstructable.Length-(ss1+5);
+
+                //Log.Info(deconstructable);
+                //Log.Info(ss1.ToString());
+                //Log.Info(ss2.ToString());
+
+                SFX newsfx = new SFX() 
+                { 
+                    Name = deconstructable.Substring(ss1,ss2), 
+                    ArrayID = int.Parse(deconstructable.Substring(locatedIndex+veerID+partialName.Length,readForXCharCountID)),
+                    Filepath = Path.GetFileName(file).ToString()
+                };
+                allSFX.Append(newsfx);
+                
+            }
+
+            
             //FullscreenMode();
             stopwatch.Start();
             //levelsequence.Add(0);
@@ -1426,6 +1465,11 @@ namespace Plat2d_2
             //<- modify level loading so it would load using Level as parameter instead.
             AudioController.RunScript("helloworldpython");
             AudioController.ConfigureAudio("nsfinfo");
+            foreach (var sfxR in allSFX)
+            {
+                sfxInstance.RegisterSound(sfxR.Name, sfxR.Filepath);
+                Log.Info($"{sfxR.Name}");
+            }
         }
         public override void OnDraw()
         {
@@ -1576,6 +1620,7 @@ namespace Plat2d_2
             }
             if (jump)
             {
+                
                 if (facedirection == 0)
                 {
                     AnimatePlayer(21, 21);
@@ -1584,6 +1629,7 @@ namespace Plat2d_2
                 {
                     AnimatePlayer(10, 10);
                 }
+                sfxInstance.Play("jump",true);
             }
             if (jump == false && jumpmode == true)
             {
@@ -1612,6 +1658,7 @@ namespace Plat2d_2
             if (pauseGameKey)
             {
                 Log.DebugFunction("Game halted.");
+                //sfxInstance.StopAll();
                 while (pauseGameKey != false)
                 {
                     if (exitTool != true)
@@ -3119,6 +3166,7 @@ namespace Plat2d_2
                     if (bullets.Count <= 2 || bullets == null)
                     {
                         //shoot new bullet
+                        
                         if (facedirection == 0)
                         {
                             if (down) //fires bullet lower than when standing
@@ -3316,6 +3364,7 @@ namespace Plat2d_2
 
             if (coin != null) //if the coin is being touched
             {
+                sfxInstance.Play("Gem collect");
                 pointScoreTally += 100;
                 crystalScoreTally++;
                 Log.Info($"Coin is being touched. Current Crystalcount: {crystalScoreTally}"); //then it logs a message to the console

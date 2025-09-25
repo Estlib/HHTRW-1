@@ -99,7 +99,8 @@ namespace Plat2d_2.EngineCore
                 $"2 - Add traces to error messages = {EngineCore.addTraceCLI}             {EngineCore.addTraceTXT}\n" +
                 $"3 - IndexOutOfRange =              {EngineCore.logIndexCLI}             {EngineCore.logIndexTXT}\n" +
                 $"4 - ThreadAbort =                  {EngineCore.logAbortCLI}             {EngineCore.logAbortTXT}\n" +
-                $"5 - InvalidOperation =             {EngineCore.logIopexCLI}             {EngineCore.logIopexTXT}\n\\/");
+                $"5 - InvalidOperation =             {EngineCore.logIopexCLI}             {EngineCore.logIopexTXT}\n" +
+                $"6 - Audio player logging =         {EngineCore.logIopexCLI}             {EngineCore.logIopexTXT}\n\\/");
             string settingOption = "sysdefault";
             do
             {
@@ -208,6 +209,26 @@ namespace Plat2d_2.EngineCore
                             { EngineCore.logIopexTXT = true; }
                             else if (settingOption.ToLower()[2] == 'n')
                             { EngineCore.logIopexTXT = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            break;
+                        case '6':
+                            if (settingOption.Count() > 3)
+                            {
+                                Console.WriteLine("Too many parameters, please check the input and try again");
+                                settingOption = "";
+                                break;
+                            }
+                            if (settingOption.ToLower()[1] == 'y')
+                            { EngineCore.logAplayCLI = true; }
+                            else if (settingOption.ToLower()[1] == 'n')
+                            { EngineCore.logAplayCLI = false; }
+                            else
+                            { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
+                            if (settingOption.ToLower()[2] == 'y')
+                            { EngineCore.logAplayTXT = true; }
+                            else if (settingOption.ToLower()[2] == 'n')
+                            { EngineCore.logAplayTXT = false; }
                             else
                             { Console.WriteLine($"Invalid parameter {settingOption.ToLower()[1]}"); }
                             break;
