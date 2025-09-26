@@ -1,102 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-
-//MU-lti SI-ngle EF-fect
+using System.Threading;
+using NAudio.Wave;
 
 namespace Plat2d_2.EngineCore
-{
+{//https://chatgpt.com/share/68d2fe37-b5fc-8012-956e-04c16d03d902
     public class SFXEngineMUSIEF
+
     {
         private static readonly SFXEngineMUSIEF _instance = new SFXEngineMUSIEF();
         public static SFXEngineMUSIEF Instance => _instance;
 
-        private readonly Dictionary<string, List<SoundPlayer>> _playersPool = new Dictionary<string, List<SoundPlayer>>();
-        private readonly Dictionary<string, int> _nextPlayerIndex = new Dictionary<string, int>();
+        private readonly Dictionary<string, string> _filePaths = new Dictionary<string, string>();
+        private readonly Dictionary<string, WaveOutEvent> _players = new Dictionary<string, WaveOutEvent>();
+        private readonly Dictionary<string, AudioFileReader> _readers = new Dictionary<string, AudioFileReader>();
 
         private SFXEngineMUSIEF() { }
 
-        /// <summary>
-        /// Register a sound by name and file path, with optional initial pool size.
-        /// </summary>
-        public void RegisterSound(string name, string filePath, int poolSize = 9)
+        public void RegisterSound(string name, string filePath)
         {
-            if (_playersPool.ContainsKey(name))
-            {
-                foreach (var oldPlayer in _playersPool[name])
-                    oldPlayer.Stop();
-            }
-
-            var list = new List<SoundPlayer>();
-            for (int i = 0; i < poolSize; i++)
-            {
-                var player = new SoundPlayer(filePath);
-                player.LoadAsync();
-                list.Add(player);
-            }
-
-            _playersPool[name] = list;
-            _nextPlayerIndex[name] = 0;
-
-            LogUtility.MonitorAudiosystem($"Registered audio {filePath} as '{name}' with pool size {poolSize}", 6);
-            Log.Info($"Registered audio {filePath} as '{name}' with pool size {poolSize}", 6);
+            _filePaths[name] = filePath;
         }
 
-        /// <summary>
-        /// Play a sound by name. Dynamically expands the pool if needed.
-        /// </summary>
-        public void Play(string name, bool cutItself = true)
+        public void Play(string name)
         {
-            if (!_playersPool.ContainsKey(name))
-            {
-                Log.Error($"Sound '{name}' not registered.");
+            if (!_filePaths.ContainsKey(name))
                 throw new ArgumentException($"Sound '{name}' not registered.");
-            }
 
-            var pool = _playersPool[name];
-            int index = _nextPlayerIndex[name];
+            string path = _filePaths[name];
 
-            // Dynamically expand the pool if needed
-            if (index >= pool.Count)
+            // Stop any currently playing sound
+            if (_players.ContainsKey(name))
             {
-                var newPlayer = new SoundPlayer(pool[0].SoundLocation);
-                newPlayer.LoadAsync();
-                pool.Add(newPlayer);
+                _players[name].Stop();
+                _players[name].Dispose();
+                _players.Remove(name);
+                _readers.Remove(name);
             }
 
-            var player = pool[index];
+            // Create new AudioFileReader and WaveOutEvent for playback
+            var reader = new AudioFileReader(path);
+            var player = new WaveOutEvent();
+            player.Init(reader);
+            player.Play();
 
-            if (cutItself)
-            {
-                // Stop only this instance
-                player.Stop();
-            }
-
-            player.Play(); // async play
-
-            // Move to next player in pool
-            _nextPlayerIndex[name] = (index + 1) % pool.Count;
-
-            Log.Info($"Playing SFX '{name}' (cutItself={cutItself}) using pool index {index}");
+            // Store the player and reader for potential future use
+            _players[name] = player;
+            _readers[name] = reader;
         }
 
-        /// <summary>
-        /// Stop all sounds immediately.
-        /// </summary>
         public void StopAll()
         {
-            foreach (var pool in _playersPool.Values)
+            foreach (var player in _players.Values)
             {
-                foreach (var player in pool)
-                {
-                    player.Stop();
-                }
+                player.Stop();
+                player.Dispose();
             }
-
-            Log.Select("All SFX stopped // StopAll()");
+            _players.Clear();
+            _readers.Clear();
         }
     }
 }

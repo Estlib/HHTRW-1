@@ -3253,7 +3253,7 @@ namespace Plat2d_2
             {
                 if (player.IsColliding("Ground")!=null) //if player is colliding with the ground, only then allow the player to jump
                 {
-                    sfxInstance.Play("jump", true);
+                    sfxInstance.Play("jump");
                     remainingJumpSteps = 9; //jump steps are set to 9 frames
                     remainingJumpFrames = 9; //jump aimation frames are set to 9 frames, currently unused.
                 }
