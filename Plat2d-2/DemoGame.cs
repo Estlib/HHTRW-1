@@ -1150,7 +1150,7 @@ namespace Plat2d_2
 
         List<SFX> allSFX = new List<SFX>();
         string sfxPath = "assets/audio/sfx";
-        private SFXEngineB sfxInstance;
+        private SFXEngineMUSIEF sfxInstance;
 
 
         /// <summary>
@@ -1165,34 +1165,11 @@ namespace Plat2d_2
         /// </summary>
         public override void OnLoad()
         {
-            sfxInstance = SFXEngineB.Instance;
-            foreach (string file in Directory.GetFiles(sfxPath))
-            {
-                string deconstructable = Path.GetFileName(file);
-                string partialName = "Track";
-                int locatedIndex = deconstructable.IndexOf(partialName, StringComparison.OrdinalIgnoreCase);
-                int veerID = 1;
-                int readForXCharCountID = 2;
-                int veerName = 13;
-                int readForXCharCountName = -1;
-                int ss1 = locatedIndex + partialName.Length + veerName;
-                int ss2 = deconstructable.Length-(ss1+5);
+            //SFXEngineB.Instance.RegisterSound("test", @"C:\Windows\Media\chimes.wav");
+            //SFXEngineB.Instance.Play("test");
+            //Console.ReadKey();
 
-                //Log.Info(deconstructable);
-                //Log.Info(ss1.ToString());
-                //Log.Info(ss2.ToString());
 
-                SFX newsfx = new SFX() 
-                { 
-                    Name = deconstructable.Substring(ss1,ss2), 
-                    ArrayID = int.Parse(deconstructable.Substring(locatedIndex+veerID+partialName.Length,readForXCharCountID)),
-                    Filepath = Path.GetFileName(file).ToString()
-                };
-                allSFX.Append(newsfx);
-                
-            }
-
-            
             //FullscreenMode();
             stopwatch.Start();
             //levelsequence.Add(0);
@@ -1335,7 +1312,7 @@ namespace Plat2d_2
             BGColor = Color.Black; //sets window background color to be black
             //CameraZoom = new Vector2(.1f,.1f);
             SetAllReferences(); //assings the references into arrays
-
+            SetSFXengineB();
             //sets the onelayer maps into a levelmaps list.
             //levelMaps.Add(Map);
             //levelMaps.Add(DebugMap);
@@ -1470,6 +1447,8 @@ namespace Plat2d_2
                 sfxInstance.RegisterSound(sfxR.Name, sfxR.Filepath);
                 Log.Info($"{sfxR.Name}");
             }
+            LogUtility.ClearLineOnly(6);
+
         }
         public override void OnDraw()
         {
@@ -1509,6 +1488,7 @@ namespace Plat2d_2
             //if leveltype is screen, then only trigger completion and next level function when object calls for it.
             //if leveltype is level, then use world1map booleans to enumerate the game, after every level, return to screen
             GameStateHandler();
+
 
             /*if (levelClear[currentLevel] == true)
             {
@@ -1629,7 +1609,6 @@ namespace Plat2d_2
                 {
                     AnimatePlayer(10, 10);
                 }
-                sfxInstance.Play("jump",true);
             }
             if (jump == false && jumpmode == true)
             {
@@ -1841,6 +1820,36 @@ namespace Plat2d_2
         {
             RemoveEnemies();
             RemoveAllSprites();
+        }
+
+        private void SetSFXengineB()
+        {
+            sfxInstance = SFXEngineMUSIEF.Instance;
+            foreach (string file in Directory.GetFiles(sfxPath))
+            {
+                string deconstructable = Path.GetFileName(file);
+                string partialName = "Track";
+                int locatedIndex = deconstructable.IndexOf(partialName, StringComparison.OrdinalIgnoreCase);
+                int veerID = 1;
+                int readForXCharCountID = 2;
+                int veerName = 13;
+                int readForXCharCountName = -1;
+                int ss1 = locatedIndex + partialName.Length + veerName;
+                int ss2 = deconstructable.Length - (ss1 + 5);
+
+                //Log.Info(deconstructable);
+                //Log.Info(ss1.ToString());
+                //Log.Info(ss2.ToString());
+
+                SFX newsfx = new SFX()
+                {
+                    Name = deconstructable.Substring(ss1, ss2),
+                    ArrayID = int.Parse(deconstructable.Substring(locatedIndex + veerID + partialName.Length, readForXCharCountID)),
+                    Filepath = sfxPath + "/"+Path.GetFileName(file).ToString()
+                };
+                allSFX.Add(newsfx);
+
+            }
         }
         private void SetAllReferences()
         {
@@ -3166,7 +3175,8 @@ namespace Plat2d_2
                     if (bullets.Count <= 2 || bullets == null)
                     {
                         //shoot new bullet
-                        
+
+                        sfxInstance.Play("W1 - single shot");
                         if (facedirection == 0)
                         {
                             if (down) //fires bullet lower than when standing
@@ -3243,6 +3253,7 @@ namespace Plat2d_2
             {
                 if (player.IsColliding("Ground")!=null) //if player is colliding with the ground, only then allow the player to jump
                 {
+                    sfxInstance.Play("jump", true);
                     remainingJumpSteps = 9; //jump steps are set to 9 frames
                     remainingJumpFrames = 9; //jump aimation frames are set to 9 frames, currently unused.
                 }
@@ -3290,6 +3301,7 @@ namespace Plat2d_2
                                 bullet.sprite2d.Tag = "RemoveThis";
                             }
                         }
+                        sfxInstance.Play("enemy ow");
                         pointScoreTally += 250;
                         enemyobject.sprite2d.DestroySelf();
                         enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);

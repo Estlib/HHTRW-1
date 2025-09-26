@@ -111,10 +111,8 @@
     <Compile Include="EngineCore\Log.cs" />
     <Compile Include="EngineCore\RuntimeDebuggingTools.cs" />
     <Compile Include="EngineCore\SFX.cs" />
-    <Compile Include="EngineCore\SFXEngineA.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="EngineCore\SFXEngineB.cs" />
+    <Compile Include="EngineCore\SFXEngineMUSIEF.cs" />
     <Compile Include="EngineCore\Shape2d.cs" />
     <Compile Include="EngineCore\Sprite2d.cs" />
     <Compile Include="EngineCore\Vector2.cs" />

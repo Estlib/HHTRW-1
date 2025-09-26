@@ -58,8 +58,8 @@ namespace Plat2d_2.EngineCore
         {
             var scriptDir = AppDomain.CurrentDomain.BaseDirectory;
             var engineDir = scriptDir + @"pyaudio\pynsf\pynes\";
-            Log.Highlight($"{engineDir}");
-            LogUtility.LogAllFilesFromDir(engineDir);
+            //Log.Highlight($"{engineDir}");
+            //LogUtility.LogAllFilesFromDir(engineDir);
             MusicFile = $"{scriptDir}test.nsf";
             Log.Info($"Musicfile: {MusicFile}");
             Runtime.PythonDLL = @"C:\Program Files (x86)\Python313-32\python313.dll";

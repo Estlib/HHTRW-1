@@ -139,7 +139,7 @@ namespace Plat2d_2.EngineCore
             Console.ForegroundColor = ConsoleColor.Black;
             // line 3 - game framecount
             // line 4 - animationclock
-            // clear from 5
+            // line 5 - enemy OR audiomonitor
 
 
         }
@@ -209,7 +209,21 @@ namespace Plat2d_2.EngineCore
             Console.WriteLine($"[//LOGUTILITY] - {msg}");
             Console.ForegroundColor = ConsoleColor.White;
         }
+        public static void MonitorAudiosystem(string msg, int writeToLine = 6)
+        {
+            Console.SetCursorPosition(0, writeToLine);
+            Console.ForegroundColor = ConsoleColor.Blue; 
+            Console.WriteLine($"[//LOGUTILITY] - {msg}");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
 
+        internal static void ClearLineOnly(int v)
+        {
+            Console.SetCursorPosition(0, v);
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.ForegroundColor = ConsoleColor.White;
+        }
     }
     public class DebugUtility : RuntimeDebuggingTools
     {
