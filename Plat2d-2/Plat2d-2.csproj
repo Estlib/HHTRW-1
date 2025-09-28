@@ -130,6 +130,9 @@
     <Compile Include="DemoGame.cs" />
     <Compile Include="EngineCore\ArtData.cs" />
     <Compile Include="EngineCore\AudioController.cs" />
+    <Compile Include="EngineCore\BGMPlayer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="EngineCore\Bullet.cs" />
     <Compile Include="EngineCore\EnemyV2.cs" />
     <Compile Include="EngineCore\EnemyV2Data.cs" />
@@ -141,7 +144,6 @@
     <Compile Include="EngineCore\Log.cs" />
     <Compile Include="EngineCore\RuntimeDebuggingTools.cs" />
     <Compile Include="EngineCore\SFX.cs" />
-    <Compile Include="EngineCore\SFXEngineB.cs" />
     <Compile Include="EngineCore\SFXEngineMUSIEF.cs" />
     <Compile Include="EngineCore\Shape2d.cs" />
     <Compile Include="EngineCore\Sprite2d.cs" />

@@ -1151,6 +1151,9 @@ namespace Plat2d_2
         List<SFX> allSFX = new List<SFX>();
         string sfxPath = "assets/audio/sfx";
         private SFXEngineMUSIEF sfxInstance;
+        List<BGM> jukeBox = new List<BGM>();
+        string bgmPath = "assets/audio/bgm";
+        private BGMPlayer BGMPlayer;
 
 
         /// <summary>
@@ -1334,6 +1337,7 @@ namespace Plat2d_2
             levels.Add(harenimus_1_4);
             levels.Add(harenimus_1_5);
             levels.Add(harenimus_1_6_1);
+            SetJukebox();
             //<- replace assigning maps with assigning levels into the level array instead
 
             //setting sprites into the bullets bitmap list
@@ -1848,6 +1852,47 @@ namespace Plat2d_2
                     Filepath = sfxPath + "/"+Path.GetFileName(file).ToString()
                 };
                 allSFX.Add(newsfx);
+
+            }
+        }
+        private void SetJukebox()
+        {
+            List<string> levelsNames = new List<string>();
+            foreach (var level in levels)
+            {
+                levelsNames.Add(level.levelname);
+            }
+            //BGMPlayer bgm = new BGMPlayer(jukeBox);
+            //foreach (var levelName in levelsNames)
+            //{
+
+            //}
+
+
+            foreach (string file in Directory.GetFiles(bgmPath))
+            {
+                string deconstructable = Path.GetFileName(file);
+                string partialName = "Track";
+                int locatedIndex = deconstructable.IndexOf(partialName, StringComparison.OrdinalIgnoreCase);
+                int veerID = 1;
+                int readForXCharCountID = 2;
+                int veerName = 13;
+                int readForXCharCountName = -1;
+                int ss1 = locatedIndex + partialName.Length + veerName;
+                int ss2 = deconstructable.Length - (ss1 + 5);
+
+                //Log.Info(deconstructable);
+                //Log.Info(ss1.ToString());
+                //Log.Info(ss2.ToString());
+
+                BGM newbgm = new BGM()
+                {
+                    Name = deconstructable.Substring(ss1, ss2),
+                    ArrayID = int.Parse(deconstructable.Substring(locatedIndex + veerID + partialName.Length, readForXCharCountID)),
+                    Filepath = sfxPath + "/" + Path.GetFileName(file).ToString(),
+                    //AssociatedLevelID = idInput
+                };
+                jukeBox.Add(newbgm);
 
             }
         }

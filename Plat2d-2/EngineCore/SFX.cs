@@ -12,4 +12,9 @@ namespace Plat2d_2.EngineCore
         public int ArrayID { get; set; }
         public string Filepath { get; set; }
     }
+    public class BGM : SFX 
+    {
+        public string AssociatedLevelID { get; set; }
+
+    }
 }
