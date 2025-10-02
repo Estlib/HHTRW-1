@@ -36,7 +36,8 @@ namespace Plat2d_2.EngineCore
             Console.WriteLine($"" +
                 $"enemy - focuses on an enemy currently loaded in array\n" +
                 $"cheat - allows you to modify player and world clearing values\n" +
-                $"logging - settings for exception logging" +
+                $"logging - settings for exception logging\n" +
+                $"alook - audio engine inspect logger\n" +
                 $"exit - leave this menu\" +");
 
             string selectedTool = Console.ReadLine();
@@ -52,6 +53,11 @@ namespace Plat2d_2.EngineCore
             {
                 exitSettings = true;
                 ExceptionSettings();
+            }
+            else if (selectedTool.ToLower() == "alook")
+            {
+                exitSettings = true;
+                AudioEngineInspector();
             }
             else if (selectedTool.ToLower() == "exit")
             {
@@ -70,6 +76,29 @@ namespace Plat2d_2.EngineCore
                 Console.BackgroundColor = ConsoleColor.DarkBlue;
             }
             Console.BackgroundColor = ConsoleColor.Black;
+        }
+
+        private static void AudioEngineInspector()
+        {
+            Console.SetCursorPosition(0, 7);
+            Thread.Sleep(1);
+            for (int j = 7; j < 30; j++)
+            {
+                Console.SetCursorPosition(0, j);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
+            Console.SetCursorPosition(0, 7);
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Audio engine inspection 0/3\n" +
+                "The inspector will go through a number of data outputs about the audio engine\n" +
+                "Just press enter to continue, this is so that the logging doesnt drown in cmd spam.");
+            Console.ReadLine();
+            Console.SetCursorPosition(0, 7);
+            Console.WriteLine("Audio engine inspection 1/3\n" +
+                $"songslist size:\n" +
+                "Just press enter to continue, this is so that the logging doesnt drown in cmd spam.");
+
         }
 
         /// <summary>

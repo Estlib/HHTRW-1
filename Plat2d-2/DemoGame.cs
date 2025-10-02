@@ -1135,25 +1135,25 @@ namespace Plat2d_2
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air"}; //not used, see TitleMenuMapRefsTags
 
-        Level titlescreen = new Level(0, "screens", TitleMenuMapRefsTags, titlescreenlayerFML, titlescreenlayerOL, titlescreenlayerLML, titlescreenlayerHL, "Screen", "Title Screen", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, null);
+        Level titlescreen = new Level(1, "screens", TitleMenuMapRefsTags, titlescreenlayerFML, titlescreenlayerOL, titlescreenlayerLML, titlescreenlayerHL, "Screen", "Title Screen", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, null);
         Level debuglevel1 = new Level(0, "plains", PlainsArtRefsTags, debug1layerFML, debug1layerOL, debug1layerLML, debug1layerHL, "Debug", "Debug Screen", System.Drawing.Color.FromArgb(255, 56, 0, 252), false, null);
         Level debuglevel2 = new Level(0, "plains", PlainsArtRefsTags, debug2layerFML, debug2layerOL, debug2layerLML, debug2layerHL, "Debug", "Debug Screen", System.Drawing.Color.FromArgb(255, 56, 0, 252), false, null);
-        Level harenimus_1_1 = new Level(0, "plains", PlainsArtRefsTags, level1FML, level1OL, level1LML, level1HL, "Level", "Harenimus 1-1 Plains", System.Drawing.Color.FromArgb(255, 56, 192, 252), false, null);
-        Level harenimus_1_2 = new Level(0, "underground", UndergroundArtRefsTags, level2FML, level2OL, level2LML, level2HL, "Level", "Harenimus 1-2 Plains", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, null);
-        public static Level harenimus_1_3_2 = new Level(0, "forest", ForestArtRefsTags, level3_2FML, level3_2OL, level3_2LML, level3_2HL, "Level", "Harenimus 1-3 Forest Part 2", System.Drawing.Color.FromArgb(255, 88, 216, 88), false, null);
-        Level harenimus_1_3_1 = new Level(0, "forest", ForestArtRefsTags, level3FML, level3OL, level3LML, level3HL, "Level", "Harenimus 1-3 Forest", System.Drawing.Color.FromArgb(255, 88, 216, 88), false, harenimus_1_3_2);
-        Level harenimus_1_4 = new Level(0, "desert", DesertArtRefsTags, level4FML, level4OL, level4LML, level4HL, "Level", "Harenimus 1-4 Desert", System.Drawing.Color.FromArgb(255, 164, 232, 252), false, null);
-        Level harenimus_1_5 = new Level(0, "plains", PlainsArtRefsTags, level5FML, level5OL, level5LML, level5HL, "Level", "Harenimus 1-5 Plains 2", System.Drawing.Color.FromArgb(255, 56, 192, 252), false, null);
-        public static Level harenimus_1_6_2 = new Level(0, "castle", CastleArtRefsTags, level6_2FML, level6_2OL, level6_2LML, level6_2HL, "Level", "Harenimus 1-6 Castle Part 2", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, null);
-        Level harenimus_1_6_1 = new Level(0, "castle", CastleArtRefsTags, level6_1FML, level6_1OL, level6_1LML, level6_1HL, "Level", "Harenimus 1-6 Castle", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, harenimus_1_6_2);
-        Level worldmap_harenimus = new Level(0, "screens", TitleMenuMapRefsTags, world1mapFML, world1mapOL, world1mapLML, world1mapHL, "Screen", "Kingdom of Harenimus", Color.FromArgb(255, 0, 0, 0), false, null);
+        Level harenimus_1_1 = new Level(2, "plains", PlainsArtRefsTags, level1FML, level1OL, level1LML, level1HL, "Level", "Harenimus 1-1 Plains", System.Drawing.Color.FromArgb(255, 56, 192, 252), false, null);
+        Level harenimus_1_2 = new Level(4, "underground", UndergroundArtRefsTags, level2FML, level2OL, level2LML, level2HL, "Level", "Harenimus 1-2 Plains", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, null);
+        public static Level harenimus_1_3_2 = new Level(3, "forest", ForestArtRefsTags, level3_2FML, level3_2OL, level3_2LML, level3_2HL, "Level", "Harenimus 1-3 Forest Part 2", System.Drawing.Color.FromArgb(255, 88, 216, 88), false, null);
+        Level harenimus_1_3_1 = new Level(3, "forest", ForestArtRefsTags, level3FML, level3OL, level3LML, level3HL, "Level", "Harenimus 1-3 Forest", System.Drawing.Color.FromArgb(255, 88, 216, 88), false, harenimus_1_3_2);
+        Level harenimus_1_4 = new Level(5, "desert", DesertArtRefsTags, level4FML, level4OL, level4LML, level4HL, "Level", "Harenimus 1-4 Desert", System.Drawing.Color.FromArgb(255, 164, 232, 252), false, null);
+        Level harenimus_1_5 = new Level(2, "plains", PlainsArtRefsTags, level5FML, level5OL, level5LML, level5HL, "Level", "Harenimus 1-5 Plains 2", System.Drawing.Color.FromArgb(255, 56, 192, 252), false, null);
+        public static Level harenimus_1_6_2 = new Level(6, "castle", CastleArtRefsTags, level6_2FML, level6_2OL, level6_2LML, level6_2HL, "Level", "Harenimus 1-6 Castle Part 2", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, null);
+        Level harenimus_1_6_1 = new Level(6, "castle", CastleArtRefsTags, level6_1FML, level6_1OL, level6_1LML, level6_1HL, "Level", "Harenimus 1-6 Castle", System.Drawing.Color.FromArgb(255, 0, 0, 0), false, harenimus_1_6_2);
+        Level worldmap_harenimus = new Level(14, "screens", TitleMenuMapRefsTags, world1mapFML, world1mapOL, world1mapLML, world1mapHL, "Screen", "Kingdom of Harenimus", Color.FromArgb(255, 0, 0, 0), false, null);
 
         List<SFX> allSFX = new List<SFX>();
         string sfxPath = "assets/audio/sfx";
         private SFXEngineMUSIEF sfxInstance;
         List<BGM> jukeBox = new List<BGM>();
         string bgmPath = "assets/audio/bgm";
-        private BGMPlayer BGMPlayer;
+        private BGMPlayer BGMPlayer = new BGMPlayer(new List<BGM>());
 
 
         /// <summary>
@@ -1876,7 +1876,7 @@ namespace Plat2d_2
                 int locatedIndex = deconstructable.IndexOf(partialName, StringComparison.OrdinalIgnoreCase);
                 int veerID = 1;
                 int readForXCharCountID = 2;
-                int veerName = 13;
+                int veerName = 5; // was 13
                 int readForXCharCountName = -1;
                 int ss1 = locatedIndex + partialName.Length + veerName;
                 int ss2 = deconstructable.Length - (ss1 + 5);
@@ -1889,12 +1889,16 @@ namespace Plat2d_2
                 {
                     Name = deconstructable.Substring(ss1, ss2),
                     ArrayID = int.Parse(deconstructable.Substring(locatedIndex + veerID + partialName.Length, readForXCharCountID)),
-                    Filepath = sfxPath + "/" + Path.GetFileName(file).ToString(),
+                    Filepath = bgmPath + "/" + Path.GetFileName(file).ToString(),
                     //AssociatedLevelID = idInput
                 };
+
+                Log.Warning(newbgm.ArrayID.ToString());
                 jukeBox.Add(newbgm);
 
             }
+            BGMPlayer.songs = jukeBox;
+            //Console.ReadLine();
         }
         private void SetAllReferences()
         {
@@ -2435,6 +2439,26 @@ namespace Plat2d_2
             //i currently do not have a way to do this yet. and thus, requires true layer implementation.
 
             //this method must handle loading the levels layers, color, tags and music to play.
+            if (currentLevel.levelname == "")
+            {
+                BGMPlayer.Stop();
+            }
+            else
+            {
+                foreach (var bgm in jukeBox)
+                {
+                    if (currentLevel.musicNumber == bgm.ArrayID)
+                    {
+                        Log.Highlight("Match success");
+                        BGMPlayer.PlayNow(bgm.Filepath);
+                        break;
+                    }
+                    else 
+                    {
+                        Log.Error($"Match fail. levelname: {currentLevel.musicNumber} checked track: {bgm.ArrayID}");
+                    }
+                }
+            }
         }
 
         private void LoadLayerNoArt(Sprite2d[] noArtRefs, string[,] Map)

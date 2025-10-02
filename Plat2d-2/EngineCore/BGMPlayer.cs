@@ -12,7 +12,7 @@ namespace Plat2d_2.EngineCore
     public class BGMPlayer : SoundPlayer
     {
         private SoundPlayer _player;
-        private List<BGM> songs = new List<BGM>();
+        public List<BGM> songs = new List<BGM>();
         private string thisPlaying = string.Empty;
 
         public BGMPlayer(List<BGM> songs)
@@ -22,7 +22,7 @@ namespace Plat2d_2.EngineCore
                 //songs.Add("assets/audio/bgm/rabbit game ost V4_64-2025-codetest - Track 01 (TITLE SCREEN - Adventure Scroll).wav");
             }
             this.songs = songs;
-            thisPlaying = songs[0].Filepath;
+            thisPlaying = "assets/audio/bgm/rabbit game ost V4_64-2025-codetest - Track 01 (TITLE SCREEN - Adventure Scroll).wav";
             _player = new SoundPlayer(thisPlaying);
             _player.LoadAsync();
         }
