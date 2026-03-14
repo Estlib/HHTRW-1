@@ -30,7 +30,11 @@ namespace Plat2d_2
          * 
          */
 
+        public static int MaxFPS = 50;
+        public double MaxFT = (1000 / MaxFPS);
         public Stopwatch stopwatch = new Stopwatch();
+        int fpsCounter = 0;
+        Stopwatch fpsTimer = Stopwatch.StartNew();
 
         long ticksinframe = 200000;
         public long lastFrameTime = 0;
@@ -50,13 +54,13 @@ namespace Plat2d_2
 
         bool animationsystemtype = true; //false v1, true v2
         bool animateEnemiesV2sysVerboseLogging = false; //enables or disables verbose logging for debugging new system
-        bool framelocking = false; //enables or disables locked fps
+        bool framelocking = true; //enables or disables locked fps
         public static bool logThisEnemy = false;
         public static int loggedEnemyArrayID = -1;
         public static bool exitTool = false;
 
         int steps = 0;
-        int slowDownFrameRate = 1;
+        int slowDownFrameRate = 0;
         int animationClock = 0;
         int playerSpeed = 10;
         int currentSprite;
@@ -93,13 +97,13 @@ namespace Plat2d_2
         int weapon1speed = 1;
         int weapon1cyclespeed = 4;
         int selectedweapon = 1;
-        bool loadfontfromfileandnotos = false; 
+        bool loadfontfromfileandnotos = false;
         int levelInList;
         Vec2 respawnlocation;
         bool pauseGameKey;
         bool stallingLoop;
 
-        public static string[] weaponnames = {"NoWeapon","Normal","Spreadshot","Plasma Rifle","Jump Bomb" };
+        public static string[] weaponnames = { "NoWeapon", "Normal", "Spreadshot", "Plasma Rifle", "Jump Bomb" };
 
         List<Bullet> bullets = new List<Bullet>();
 
@@ -826,7 +830,7 @@ namespace Plat2d_2
             { },
             { }
         };
-        
+
         public static string[,] level6_2FML =
         {
             {"40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","09","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","11","40","41","40","41","40","41","40","41","09","  ","  ","  ","11","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","11","11","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","09","11","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","11","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","11","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","40","41","11","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","  ","02","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04","03","04" },
@@ -1159,7 +1163,7 @@ namespace Plat2d_2
         /// <summary>
         /// constructor for demogame. bases enginecore
         /// </summary>
-        public DemoGame() :  base(new Vector2(320+16, 240+40),"HHTRW-engine1 demo")
+        public DemoGame() : base(new Vector2(320 + 16, 240 + 40), "HHTRW-engine1 demo")
         {
 
         }
@@ -1175,6 +1179,7 @@ namespace Plat2d_2
 
             //FullscreenMode();
             stopwatch.Start();
+            lastFrameTime = stopwatch.ElapsedMilliseconds;
             //levelsequence.Add(0);
             //levelsequence.Add(1);
             //levelsequence.Add(2);
@@ -1198,7 +1203,7 @@ namespace Plat2d_2
             Font debuglabelfont = new Font(font, 6);
             Font systemdebuglabelfont = new Font("Arcade Legacy", 6);
 
-            
+
 
             //label for crystals
             var label6 = new Label();
@@ -1284,7 +1289,7 @@ namespace Plat2d_2
             AmmoLabel = label5;
             Window.BeginInvoke((MethodInvoker)delegate { Window.Controls.Add(LevelLabel); });
             Log.InitiateLogWindow();
-            Log.Highlight($"Game is starting, current game: DemoGame",3);
+            Log.Highlight($"Game is starting, current game: DemoGame", 3);
 
             //debug label for level and levelpart statuses
             var dLabel1 = new Label();
@@ -1570,7 +1575,8 @@ namespace Plat2d_2
                 }
                 Log.Warning("Up has no animation currently.");
             }
-            if (pauseGameKey) {
+            if (pauseGameKey)
+            {
 
             }
             if (down)
@@ -1604,7 +1610,7 @@ namespace Plat2d_2
             }
             if (jump)
             {
-                
+
                 if (facedirection == 0)
                 {
                     AnimatePlayer(21, 21);
@@ -1668,7 +1674,7 @@ namespace Plat2d_2
             //reloadtrigger = false;
             //Log.Highlight("[GSH] - GameStateHandler has been called");
             Level nextlevel = null; //variable internal to the function for the next level to load
-            
+
             if (levels[currentLevel].isLevelCleared) //check if level has been cleared, then
             {
                 Log.Info($"Level {levels[currentLevel].levelname} (levels[{currentLevel}]) has been cleared.");
@@ -1725,8 +1731,8 @@ namespace Plat2d_2
                                 }
                                 reloadtrigger = false;
                                 isLevelPartLoaded = true;
-                            }    
-                        }                        
+                            }
+                        }
                     }
                 }
                 else
@@ -1849,7 +1855,7 @@ namespace Plat2d_2
                 {
                     Name = deconstructable.Substring(ss1, ss2),
                     ArrayID = int.Parse(deconstructable.Substring(locatedIndex + veerID + partialName.Length, readForXCharCountID)),
-                    Filepath = sfxPath + "/"+Path.GetFileName(file).ToString()
+                    Filepath = sfxPath + "/" + Path.GetFileName(file).ToString()
                 };
                 allSFX.Add(newsfx);
 
@@ -2453,7 +2459,7 @@ namespace Plat2d_2
                         BGMPlayer.PlayNow(bgm.Filepath);
                         break;
                     }
-                    else 
+                    else
                     {
                         Log.Error($"Match fail. levelname: {currentLevel.musicNumber} checked track: {bgm.ArrayID}");
                     }
@@ -2696,7 +2702,7 @@ namespace Plat2d_2
                     bool skipcheck = false;
                     int tryint = 0;
                     int result = 0;
-                    if (Map[j,i]=="  ")
+                    if (Map[j, i] == "  ")
                     {
                         skipcheck = true;
                     }
@@ -2726,7 +2732,7 @@ namespace Plat2d_2
         int remainingJumpFrames = 0; //unused, custom animation function variable for the jump
         int start; //used for the animateplayer function
         int end; //used for the animateplayer function
-        
+
         private void AnimateThisV2Enemy(EnemyV2 enemy, bool loglevel = false)
         {
             //EnemyV2 enemyv2 = new EnemyV2
@@ -2784,7 +2790,7 @@ namespace Plat2d_2
                     {
                         case (ActionState)0: //standing left
                             //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
-                            if (loglevel) 
+                            if (loglevel)
                             {
                                 string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
                                 LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} with Step {tempint}");
@@ -2919,7 +2925,7 @@ namespace Plat2d_2
 
                             break;
                         default:
-                            if (enemy.CurrentBehaviourStep == null || 
+                            if (enemy.CurrentBehaviourStep == null ||
                                 enemy.CurrentBehaviourStep < 0 ||
                                 enemy.CurrentBehaviourStep > enemy.BehaviourData.Count)
                             {
@@ -2939,7 +2945,7 @@ namespace Plat2d_2
                     {
                         Log.Error($"Enemy Type is not set. - {enemy.enemyType}");
                     }
-                        break;
+                    break;
             }
 
             enemy.sprite2d.UpdatePosition();
@@ -2978,8 +2984,8 @@ namespace Plat2d_2
             //    Log.Highlight($"enemy sprite needs to be {enemy.animationsteps}");
             //}
         }
-        
-        private void AnimateEnemiesV2sys(bool loglevel) 
+
+        private void AnimateEnemiesV2sys(bool loglevel)
         {
             if (loglevel)
             {
@@ -2987,78 +2993,78 @@ namespace Plat2d_2
             }
             //if (slowDownFrameRate == 4)
             //{
-                //if (loglevel)
-                //{
-                //    Log.Info("slowdownframerate if accessed");
-                //}
-                for (int i = 0; i < enemiesv2.Count; i++)
+            //if (loglevel)
+            //{
+            //    Log.Info("slowdownframerate if accessed");
+            //}
+            for (int i = 0; i < enemiesv2.Count; i++)
+            {
+                if (loglevel)
+                {
+                    Log.Info("for loop accessed");
+                }
+
+                if (enemiesv2.ElementAt(i).sprite2d.HasBody())
                 {
                     if (loglevel)
                     {
-                        Log.Info("for loop accessed");
+                        Log.Info("sprite has body");
                     }
-
-                    if (enemiesv2.ElementAt(i).sprite2d.HasBody())
-                    {
-                        if (loglevel)
-                        {
-                            Log.Info("sprite has body");
-                        }
                     //Enemy en = enemies.ElementAt(i);
                     //if (enemiesv2.ElementAt(i).sprite2d.Position.X > enemiesv2.ElementAt(i).lastXpos)
                     //{
-                        //if (loglevel)
-                        //{
-                        //    Log.Info("if within lastxpos accessed");
-                        //}
-                            if (logThisEnemy == true && i == loggedEnemyArrayID)
-                            {
-                                loglevel = true;
-                            }
-                            else
-                            {
-                                loglevel = false;
-                            }
-                            AnimateThisV2Enemy(enemiesv2.ElementAt(i), loglevel);
-                            loglevel = false;
+                    //if (loglevel)
+                    //{
+                    //    Log.Info("if within lastxpos accessed");
                     //}
-
-                }
+                    if (logThisEnemy == true && i == loggedEnemyArrayID)
+                    {
+                        loglevel = true;
+                    }
                     else
                     {
-                        Log.Warning("sprite has no body");
-                        AnimateThisV2Enemy(enemiesv2.ElementAt(i),loglevel);
+                        loglevel = false;
                     }
+                    AnimateThisV2Enemy(enemiesv2.ElementAt(i), loglevel);
+                    loglevel = false;
+                    //}
 
-                    //if (enemies.ElementAt(i).isfacingleft)
-                    //{
-                    //    //enemy walkright
-                    //    enemies.ElementAt(i).sprite2d.SetVelocity(new Vector2(-120, enemies.ElementAt(i).sprite2d.GetYVelocity()));
-                    //    enemies.ElementAt(i).enemyrightwalkframes--;
-                    //    enemies.ElementAt(i).enemyleftwalkframes = 30;
-                    //    if (enemies.ElementAt(i).enemyrightwalkframes <= 0)
-                    //    {
-                    //        enemies.ElementAt(i).isfacingleft = false;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    //enemy walkleft
-                    //    enemies.ElementAt(i).sprite2d.SetVelocity(new Vector2(120, enemies.ElementAt(i).sprite2d.GetYVelocity()));
-                    //    enemies.ElementAt(i).enemyleftwalkframes--;
-                    //    enemies.ElementAt(i).enemyrightwalkframes = 30;
-                    //    if (enemies.ElementAt(i).enemyleftwalkframes <= 0)
-                    //    {
-                    //        enemies.ElementAt(i).isfacingleft = true;
-                    //    }
-                    //}
-                    ////player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
-                    //enemies.ElementAt(i).sprite2d.Sprite = walkingEnemySpritesBitmap[enemies.ElementAt(i).animationsteps];
                 }
+                else
+                {
+                    Log.Warning("sprite has no body");
+                    AnimateThisV2Enemy(enemiesv2.ElementAt(i), loglevel);
+                }
+
+                //if (enemies.ElementAt(i).isfacingleft)
+                //{
+                //    //enemy walkright
+                //    enemies.ElementAt(i).sprite2d.SetVelocity(new Vector2(-120, enemies.ElementAt(i).sprite2d.GetYVelocity()));
+                //    enemies.ElementAt(i).enemyrightwalkframes--;
+                //    enemies.ElementAt(i).enemyleftwalkframes = 30;
+                //    if (enemies.ElementAt(i).enemyrightwalkframes <= 0)
+                //    {
+                //        enemies.ElementAt(i).isfacingleft = false;
+                //    }
+                //}
+                //else
+                //{
+                //    //enemy walkleft
+                //    enemies.ElementAt(i).sprite2d.SetVelocity(new Vector2(120, enemies.ElementAt(i).sprite2d.GetYVelocity()));
+                //    enemies.ElementAt(i).enemyleftwalkframes--;
+                //    enemies.ElementAt(i).enemyrightwalkframes = 30;
+                //    if (enemies.ElementAt(i).enemyleftwalkframes <= 0)
+                //    {
+                //        enemies.ElementAt(i).isfacingleft = true;
+                //    }
+                //}
+                ////player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
+                //enemies.ElementAt(i).sprite2d.Sprite = walkingEnemySpritesBitmap[enemies.ElementAt(i).animationsteps];
+            }
 
             //}
         }
-        
+
 
 
         /// <summary>
@@ -3070,7 +3076,7 @@ namespace Plat2d_2
         {
             //Log.Info("AnimatePlayer has been called");
             slowDownFrameRate += 1;
-            if (slowDownFrameRate == 4)
+            if (slowDownFrameRate == 1)
             {
                 steps++;
                 slowDownFrameRate = 0;
@@ -3083,8 +3089,8 @@ namespace Plat2d_2
             player.Sprite = playerSpritesBitmap[steps];
         }
 
-        int[] jumpFramesL = new int[] {7, 9 }; //frames for custom, out of order, jump animation. left facing.
-        int[] jumpFramesR = new int[] {18, 20 }; //frames for custom, out of order, jump animation. right facing.
+        int[] jumpFramesL = new int[] { 7, 9 }; //frames for custom, out of order, jump animation. left facing.
+        int[] jumpFramesR = new int[] { 18, 20 }; //frames for custom, out of order, jump animation. right facing.
         public static int crystalScoreTally = 0;
         public static int pointScoreTally = 0;
         public static int playerHealth = 100;
@@ -3146,13 +3152,13 @@ namespace Plat2d_2
         /// </summary>
         public override void OnUpdate()
         {
-            var startTime = Stopwatch.GetTimestamp();
-            lastFrameTime = 0;
-            int liveFPS = 0;
-            
+            long frameStart = stopwatch.ElapsedMilliseconds;
+
+            //int liveFPS = 0;
+
             Log.runtimeframes++;
 
-            if (animationClock == 4)
+            if (animationClock == 1)
             {
                 animationClock = 0;
             }
@@ -3204,7 +3210,7 @@ namespace Plat2d_2
 
             if (firinglock)
             {
-                if (firinglockcounter!=0)
+                if (firinglockcounter != 0)
                 {
                     //Log.Info("Subtracting one from firinglockcounter");
                     firinglockcounter--;
@@ -3221,7 +3227,7 @@ namespace Plat2d_2
             }
 
             if (enemiesv2 != null)
-            { 
+            {
                 AnimateEnemiesV2sys(animateEnemiesV2sysVerboseLogging);
             }
             if (bullets != null)
@@ -3292,7 +3298,7 @@ namespace Plat2d_2
                     }
                     else
                     {
-                        LogUtility.LogCurrentWeaponState($"Fired Bullet Limit reached. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}",true);
+                        LogUtility.LogCurrentWeaponState($"Fired Bullet Limit reached. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}", true);
                     }
                 }
             }
@@ -3320,7 +3326,7 @@ namespace Plat2d_2
             }
             if (jump) //performs jumpstepping when the jump key boolean is true
             {
-                if (player.IsColliding("Ground")!=null) //if player is colliding with the ground, only then allow the player to jump
+                if (player.IsColliding("Ground") != null) //if player is colliding with the ground, only then allow the player to jump
                 {
                     sfxInstance.Play("jump");
                     remainingJumpSteps = 9; //jump steps are set to 9 frames
@@ -3344,7 +3350,7 @@ namespace Plat2d_2
             {
                 //Log.Warning("Player is not colliding with Ground and thus cannot jump.");
                 //jumpstate handling for this is done in the if() structure that checks for jumpsteps
-                
+
             }
             player.UpdatePosition(); //updates players position
             //foreach (var bullet in bullets)
@@ -3403,7 +3409,7 @@ namespace Plat2d_2
                             {
                                 bullet.sprite2d.CreateDynamic();
                                 bullet.sprite2d.SetVelocity(new Vector2(-80000, 0));
-                            }                                
+                            }
                         }
                         else
                         {
@@ -3415,7 +3421,7 @@ namespace Plat2d_2
                             {
                                 bullet.sprite2d.CreateDynamic();
                                 bullet.sprite2d.SetVelocity(new Vector2(80000, 0));
-                            }                                
+                            }
                         }
                         //bullet.sprite2d.UpdatePosition();
                     }
@@ -3483,7 +3489,7 @@ namespace Plat2d_2
             }
 
             Sprite2d enemy = player.IsColliding("Enemy"); //checks for collisions between the player and the level finishing trigger object.
-            
+
             Sprite2d bulletcollision = null;
 
             if (enemy != null) //if the trigger object is being touched
@@ -3592,31 +3598,61 @@ namespace Plat2d_2
             //Console.WriteLine($"Framecount: {frame}.");
             //frame++;
             // SPRITE LOGGING       Log.Info($"Currentsprite should be # {steps}");
-
+            
+            int FPSCountBuffer = fpsCounter;
             if (framelocking)
             {
-                var endTime = Stopwatch.GetTimestamp();
-                long delta = (endTime - startTime);
-                //stopwatch.Stop();
+                long frameTime = stopwatch.ElapsedMilliseconds - frameStart;
+
+                if (frameTime < MaxFT)
+                {
+                    Thread.Sleep((int)(MaxFT - frameTime));
+                }
+                frameTime = stopwatch.ElapsedMilliseconds - frameStart;
+                LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes} Frametime: {frameTime /*/ 1000*/}ms. LiveFPS: {FPSCountBuffer}");
+                fpsCounter++;
+
+                ////var endTime = Stopwatch.GetTimestamp();
+
+                ////long delta = (endTime - startTime);
+                //long delta = (stopwatch.ElapsedMilliseconds - startTime);
+                ////stopwatch.Stop();
+                ////lastFrameTime = stopwatch.ElapsedMilliseconds;
+                ////lastFrameTime = delta;
+                //if (delta < MaxFT)
+                //{
+                //    Thread.Sleep((int)(MaxFT - lastFrameTime));
+                //}
+                //liveFPS = (int)(1000.0 / (stopwatch.ElapsedMilliseconds - delta));
                 //lastFrameTime = stopwatch.ElapsedMilliseconds;
-                lastFrameTime = delta;
-                stopwatch.Reset();
-                if (lastFrameTime != 0)
-                {
-                    liveFPS = (int)(1000 / (lastFrameTime / 1000));
-                }
-                else
-                {
-                    liveFPS = (int)(1000 / 1);
-                }
-                LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes} Frametime: {lastFrameTime / 1000}ms. LiveFPS: {liveFPS}");
-                int remainingFrameTime = (int)(ticksinframe - delta);
-                Thread.Sleep(remainingFrameTime / 200000);
+
+                ////stopwatch.Reset();
+                ////if (lastFrameTime != 0)
+                ////{
+                ////    liveFPS = (int)(1000 / (lastFrameTime / 1000));
+                ////}
+                ////else
+                ////{
+                ////    liveFPS = (int)(1000 / 1);
+                ////}
+
+                //LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes} Frametime: {lastFrameTime / 1000}ms. LiveFPS: {liveFPS}");
+                ////int remainingFrameTime = (int)(ticksinframe - delta);
+                ////Thread.Sleep(remainingFrameTime / 15000);
             }
             else
             {
+                fpsCounter++;
+                long frameTime = stopwatch.ElapsedMilliseconds - frameStart;
                 LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes}");
             }
+            if (fpsTimer.ElapsedMilliseconds >= 1000)
+            {
+                //Console.WriteLine("FPS: " + fpsCounter);
+                fpsCounter = 0;
+                fpsTimer.Restart();
+            }
+            
         }
 
         private void AnimateBullets()
@@ -3633,7 +3669,7 @@ namespace Plat2d_2
                     {
                         bullet.sprite2d.Sprite = bulletgraphics[0];
                     }
-                }                
+                }
             }
         }
 
@@ -3647,7 +3683,7 @@ namespace Plat2d_2
             player.SetLocation(respawnlocation);
             Log.Info($"X = {player.Position.X}. Y = {player.Position.Y}");
             Log.Info($"respawn X = {respawnlocation.X}. respawnY = {respawnlocation.Y}");
-            
+
         }
 
         private void SelectLevelWithoutClearingMap(int selectedlevel)
@@ -3775,7 +3811,7 @@ namespace Plat2d_2
             {
                 check = true;
             }
-            else 
+            else
             {
                 check = false;
             }
@@ -3859,27 +3895,27 @@ namespace Plat2d_2
             //    }
             //    else
             //    {
-                    CrystalLabel.BackColor = System.Drawing.Color.Black;
-                    CrystalLabel.ForeColor = System.Drawing.Color.White;
-                    CrystalLabel.Location = new System.Drawing.Point(32, 216);
-                    HealthLabel.BackColor = System.Drawing.Color.Black;
-                    HealthLabel.ForeColor = System.Drawing.Color.White;
-                    HealthLabel.Location = new System.Drawing.Point(128, 216);
-                    LivesLabel.BackColor = System.Drawing.Color.Black;
-                    LivesLabel.ForeColor = System.Drawing.Color.White;
-                    LivesLabel.Location = new System.Drawing.Point(160, 216);
-                    AmmoLabel.BackColor = System.Drawing.Color.Black;
-                    AmmoLabel.ForeColor = System.Drawing.Color.White;
-                    AmmoLabel.Location = new System.Drawing.Point(188, 216);
-                    ScoreLabel.BackColor = System.Drawing.Color.Black;
-                    ScoreLabel.ForeColor = System.Drawing.Color.White;
-                    ScoreLabel.Location = new System.Drawing.Point(64, 216);
-                    SelectedWeaponLabel.BackColor = System.Drawing.Color.Black;
-                    SelectedWeaponLabel.ForeColor = System.Drawing.Color.White;
-                    SelectedWeaponLabel.Location = new System.Drawing.Point(32, 224);
-                    LevelLabel.BackColor = System.Drawing.Color.Black;
-                    LevelLabel.ForeColor = System.Drawing.Color.Yellow;
-                    LevelLabel.Location = new System.Drawing.Point(0, 0);
+            CrystalLabel.BackColor = System.Drawing.Color.Black;
+            CrystalLabel.ForeColor = System.Drawing.Color.White;
+            CrystalLabel.Location = new System.Drawing.Point(32, 216);
+            HealthLabel.BackColor = System.Drawing.Color.Black;
+            HealthLabel.ForeColor = System.Drawing.Color.White;
+            HealthLabel.Location = new System.Drawing.Point(128, 216);
+            LivesLabel.BackColor = System.Drawing.Color.Black;
+            LivesLabel.ForeColor = System.Drawing.Color.White;
+            LivesLabel.Location = new System.Drawing.Point(160, 216);
+            AmmoLabel.BackColor = System.Drawing.Color.Black;
+            AmmoLabel.ForeColor = System.Drawing.Color.White;
+            AmmoLabel.Location = new System.Drawing.Point(188, 216);
+            ScoreLabel.BackColor = System.Drawing.Color.Black;
+            ScoreLabel.ForeColor = System.Drawing.Color.White;
+            ScoreLabel.Location = new System.Drawing.Point(64, 216);
+            SelectedWeaponLabel.BackColor = System.Drawing.Color.Black;
+            SelectedWeaponLabel.ForeColor = System.Drawing.Color.White;
+            SelectedWeaponLabel.Location = new System.Drawing.Point(32, 224);
+            LevelLabel.BackColor = System.Drawing.Color.Black;
+            LevelLabel.ForeColor = System.Drawing.Color.Yellow;
+            LevelLabel.Location = new System.Drawing.Point(0, 0);
             //    }
             //}            
             if (CrystalLabel != null)
@@ -3923,44 +3959,44 @@ namespace Plat2d_2
             // format for reference $"______\n  _  _"
             char[] array = currentcontent.ToCharArray();
 
-            if (harenimus_1_1.isLevelCleared == false) {array[0] = Convert.ToChar("x");}
-            else if (harenimus_1_1.isLevelCleared == true) {array[0] = Convert.ToChar("v");}
-            else { array[0] = Convert.ToChar("?");}
+            if (harenimus_1_1.isLevelCleared == false) { array[0] = Convert.ToChar("x"); }
+            else if (harenimus_1_1.isLevelCleared == true) { array[0] = Convert.ToChar("v"); }
+            else { array[0] = Convert.ToChar("?"); }
 
-            if (harenimus_1_2.isLevelCleared == false) {array[1] = Convert.ToChar("x");}
-            else if (harenimus_1_2.isLevelCleared == true) {array[1] = Convert.ToChar("v");}
-            else { array[1] = Convert.ToChar("?");}
+            if (harenimus_1_2.isLevelCleared == false) { array[1] = Convert.ToChar("x"); }
+            else if (harenimus_1_2.isLevelCleared == true) { array[1] = Convert.ToChar("v"); }
+            else { array[1] = Convert.ToChar("?"); }
 
-            if (harenimus_1_3_1.isLevelCleared == false) {array[2] = Convert.ToChar("x");}
-            else if (harenimus_1_3_1.isLevelCleared == true) {array[2] = Convert.ToChar("v");}
-            else { array[2] = Convert.ToChar("?");}
+            if (harenimus_1_3_1.isLevelCleared == false) { array[2] = Convert.ToChar("x"); }
+            else if (harenimus_1_3_1.isLevelCleared == true) { array[2] = Convert.ToChar("v"); }
+            else { array[2] = Convert.ToChar("?"); }
 
-            if (harenimus_1_3_2.isLevelCleared == false) {array[8] = Convert.ToChar("x");}
-            else if (harenimus_1_3_2.isLevelCleared == true) {array[8] = Convert.ToChar("v");}
-            else { array[8] = Convert.ToChar("?");}
+            if (harenimus_1_3_2.isLevelCleared == false) { array[8] = Convert.ToChar("x"); }
+            else if (harenimus_1_3_2.isLevelCleared == true) { array[8] = Convert.ToChar("v"); }
+            else { array[8] = Convert.ToChar("?"); }
 
-            if (harenimus_1_4.isLevelCleared == false) {array[3] = Convert.ToChar("x");}
-            else if (harenimus_1_4.isLevelCleared == true) {array[3] = Convert.ToChar("v");}
-            else { array[3] = Convert.ToChar("?");}
+            if (harenimus_1_4.isLevelCleared == false) { array[3] = Convert.ToChar("x"); }
+            else if (harenimus_1_4.isLevelCleared == true) { array[3] = Convert.ToChar("v"); }
+            else { array[3] = Convert.ToChar("?"); }
 
-            if (harenimus_1_5.isLevelCleared == false) {array[4] = Convert.ToChar("x");}
-            else if (harenimus_1_5.isLevelCleared == true) {array[4] = Convert.ToChar("v");}
-            else { array[4] = Convert.ToChar("?");}
+            if (harenimus_1_5.isLevelCleared == false) { array[4] = Convert.ToChar("x"); }
+            else if (harenimus_1_5.isLevelCleared == true) { array[4] = Convert.ToChar("v"); }
+            else { array[4] = Convert.ToChar("?"); }
 
-            if (harenimus_1_6_1.isLevelCleared == false) {array[5] = Convert.ToChar("x");}
-            else if (harenimus_1_6_1.isLevelCleared == true) {array[5] = Convert.ToChar("v");}
-            else { array[5] = Convert.ToChar("?");}
+            if (harenimus_1_6_1.isLevelCleared == false) { array[5] = Convert.ToChar("x"); }
+            else if (harenimus_1_6_1.isLevelCleared == true) { array[5] = Convert.ToChar("v"); }
+            else { array[5] = Convert.ToChar("?"); }
 
-            if (harenimus_1_6_2.isLevelCleared == false) {array[11] = Convert.ToChar("x");}
-            else if (harenimus_1_6_2.isLevelCleared == true) {array[11] = Convert.ToChar("v");}
-            else { array[11] = Convert.ToChar("?");}
+            if (harenimus_1_6_2.isLevelCleared == false) { array[11] = Convert.ToChar("x"); }
+            else if (harenimus_1_6_2.isLevelCleared == true) { array[11] = Convert.ToChar("v"); }
+            else { array[11] = Convert.ToChar("?"); }
 
             char[] line1Array = array.Take(array.Length / 2).ToArray();
             char[] line2Array = array.Skip(array.Length / 2).ToArray();
 
             //Log.Info($"{new string(line1Array)}\n{new string(line2Array)}");
 
-            return new string(line1Array)+"\n"+new string(line2Array);
+            return new string(line1Array) + "\n" + new string(line2Array);
         }
     }
 

@@ -221,7 +221,7 @@ namespace Plat2d_2.EngineCore
         {
             Console.SetCursorPosition(0, v);
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.Write(new string(' ', Console.WindowWidth));
+            Console.Write(" ".PadRight(Console.WindowWidth));
             Console.ForegroundColor = ConsoleColor.White;
         }
     }
