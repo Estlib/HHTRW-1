@@ -3863,6 +3863,91 @@ namespace Plat2d_2
         }
         public override void UpdateHud()
         {
+            float aspect = ScreenSize.X / ScreenSize.Y;
+
+            float drawHeight = Window.ClientSize.Height;
+            float drawWidth = drawHeight * aspect;
+
+            float offsetX = (Window.ClientSize.Width - drawWidth) / 2f;
+            float offsetY = 0f;
+
+            float hudScaleX = drawWidth / ScreenSize.X;
+            float hudScaleY = drawHeight / ScreenSize.Y;
+
+            CrystalLabel.BackColor = System.Drawing.Color.Black;
+            CrystalLabel.ForeColor = System.Drawing.Color.White;
+            CrystalLabel.Location = new System.Drawing.Point(
+                (int)(offsetX + 32 * hudScaleX),
+                (int)(offsetY + 216 * hudScaleY)
+            );
+
+            HealthLabel.BackColor = System.Drawing.Color.Black;
+            HealthLabel.ForeColor = System.Drawing.Color.White;
+            HealthLabel.Location = new System.Drawing.Point(
+                (int)(offsetX + 128 * hudScaleX),
+                (int)(offsetY + 216 * hudScaleY)
+            );
+
+            LivesLabel.BackColor = System.Drawing.Color.Black;
+            LivesLabel.ForeColor = System.Drawing.Color.White;
+            LivesLabel.Location = new System.Drawing.Point(
+                (int)(offsetX + 160 * hudScaleX),
+                (int)(offsetY + 216 * hudScaleY)
+            );
+
+            AmmoLabel.BackColor = System.Drawing.Color.Black;
+            AmmoLabel.ForeColor = System.Drawing.Color.White;
+            AmmoLabel.Location = new System.Drawing.Point(
+                (int)(offsetX + 188 * hudScaleX),
+                (int)(offsetY + 216 * hudScaleY)
+            );
+
+            ScoreLabel.BackColor = System.Drawing.Color.Black;
+            ScoreLabel.ForeColor = System.Drawing.Color.White;
+            ScoreLabel.Location = new System.Drawing.Point(
+                (int)(offsetX + 64 * hudScaleX),
+                (int)(offsetY + 216 * hudScaleY)
+            );
+
+            SelectedWeaponLabel.BackColor = System.Drawing.Color.Black;
+            SelectedWeaponLabel.ForeColor = System.Drawing.Color.White;
+            SelectedWeaponLabel.Location = new System.Drawing.Point(
+                (int)(offsetX + 32 * hudScaleX),
+                (int)(offsetY + 224 * hudScaleY)
+            );
+
+            LevelLabel.BackColor = System.Drawing.Color.Black;
+            LevelLabel.ForeColor = System.Drawing.Color.Yellow;
+            LevelLabel.Location = new System.Drawing.Point(
+                (int)(offsetX + 0 * hudScaleX),
+                (int)(offsetY + 0 * hudScaleY)
+            );
+
+            if (CrystalLabel != null)
+                CrystalLabel.Text = $"{DemoGame.crystalScoreTally}";
+
+            if (HealthLabel != null)
+                HealthLabel.Text = $"{DemoGame.playerHealth}";
+
+            if (LivesLabel != null)
+                LivesLabel.Text = $"{DemoGame.playerLives}";
+
+            if (AmmoLabel != null)
+            {
+                if (weapon1Ammo < 0)
+                    AmmoLabel.Text = "∞";
+                else
+                    AmmoLabel.Text = $"{DemoGame.weapon1Ammo}";
+            }
+
+            if (ScoreLabel != null)
+                ScoreLabel.Text = $"{DemoGame.pointScoreTally}";
+
+            if (LevelLabel != null)
+                LevelLabel.Text = $"{CheckLevel(levelclearingsforlabel)}";
+        }
+        public /*override*/ void UpdateHudOld()
+        {
             //if (levels.ElementAt(currentLevel).levelType != null)
             //{
             //    if (levels.ElementAt(currentLevel).levelType == "Screen")

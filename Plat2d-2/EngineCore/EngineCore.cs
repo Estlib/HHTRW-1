@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Threading;
-using Box2DX.Dynamics;
-using Box2DX.Collision;
+﻿using Box2DX.Collision;
 using Box2DX.Common;
-using System.Security.Policy;
+using Box2DX.Dynamics;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
+using System.Linq;
+using System.Security.Policy;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Plat2d_2.EngineCore
 {
@@ -55,8 +56,8 @@ namespace Plat2d_2.EngineCore
     }
     public abstract class EngineCore
     {
-        private Vector2 ScreenSize = new Vector2(320, 240);
-        private string Title = "HHTRW-engine1";
+        public Vector2 ScreenSize = new Vector2(320, 240);
+        private string Title = "Harold Harrisson the Rabbit Warrior";
         public Canvas Window = null;
         private Thread GameLoopThread = null;
         public static bool showRuntimeGenericError = true;
@@ -70,6 +71,8 @@ namespace Plat2d_2.EngineCore
         public static bool logAplayTXT = false;
         public static bool addTraceCLI = false;
         public static bool addTraceTXT = false;
+        private Bitmap backBuffer;
+        private Graphics backGraphics;
 
 
 
@@ -103,12 +106,16 @@ namespace Plat2d_2.EngineCore
         {
             Log.Info("Game is starting");
             this.ScreenSize = ScreenSize;
+            backBuffer = new Bitmap((int)this.ScreenSize.X, (int)this.ScreenSize.Y);
+            backGraphics = Graphics.FromImage(backBuffer);
+            backGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            backGraphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
             this.Title = Title;
 
             Window = new Canvas();
             Window.Size = new Size((int)this.ScreenSize.X, (int)this.ScreenSize.Y);
             Window.Text = this.Title;
-            Window.Paint += Renderer;
+            Window.Paint += Renderer2;
             Window.KeyDown += Window_KeyDown;
             Window.KeyUp+= Window_KeyUp;
             Window.FormBorderStyle = FormBorderStyle.FixedToolWindow;
@@ -117,8 +124,8 @@ namespace Plat2d_2.EngineCore
             GameLoopThread.Start();
             world = new World(worldAABB, gravity, pausebuttoninput);
             Window.InitializeComponent();
-            //SetFullscreen();
-
+            SetFullscreen();
+            FullscreenMode();
             Application.Run(Window);
         }
 
@@ -202,7 +209,7 @@ namespace Plat2d_2.EngineCore
         // Prepare for simulation. Typically we use a time step of 1/60 of a
         // second (60Hz) and 10 iterations. This provides a high quality simulation
         // in most game scenarios.
-        float timeStep = 1.0f / 60.0f;
+        float timeStep = 1.0f / 50.0f;
         //float timeStep = 100000.01f;
         int velocityIterations = 16;
         int positionIterations = 16;
@@ -311,6 +318,56 @@ namespace Plat2d_2.EngineCore
             this.Window.FormBorderStyle = FormBorderStyle.None;
         }
 
+        private void Renderer2(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
+            // 1) render scene to low-res buffer
+            backGraphics.Clear(BGColor);
+            backGraphics.ResetTransform();
+
+            backGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            backGraphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+
+            backGraphics.TranslateTransform(CameraPosition.X, -CameraPosition.Y);
+            backGraphics.RotateTransform(CameraAngle);
+            backGraphics.ScaleTransform(CameraZoom.X, CameraZoom.Y);
+
+            for (int i = 0; i < AllSprites.Count; i++)
+            {
+                Sprite2d sprite = AllSprites[i];
+                if (!sprite.IsReference)
+                {
+                    backGraphics.DrawImage(
+                        sprite.Sprite,
+                        sprite.Position.X,
+                        sprite.Position.Y,
+                        sprite.Scale.X,
+                        sprite.Scale.Y
+                    );
+                }
+            }
+
+            // 2) scale buffer to fullscreen using full vertical size
+            g.Clear(BGColor);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+
+            float aspect = ScreenSize.X / ScreenSize.Y;
+
+            float drawHeight = Window.ClientSize.Height;
+            float drawWidth = drawHeight * aspect;
+
+            float offsetX = (Window.ClientSize.Width - drawWidth) / 2f;
+            float offsetY = 0f;
+
+            g.DrawImage(
+                backBuffer,
+                new RectangleF(offsetX, offsetY, drawWidth, drawHeight),
+                new RectangleF(0, 0, ScreenSize.X, ScreenSize.Y),
+                GraphicsUnit.Pixel
+            );
+        }
         private void Renderer(object sender, PaintEventArgs e)
         {
             // Instruct the world to perform a single step of simulation. It is
@@ -319,18 +376,18 @@ namespace Plat2d_2.EngineCore
             g.Clear(BGColor);
             //GameLoopThread.Abort();
 
-            //float scaleX = (float)Window.ClientSize.Width / ScreenSize.X;
-            //float scaleY = (float)Window.ClientSize.Height / ScreenSize.Y;
-            //float scale = System.Math.Min(scaleX, scaleY); // Keep aspect ratio
-                //// new code for pixellated fullscreen
-                //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                //g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+            float scaleX = (float)Window.ClientSize.Width / ScreenSize.X;
+            float scaleY = (float)Window.ClientSize.Height / ScreenSize.Y;
+            float scale = System.Math.Min(scaleX, scaleY); // Keep aspect ratio
+            // new code for pixellated fullscreen
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
             g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
             g.RotateTransform(CameraAngle);
-            g.ScaleTransform(CameraZoom.X, CameraZoom.Y);
+            //g.ScaleTransform(CameraZoom.X, CameraZoom.Y);
 
-                //g.ScaleTransform(scale, scale);
+            g.ScaleTransform(scale, scale);
             //try
             //{
             //foreach (Shape2d shape in AllShapes)
