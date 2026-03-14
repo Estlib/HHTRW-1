@@ -30,14 +30,19 @@ namespace Plat2d_2
          * 
          */
 
-        public static int MaxFPS = 50;
-        public double MaxFT = (1000 / MaxFPS);
+        [DllImport("winmm.dll")]
+        private static extern uint timeBeginPeriod(uint uMilliseconds);
+        [DllImport("winmm.dll")]
+        private static extern uint timeEndPeriod(uint uMilliseconds);
+
+        public static int MaxFPS = 57;
+        public double MaxFT = (1000d / MaxFPS);
         public Stopwatch stopwatch = new Stopwatch();
         int fpsCounter = 0;
         Stopwatch fpsTimer = Stopwatch.StartNew();
 
         long ticksinframe = 200000;
-        public long lastFrameTime = 0;
+        public double lastFrameTime = 0;
         public static int nextusableline = 5; // this is to save last logged line for the Logging tool
         string fontplace = "assets/fonts/arcade-legacy.ttf";
         string levelclearingsforlabel = $"______  _  _";
@@ -1175,11 +1180,11 @@ namespace Plat2d_2
             //SFXEngineB.Instance.RegisterSound("test", @"C:\Windows\Media\chimes.wav");
             //SFXEngineB.Instance.Play("test");
             //Console.ReadKey();
-
+            timeBeginPeriod(1);
 
             //FullscreenMode();
             stopwatch.Start();
-            lastFrameTime = stopwatch.ElapsedMilliseconds;
+            lastFrameTime = stopwatch.Elapsed.TotalMilliseconds;
             //levelsequence.Add(0);
             //levelsequence.Add(1);
             //levelsequence.Add(2);
@@ -3152,7 +3157,7 @@ namespace Plat2d_2
         /// </summary>
         public override void OnUpdate()
         {
-            long frameStart = stopwatch.ElapsedMilliseconds;
+            double frameStart = stopwatch.Elapsed.TotalMilliseconds;
 
             //int liveFPS = 0;
 
@@ -3598,61 +3603,49 @@ namespace Plat2d_2
             //Console.WriteLine($"Framecount: {frame}.");
             //frame++;
             // SPRITE LOGGING       Log.Info($"Currentsprite should be # {steps}");
-            
-            int FPSCountBuffer = fpsCounter;
-            if (framelocking)
+
+            double frameTime = stopwatch.Elapsed.TotalMilliseconds - frameStart;
+            double remaining = MaxFT - frameTime;
+
+            // coarse wait first
+            if (framelocking && remaining > 2.0)
             {
-                long frameTime = stopwatch.ElapsedMilliseconds - frameStart;
-
-                if (frameTime < MaxFT)
-                {
-                    Thread.Sleep((int)(MaxFT - frameTime));
-                }
-                frameTime = stopwatch.ElapsedMilliseconds - frameStart;
-                LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes} Frametime: {frameTime /*/ 1000*/}ms. LiveFPS: {FPSCountBuffer}");
-                fpsCounter++;
-
-                ////var endTime = Stopwatch.GetTimestamp();
-
-                ////long delta = (endTime - startTime);
-                //long delta = (stopwatch.ElapsedMilliseconds - startTime);
-                ////stopwatch.Stop();
-                ////lastFrameTime = stopwatch.ElapsedMilliseconds;
-                ////lastFrameTime = delta;
-                //if (delta < MaxFT)
-                //{
-                //    Thread.Sleep((int)(MaxFT - lastFrameTime));
-                //}
-                //liveFPS = (int)(1000.0 / (stopwatch.ElapsedMilliseconds - delta));
-                //lastFrameTime = stopwatch.ElapsedMilliseconds;
-
-                ////stopwatch.Reset();
-                ////if (lastFrameTime != 0)
-                ////{
-                ////    liveFPS = (int)(1000 / (lastFrameTime / 1000));
-                ////}
-                ////else
-                ////{
-                ////    liveFPS = (int)(1000 / 1);
-                ////}
-
-                //LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes} Frametime: {lastFrameTime / 1000}ms. LiveFPS: {liveFPS}");
-                ////int remainingFrameTime = (int)(ticksinframe - delta);
-                ////Thread.Sleep(remainingFrameTime / 15000);
+                Thread.Sleep((int)(remaining - 1.0));
             }
-            else
+
+            // fine wait for the last bit
+            while (framelocking && stopwatch.Elapsed.TotalMilliseconds - frameStart < MaxFT)
             {
-                fpsCounter++;
-                long frameTime = stopwatch.ElapsedMilliseconds - frameStart;
-                LogUtility.LogCurrentFrame($"Current Game Frame: {Log.runtimeframes}");
+                Thread.SpinWait(20);
             }
-            if (fpsTimer.ElapsedMilliseconds >= 1000)
+
+            // final frame time after waiting
+            frameTime = stopwatch.Elapsed.TotalMilliseconds - frameStart;
+            fpsCounter++;
+
+            if (fpsTimer.Elapsed.TotalMilliseconds >= 1000)
             {
-                //Console.WriteLine("FPS: " + fpsCounter);
+                LogUtility.LogCurrentFrame($"FPS: {fpsCounter}, FrameTime: {frameTime}ms                   ");
                 fpsCounter = 0;
                 fpsTimer.Restart();
             }
-            
+
+            //double frameTime = stopwatch.Elapsed.TotalMilliseconds - frameStart;
+
+            //if (framelocking && frameTime < MaxFT)
+            //{
+            //    Thread.Sleep((int)(MaxFT - frameTime));
+            //    frameTime = stopwatch.ElapsedMilliseconds - frameStart;
+            //}
+
+            //fpsCounter++;
+
+            //if (fpsTimer.ElapsedMilliseconds >= 1000)
+            //{
+            //    Log.Normal($"FPS: {fpsCounter}, FrameTime: {frameTime}ms");
+            //    fpsCounter = 0;
+            //    fpsTimer.Restart();
+            //}
         }
 
         private void AnimateBullets()

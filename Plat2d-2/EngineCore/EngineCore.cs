@@ -272,6 +272,7 @@ namespace Plat2d_2.EngineCore
 
                 }
             }
+
         }
 
         private static void LogTrace(Exception ex)
