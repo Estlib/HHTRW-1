@@ -340,6 +340,23 @@ namespace Plat2d_2.EngineCore
                 this.CurrentBehaviourStep = 0;
             }
         }
+        /// <summary>
+        /// Method used for instantiating sprites of an enemy into memory
+        /// </summary>
+        /// <param name="enemyType">Name of the enemy type to load sprites for</param>
+        /// <returns>A list of bitmaps with requested sprites</returns>
+        public static List<Bitmap> EnemySprites(string enemyType)
+        {
+
+            Log.Warning("Function does not contain any sprites assigned, not implemented.");
+            switch (enemyType)
+            {
+                default:
+                    return new List<Bitmap>();
+                    break;
+            }
+            return new List<Bitmap>();
+        }
 
         ~EnemyV2() { }
 

@@ -157,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
+    <Compile Include="DemoGameRF.cs" />
     <Compile Include="EngineCore\ArtData.cs" />
     <Compile Include="EngineCore\BGMPlayer.cs">
       <SubType>Component</SubType>
@@ -170,6 +171,9 @@
     <Compile Include="EngineCore\Level.cs" />
     <Compile Include="EngineCore\LevelData.cs" />
     <Compile Include="EngineCore\Log.cs" />
+    <Compile Include="EngineCore\ObjectControllers\LevelController.cs" />
+    <Compile Include="EngineCore\ObjectControllers\MenuController.cs" />
+    <Compile Include="EngineCore\ObjectControllers\WorldController.cs" />
     <Compile Include="EngineCore\ObjectTypes\Area.cs" />
     <Compile Include="EngineCore\ObjectTypes\Block.cs" />
     <Compile Include="EngineCore\ObjectTypes\World.cs" />
@@ -767,7 +771,6 @@
     <Folder Include="assets\audio\bgm\" />
     <Folder Include="assets\sprites\backgrounds\" />
     <Folder Include="assets\sprites\generic\" />
-    <Folder Include="EngineCore\ObjectControllers\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
