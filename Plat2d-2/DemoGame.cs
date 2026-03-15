@@ -1331,7 +1331,7 @@ namespace Plat2d_2
 
             BGColor = Color.Black; //sets window background color to be black
             //CameraZoom = new Vector2(.1f,.1f);
-            SetAllReferences(); //assings the references into arrays
+            SetAllReferences(); //assingzzs the references into arrays
             SetSFXengineB();
             //sets the onelayer maps into a levelmaps list.
             //levelMaps.Add(Map);
@@ -1461,8 +1461,7 @@ namespace Plat2d_2
             //<- modify level loading so it would load using Level as parameter instead.
             LoadNextLevel(levels.ElementAt(currentLevel), TitleMenuMapRefs);
             //<- modify level loading so it would load using Level as parameter instead.
-            AudioController.RunScript("helloworldpython");
-            AudioController.ConfigureAudio("nsfinfo");
+            
             foreach (var sfxR in allSFX)
             {
                 sfxInstance.RegisterSound(sfxR.Name, sfxR.Filepath);
@@ -2477,6 +2476,11 @@ namespace Plat2d_2
                     }
                 }
             }
+            Window.BeginInvoke((MethodInvoker)(() =>
+            {
+                Window.ActiveControl = null;
+                Window.Focus();
+            }));
         }
 
         private void LoadLayerNoArt(Sprite2d[] noArtRefs, string[,] Map)

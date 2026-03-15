@@ -33,6 +33,7 @@ namespace Plat2d_2.EngineCore
         {
 
             this.DoubleBuffered = true;
+            this.KeyPreview = true;
 
         }
 
@@ -136,8 +137,11 @@ namespace Plat2d_2.EngineCore
             Window.KeyUp += Window_KeyUp;
             Window.FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Window.FormClosing += Window_FormClosing;
-            GameLoopThread = new Thread(GameLoop);
-            GameLoopThread.Start();
+            Window.Shown += (s, e) =>
+            {
+                GameLoopThread = new Thread(GameLoop);
+                GameLoopThread.Start();
+            };
             world = new World(worldAABB, gravity, pausebuttoninput);
             Window.InitializeComponent();
             if (!isWindow)

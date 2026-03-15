@@ -158,7 +158,6 @@
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
     <Compile Include="EngineCore\ArtData.cs" />
-    <Compile Include="EngineCore\AudioController.cs" />
     <Compile Include="EngineCore\BGMPlayer.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -734,9 +733,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="EngineCore\feedback.txt" />
-    <Resource Include="EngineCore\helloworldpython.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Content Include="pyaudio\pynsf\pynes\addressmode.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
