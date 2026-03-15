@@ -3092,7 +3092,7 @@ namespace Plat2d_2
         {
             //Log.Info("AnimatePlayer has been called");
             slowDownFrameRate += 1;
-            if (slowDownFrameRate == 1)
+            if (slowDownFrameRate == 3)
             {
                 steps++;
                 slowDownFrameRate = 0;
@@ -3174,7 +3174,7 @@ namespace Plat2d_2
 
             Log.runtimeframes++;
 
-            if (animationClock == 1)
+            if (animationClock == 3)
             {
                 animationClock = 0;
             }

@@ -269,7 +269,7 @@ namespace Plat2d_2.EngineCore
                     break;
                 case ActionState.WalkingLeft:
                     var walkleftanimation = this.walkLeftData;
-                    if (animationClock == 1)
+                    if (animationClock == 3)
                     {
                         if (this.currentFrame >= walkleftanimation.Count()-1)
                         { this.currentFrame = 0; }
@@ -280,7 +280,7 @@ namespace Plat2d_2.EngineCore
                     break;
                 case ActionState.WalkingRight:
                     var walkrightanimation = this.walkRightData;
-                    if (animationClock == 1)
+                    if (animationClock == 3)
                     {
                         if (this.currentFrame >= walkrightanimation.Count()-1)
                         { this.currentFrame = 0; }
@@ -291,7 +291,7 @@ namespace Plat2d_2.EngineCore
                     break;
                 case ActionState.JumpingLeft:
                     var jumpleftanimation = this.jumpLeftData;
-                    if (animationClock == 1)
+                    if (animationClock == 3)
                     {
                         if (this.currentFrame >= jumpleftanimation.Count() - 1)
                         { this.currentFrame = 0; }
@@ -304,7 +304,7 @@ namespace Plat2d_2.EngineCore
                     break;
                 case ActionState.JumpingRight:
                     var jumprightanimation = this.jumpRightData;
-                    if (animationClock == 1)
+                    if (animationClock == 3)
                     {
                         if (this.currentFrame >= jumprightanimation.Count() - 1)
                         { this.currentFrame = 0; }
