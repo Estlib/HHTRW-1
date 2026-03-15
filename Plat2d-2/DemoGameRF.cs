@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Plat2d_2.EngineCore.ObjectTypes;
 
 namespace Plat2d_2
 {
@@ -66,6 +67,6 @@ namespace Plat2d_2
 
         /* Gameplay stuff */
         //World 1
-        World harenimus = GetHarenimus();
+        WorldStructure harenimus = WorldStructure.GetHarenimus();
     }
 }

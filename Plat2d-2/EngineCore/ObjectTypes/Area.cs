@@ -15,16 +15,16 @@ namespace Plat2d_2.EngineCore.ObjectTypes
 
         //an array of area numbers to compose a "clear map"
         //an array of area numbers player needs to clear to consider world complete - can be used to exclude bonus levels.
-        public List<int> ClearMap = GetIDsFromLevels(Levels);
+        public static List<int> ClearMap = GetIDsFromLevels(Levels);
         //areanumber
-        public int AreaNumber { get; set; }
+        public static int AreaNumber { get; set; }
         //areaname
-        public string AreaName { get; set; }
+        public static string AreaName { get; set; }
         //areamap
         /*same as clearmap*/
-        public bool isAreaClear { get; set; }
-        public bool isRequiredToBeCleared { get; set; }
-        public bool canPassOnMap { get; set; } = false;
+        public static bool isAreaClear { get; set; }
+        public static bool isRequiredToBeCleared { get; set; }
+        public static bool canPassOnMap { get; set; } = false;
 
 
 
