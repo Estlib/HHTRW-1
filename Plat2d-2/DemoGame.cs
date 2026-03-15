@@ -35,13 +35,12 @@ namespace Plat2d_2
         [DllImport("winmm.dll")]
         private static extern uint timeEndPeriod(uint uMilliseconds);
 
-        public static int MaxFPS = 57;
+        public static int MaxFPS = 50;
         public double MaxFT = (1000d / MaxFPS);
         public Stopwatch stopwatch = new Stopwatch();
         int fpsCounter = 0;
         Stopwatch fpsTimer = Stopwatch.StartNew();
 
-        long ticksinframe = 200000;
         public double lastFrameTime = 0;
         public static int nextusableline = 5; // this is to save last logged line for the Logging tool
         string fontplace = "assets/fonts/arcade-legacy.ttf";
@@ -1171,6 +1170,14 @@ namespace Plat2d_2
         public DemoGame() : base(new Vector2(320 + 16, 240 + 40), "HHTRW-engine1 demo")
         {
 
+        }
+
+        /// <summary>
+        /// constructor for demogame. bases enginecore
+        /// </summary>
+        public DemoGame(bool _isWindow) : base(new Vector2(320, 240 ), "HHTRW-engine1 demo")
+        {
+            isWindow = _isWindow;
         }
         /// <summary>
         /// method that runs on load of the game, setting it up for play.

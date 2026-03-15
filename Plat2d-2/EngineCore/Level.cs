@@ -23,6 +23,7 @@ namespace Plat2d_2.EngineCore
         public bool isLevelCleared = false;
         //public List<Level> multipartlevelparts = new List<Level>();
         public Level nextlevelpart = null;
+        public bool isClearingRequired = false;
 
         //public int? musicNumber {  get; set; }
         //public string artSetFolder { get; set; }

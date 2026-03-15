@@ -11,7 +11,10 @@ namespace Plat2d_2.EngineCore.ObjectTypes
         //this is the data for a single world, it needs:
 
         //List of existing List-area-type items
+        public List<Area> Areas { get; set; }
         //an array of area numbers to compose a "clear map"
+
+
         //an array of area numbers player needs to clear to consider world complete - can be used to exclude bonus levels.
         //worldname
         //worldorderinteger

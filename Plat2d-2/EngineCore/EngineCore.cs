@@ -38,12 +38,12 @@ namespace Plat2d_2.EngineCore
 
         public void InitializeComponent()
         {
-            
+
             this.SuspendLayout();
             // 
             // label1
             // 
-            
+
             // 
             // Canvas
             // 
@@ -73,7 +73,7 @@ namespace Plat2d_2.EngineCore
         public static bool addTraceTXT = false;
         private Bitmap backBuffer;
         private Graphics backGraphics;
-
+        public static bool isWindow = false;
 
 
         public static List<Shape2d> AllShapes = new List<Shape2d>();
@@ -84,7 +84,7 @@ namespace Plat2d_2.EngineCore
 
         public System.Drawing.Color BGColor = System.Drawing.Color.Black;
 
-        public Vector2 CameraZoom = new Vector2(1,1);
+        public Vector2 CameraZoom = new Vector2(1, 1);
         public Vector2 CameraPosition = Vector2.Zero();
         public float CameraAngle = 0f;
 
@@ -106,27 +106,47 @@ namespace Plat2d_2.EngineCore
         {
             Log.Info("Game is starting");
             this.ScreenSize = ScreenSize;
-            backBuffer = new Bitmap((int)this.ScreenSize.X, (int)this.ScreenSize.Y);
-            backGraphics = Graphics.FromImage(backBuffer);
-            backGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            backGraphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+            //Log.Info("ScreenSize: " + this.ScreenSize.X + " x " + this.ScreenSize.Y);
+            //Log.Info("isWindow: " + isWindow);
+            //Log.Info("CameraZoom: " + CameraZoom.X + ", " + CameraZoom.Y);
+            //Log.Info("CameraAngle: " + CameraAngle);
+            //Console.ReadKey();
+            if (!isWindow)
+            {
+                backBuffer = new Bitmap((int)this.ScreenSize.X, (int)this.ScreenSize.Y);
+                backGraphics = Graphics.FromImage(backBuffer);
+                backGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                backGraphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+            }
             this.Title = Title;
 
             Window = new Canvas();
-            Window.Size = new Size((int)this.ScreenSize.X, (int)this.ScreenSize.Y);
+            Window.ClientSize = new Size((int)this.ScreenSize.X, (int)this.ScreenSize.Y);
+            //noclient
             Window.Text = this.Title;
-            Window.Paint += Renderer2;
+            if (!isWindow)
+            {
+                Window.Paint += Renderer2;
+            }
+            else
+            {
+                Window.Paint += Renderer;
+            }
             Window.KeyDown += Window_KeyDown;
-            Window.KeyUp+= Window_KeyUp;
+            Window.KeyUp += Window_KeyUp;
             Window.FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Window.FormClosing += Window_FormClosing;
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
             world = new World(worldAABB, gravity, pausebuttoninput);
             Window.InitializeComponent();
-            SetFullscreen();
-            FullscreenMode();
+            if (!isWindow)
+            {
+                SetFullscreen();
+                FullscreenMode();
+            }
             Application.Run(Window);
+
         }
 
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
@@ -216,7 +236,7 @@ namespace Plat2d_2.EngineCore
         void GameLoop()
         {
 
-            
+
             OnLoad();
             while (GameLoopThread.IsAlive)
             {
@@ -226,11 +246,11 @@ namespace Plat2d_2.EngineCore
                     world.Step(timeStep, velocityIterations, positionIterations);
                     OnUpdate();
                     Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
-                    Thread.Sleep(2);
+                    //Thread.Sleep(2);
                     if (Window != null)
                     {
                         Window.BeginInvoke((MethodInvoker)delegate { UpdateHud(); });
-                    }                    
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -320,6 +340,61 @@ namespace Plat2d_2.EngineCore
 
         private void Renderer2(object sender, PaintEventArgs e)
         {
+            //Log.Info("Render CameraPosition: " + CameraPosition.X + ", " + CameraPosition.Y);
+            Graphics g = e.Graphics;
+
+            // Draw to low-res backbuffer exactly like old Renderer
+            backGraphics.Clear(BGColor);
+            backGraphics.ResetTransform();
+            backGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            backGraphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+
+            backGraphics.TranslateTransform(CameraPosition.X, CameraPosition.Y);
+            backGraphics.RotateTransform(CameraAngle);
+            backGraphics.ScaleTransform(CameraZoom.X, CameraZoom.Y);
+
+            for (int i = 0; i < AllSprites.Count; i++)
+            {
+                Sprite2d sprite = AllSprites[i];
+                if (!sprite.IsReference)
+                {
+                    backGraphics.DrawImage(
+                        sprite.Sprite,
+                        sprite.Position.X,
+                        sprite.Position.Y,
+                        sprite.Scale.X,
+                        sprite.Scale.Y
+                    );
+                }
+            }
+
+            // Present backbuffer to fullscreen
+            g.Clear(BGColor);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+
+            float aspect = ScreenSize.X / ScreenSize.Y;
+
+            int drawHeight = Window.ClientSize.Height;
+            int drawWidth = (int)System.Math.Round(drawHeight * aspect);
+
+            if (drawWidth > Window.ClientSize.Width)
+            {
+                drawWidth = Window.ClientSize.Width;
+                drawHeight = (int)System.Math.Round(drawWidth / aspect);
+            }
+
+            int offsetX = (Window.ClientSize.Width - drawWidth) / 2;
+            int offsetY = (Window.ClientSize.Height - drawHeight) / 2;
+            backBuffer.Save("fullscreen_source.png", System.Drawing.Imaging.ImageFormat.Png);
+            g.DrawImage(
+                backBuffer,
+                new Rectangle(offsetX, offsetY, drawWidth, drawHeight),
+                new Rectangle(0, 0, (int)ScreenSize.X, (int)ScreenSize.Y),
+                GraphicsUnit.Pixel
+            );
+        }
+        /*{
             Graphics g = e.Graphics;
 
             // 1) render scene to low-res buffer
@@ -329,7 +404,7 @@ namespace Plat2d_2.EngineCore
             backGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             backGraphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
-            backGraphics.TranslateTransform(CameraPosition.X, -CameraPosition.Y);
+            backGraphics.TranslateTransform(CameraPosition.X, -(CameraPosition.Y));
             backGraphics.RotateTransform(CameraAngle);
             backGraphics.ScaleTransform(CameraZoom.X, CameraZoom.Y);
 
@@ -363,31 +438,60 @@ namespace Plat2d_2.EngineCore
 
             g.DrawImage(
                 backBuffer,
-                new RectangleF(offsetX, offsetY, drawWidth, drawHeight),
+                new RectangleF(offsetX, offsetY-40, drawWidth, drawHeight),
                 new RectangleF(0, 0, ScreenSize.X, ScreenSize.Y),
                 GraphicsUnit.Pixel
             );
-        }
+            backBuffer.Save("frame_debug.png", System.Drawing.Imaging.ImageFormat.Png);
+        }*/
         private void Renderer(object sender, PaintEventArgs e)
         {
+            //Log.Info("Render CameraPosition: " + CameraPosition.X + ", " + CameraPosition.Y);
             // Instruct the world to perform a single step of simulation. It is
             // generally best to keep the time step and iterations fixed.
             Graphics g = e.Graphics;
             g.Clear(BGColor);
             //GameLoopThread.Abort();
 
+            //using (Bitmap testBuffer = new Bitmap((int)ScreenSize.X, (int)ScreenSize.Y))
+            //using (Graphics tg = Graphics.FromImage(testBuffer))
+            //{
+            //    tg.Clear(BGColor);
+            //    tg.TranslateTransform(CameraPosition.X, CameraPosition.Y);
+            //    tg.RotateTransform(CameraAngle);
+            //    tg.ScaleTransform(CameraZoom.X, CameraZoom.Y);
+
+            //    for (int i = 0; i < AllSprites.Count; i++)
+            //    {
+            //        Sprite2d sprite = AllSprites[i];
+            //        if (!sprite.IsReference)
+            //        {
+            //            tg.DrawImage(
+            //                sprite.Sprite,
+            //                sprite.Position.X,
+            //                sprite.Position.Y,
+            //                sprite.Scale.X,
+            //                sprite.Scale.Y
+            //            );
+            //        }
+            //    }
+
+            //    testBuffer.Save("windowed_source.png", System.Drawing.Imaging.ImageFormat.Png);
+            //}
+
+
             float scaleX = (float)Window.ClientSize.Width / ScreenSize.X;
             float scaleY = (float)Window.ClientSize.Height / ScreenSize.Y;
             float scale = System.Math.Min(scaleX, scaleY); // Keep aspect ratio
             // new code for pixellated fullscreen
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+            //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            //g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
             g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
             g.RotateTransform(CameraAngle);
-            //g.ScaleTransform(CameraZoom.X, CameraZoom.Y);
+            g.ScaleTransform(CameraZoom.X, CameraZoom.Y);
 
-            g.ScaleTransform(scale, scale);
+            //g.ScaleTransform(scale, scale);
             //try
             //{
             //foreach (Shape2d shape in AllShapes)
@@ -421,7 +525,7 @@ namespace Plat2d_2.EngineCore
         //{
         //    Graphics h = e.Graphics;
         //    h.Clear(BGColor);
-            
+
         //}
         public abstract void OnLoad();
         public abstract void OnUpdate();
