@@ -282,7 +282,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
             return new Area
                 (
                 new List<Level> { GetL_07(), GetL_08() },
-                3,
+                6,
                 "Harenimus 1-6 Castle"
                 );
         }

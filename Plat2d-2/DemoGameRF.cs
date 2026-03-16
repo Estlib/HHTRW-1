@@ -123,6 +123,13 @@ namespace Plat2d_2
         //Current gamestate
         public static bool isOnScreen = true;
         public static int whichScreen = 0;
+        public static bool isPlayerRequestingLevel = false;
+        public static int[] whichLevel = { 1, 0 };
+        public static bool isPlayerGoingNextRoom = false;
+        public static int nextRoomElementInt = 1;
+        Level activeLevel;
+        public static bool isThisLevelClear = false;
+
 
 
 
@@ -191,10 +198,165 @@ namespace Plat2d_2
             //Start game on title screen   \/
             isOnScreen = true;
             whichScreen = 0;
+            isPlayerRequestingLevel = false;
             LoadArea(isOnScreen, whichScreen, worlds);
+
         }
 
-       
+        public override void OnDraw()
+        {
+            // level state handling
+            GameStateHandler2();
+
+            // key detection
+
+        }
+
+        private void GameStateHandler2()
+        {
+            if (isThisLevelClear)
+            {
+                SetLevelCleared(worlds, activeLevel);
+            }
+            //check wether to change level or go to screen or do nothing
+            if (isPlayerRequestingLevel)
+            {
+                UnloadLastLevel();
+                if (isOnScreen == true && whichScreen != -1)
+                {
+                    LoadArea(isOnScreen, whichScreen, worlds);
+                }
+                else
+                {
+                    LoadLevel(worlds, whichLevel);
+                }
+            }
+            else if (isPlayerGoingNextRoom)
+            {
+                UnloadLastLevel();
+                LoadLevel(activeLevel, nextRoomElementInt);
+            }
+            else
+            {
+                UnloadLastLevel();
+                Log.Error("Cannot determine next level, returning to title screen.");
+                LoadArea(true, 0, worlds);
+            }
+
+        }
+
+        private void SetLevelCleared(List<WorldStructure> worlds, Level activeLevel)
+        {
+            int areanum = 0;
+            int numindspot = 0;
+            foreach (var world in worlds)
+            {
+                if (world.WorldName != "Utility" || world.isWorldClear != true)
+                {
+                    foreach (var area in world.Areas)
+                    {
+                        bool thisIsCleared = false;
+                        foreach (var level in area.Levels)
+                        {
+                            if (level == activeLevel)
+                            {
+                                thisIsCleared = true;
+                            }
+                        }
+                        area.isAreaClear = thisIsCleared;
+                        areanum = area.AreaNumber;
+                        break;
+                    }
+                }
+                //what is the area number
+
+                //does it exist in clearareas
+                if (world.ClearAreas.Contains(areanum))
+                {
+                    //if yes, what index is it in clearareas
+                    numindspot = world.ClearAreas.IndexOf(areanum);
+                    //mark same index in areareasclear as true
+                    world.AreAreasClear[numindspot] = true;
+                }
+                //check all areas, mark world clear
+                bool hasAnyForgot = true;
+                foreach (var areaclearbool in world.AreAreasClear)
+                {
+                    if (areaclearbool == false)
+                    {
+                        hasAnyForgot = false;
+                    }
+                    else 
+                    { 
+                        hasAnyForgot = true; 
+                    }
+                }
+                if (hasAnyForgot == false)
+                {
+                    world.isWorldClear = true;
+                }
+            }
+        }
+
+        private void UnloadLastLevel()
+        {
+            RemoveEnemies();
+            RemoveAllSprites();
+        }
+        private static void RemoveEnemies()
+        {
+            if (enemiesv2.Count != 0)
+            {
+                for (int i = 0; i < enemiesv2.Count; i++)
+                {
+                    enemiesv2.ElementAt(i).sprite2d.DestroySelf();
+                    enemiesv2.ElementAt(i).sprite2d.DestroyStatic(enemiesv2.ElementAt(i).sprite2d);
+                }
+            }
+        }
+        private void LoadLevel(Level activeLevel, int nextRoomElementInt)
+        {
+            foreach (var world in worlds)
+            {
+                if (world.WorldName != "Utility")
+                {
+                    foreach (var area in world.Areas)
+                    {
+                        bool loadnext = false;
+                        int areaElement = 0;
+                        foreach (var level in area.Levels)
+                        {
+                            if (level == activeLevel)
+                            {
+                                areaElement = area.Levels.IndexOf(level) + 1;
+                                loadnext = true;
+                            }
+                        }
+                        if (loadnext)
+                        {
+                            LoadScreen(area, areaElement);
+                        }
+
+                    }
+                }
+
+            }
+        }
+        private void LoadLevel(List<WorldStructure> worlds, int[] whichLevel)
+        {
+            WorldStructure selectedWorld = worlds[whichLevel[0]];
+            Area selectedLevel = selectedWorld.Areas[whichLevel[1]];
+            if (selectedLevel.isAreaClear)
+            {
+                return;
+            }
+            else
+            {
+                LoadScreen(selectedLevel, 0);
+            }
+        }
+
+
 
         /// <summary>
         /// Overall method for Area loading
@@ -222,10 +384,10 @@ namespace Plat2d_2
                 LoadScreen(whichScreen, selectedWorld);
             }
         }
-
-        private void LoadScreen(int whichScreen, WorldStructure selectedWorld)
+        private void LoadScreen(Area selectedLevel, int targetedLevel)
         {
-            Level loadTarget = selectedWorld.Levels[whichScreen];
+            Level loadTarget = selectedLevel.Levels[targetedLevel];
+            activeLevel = loadTarget;
             BGColor = loadTarget.levelColor; //set color from level
             enemiesv2 = new List<EnemyV2>(); //clear enemies
             Log.Info($"New Level is being loaded -> {loadTarget.levelname}");
@@ -249,7 +411,34 @@ namespace Plat2d_2
                 }
             }
             PlayLevelTrack(loadTarget);
+        }
+        private void LoadScreen(int whichScreen, WorldStructure selectedWorld)
+        {
+            Level loadTarget = selectedWorld.Levels[whichScreen];
+            activeLevel = loadTarget;
+            BGColor = loadTarget.levelColor; //set color from level
+            enemiesv2 = new List<EnemyV2>(); //clear enemies
+            Log.Info($"New Level is being loaded -> {loadTarget.levelname}");
 
+            //load the layers
+            List<string[,]> layersToRender = new List<string[,]>();
+            layersToRender.Add(loadTarget.firstMostLayer);
+            layersToRender.Add(loadTarget.objectRenderLayer);
+            layersToRender.Add(loadTarget.lastMostLayer);
+            layersToRender.Add(loadTarget.hudLayer);
+            currentLevelEndSize = layersToRender.ElementAt(0).GetLength(1) * 16;
+            foreach (var layer in layersToRender)
+            {
+                if (layersToRender.IndexOf(layer) == 1)
+                {
+                    RenderObjects(layer);
+                }
+                else
+                {
+                    RenderLayer(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
+                }
+            }
+            PlayLevelTrack(loadTarget);
         }
 
         private void PlayLevelTrack(Level loadTarget)
@@ -331,9 +520,9 @@ namespace Plat2d_2
                         (
                             new Sprite2d
                             (
-                                new Vector2(i * 16, j * 16), 
-                                new Vector2(32, 32), 
-                                walkingEnemySpritesBitmap[0], 
+                                new Vector2(i * 16, j * 16),
+                                new Vector2(32, 32),
+                                walkingEnemySpritesBitmap[0],
                                 "Enemy"
                                 ),
                             walkingEnemySpritesBitmap,

@@ -1684,7 +1684,7 @@ namespace Plat2d_2
         private void GameStateHandler()
         {
             //reloadtrigger = false;
-            //Log.Highlight("[GSH] - GameStateHandler has been called");
+            //Log.Highlight("[GSH] - GameStateHandler ha s been called");
             Level nextlevel = null; //variable internal to the function for the next level to load
 
             if (levels[currentLevel].isLevelCleared) //check if level has been cleared, then
