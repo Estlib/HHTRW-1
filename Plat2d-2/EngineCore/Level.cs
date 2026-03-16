@@ -24,6 +24,7 @@ namespace Plat2d_2.EngineCore
         //public List<Level> multipartlevelparts = new List<Level>();
         public Level nextlevelpart = null;
         public bool isClearingRequired = false;
+        public Sprite2d[] artRefs { get; set; }
 
         //public int? musicNumber {  get; set; }
         //public string artSetFolder { get; set; }
@@ -44,6 +45,10 @@ namespace Plat2d_2.EngineCore
         //    this.lastMostLayer = null;
         //    this.hudLayer = null;
         //}
+        /// <summary>
+        /// ctor 1
+        /// </summary>
+        /// <param name="artSetFolder"></param>
         public Level(string artSetFolder)
         {
             this.musicNumber = 0;
@@ -53,6 +58,11 @@ namespace Plat2d_2.EngineCore
             this.lastMostLayer = null;
             this.hudLayer = null;
         }
+        /// <summary>
+        /// ctor2
+        /// </summary>
+        /// <param name="artSetFolder"></param>
+        /// <param name="firstMostLayer"></param>
         public Level(string artSetFolder, string[,] firstMostLayer)
         {
             this.musicNumber = 0;
@@ -62,6 +72,13 @@ namespace Plat2d_2.EngineCore
             this.lastMostLayer = null;
             this.hudLayer = null;
         }
+        /// <summary>
+        /// ctor3
+        /// </summary>
+        /// <param name="firstMostLayer"></param>
+        /// <param name="objectRenderLayer"></param>
+        /// <param name="lastMostLayer"></param>
+        /// <param name="levelname"></param>
         public Level(string[,] firstMostLayer, string[,] objectRenderLayer, string[,] lastMostLayer,  string levelname)
         {
             string findthislevel = levelname;
@@ -102,7 +119,21 @@ namespace Plat2d_2.EngineCore
             this.levelColor = levelColor;
             this.isLevelCleared = isLevelCleared;
         }
-
+        /// <summary>
+        /// ctor5
+        /// </summary>
+        /// <param name="musicNumber"></param>
+        /// <param name="artSetFolder"></param>
+        /// <param name="artTagDefinitions"></param>
+        /// <param name="firstMostLayer"></param>
+        /// <param name="objectRenderLayer"></param>
+        /// <param name="lastMostLayer"></param>
+        /// <param name="hudLayer"></param>
+        /// <param name="levelType"></param>
+        /// <param name="levelname"></param>
+        /// <param name="levelColor"></param>
+        /// <param name="isLevelCleared"></param>
+        /// <param name="nextlevelpart"></param>
         public Level(
         int musicNumber, string artSetFolder, string[] artTagDefinitions, string[,] firstMostLayer, string[,] objectRenderLayer, string[,] lastMostLayer,
         string[,] hudLayer, string levelType, string levelname, System.Drawing.Color levelColor, bool isLevelCleared, Level nextlevelpart)
@@ -119,6 +150,38 @@ namespace Plat2d_2.EngineCore
             this.levelColor = levelColor;
             this.isLevelCleared = isLevelCleared;
             this.nextlevelpart = nextlevelpart;
+        }
+        /// <summary>
+        /// ctor6
+        /// </summary>
+        /// <param name="musicNumber"></param>
+        /// <param name="artSetFolder"></param>
+        /// <param name="artTagDefinitions"></param>
+        /// <param name="firstMostLayer"></param>
+        /// <param name="objectRenderLayer"></param>
+        /// <param name="lastMostLayer"></param>
+        /// <param name="hudLayer"></param>
+        /// <param name="levelType"></param>
+        /// <param name="levelname"></param>
+        /// <param name="levelColor"></param>
+        /// <param name="isLevelCleared"></param>
+        /// <param name="artRefs"></param>
+        public Level(
+        int musicNumber, string artSetFolder, string[] artTagDefinitions, string[,] firstMostLayer, string[,] objectRenderLayer, string[,] lastMostLayer,
+        string[,] hudLayer, string levelType, string levelname, System.Drawing.Color levelColor, bool isLevelCleared, Sprite2d[] artRefs, bool ignore = false)
+        {
+            this.musicNumber = musicNumber;
+            this.artSetFolder = artSetFolder;
+            this.artTagDefinitions = artTagDefinitions;
+            this.firstMostLayer = firstMostLayer;
+            this.objectRenderLayer = objectRenderLayer;
+            this.lastMostLayer = lastMostLayer;
+            this.hudLayer = hudLayer;
+            this.levelType = levelType;
+            this.levelname = levelname;
+            this.levelColor = levelColor;
+            this.isLevelCleared = isLevelCleared;
+            this.artRefs = artRefs;
         }
 
         public string[,] LevelLayers(string levelname, int layernumber)

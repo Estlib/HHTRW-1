@@ -12,18 +12,19 @@ namespace Plat2d_2.EngineCore.ObjectTypes
         //this is the data for a single world, it needs:
 
         //List of existing List-area-type items
-        public static List<Area> Areas { get; set; }
+        public  List<Area> Areas { get; set; }
+        public  List<Level> Levels { get; set; } //used for utility levels
         //an array of area numbers to compose a "clear map"
         //an array of area numbers player needs to clear to consider world complete - can be used to exclude bonus levels.
-        public static List<int> ClearAreas { get; set; }
+        public  List<int> ClearAreas { get; set; }
 
         //worldname
-        public static string WorldName { get; set; }
+        public  string WorldName { get; set; }
         //worldorderinteger
-        public static int WorldOrderInteger { get; set; }
+        public  int WorldOrderInteger { get; set; }
         //world map - single level item, will be rendered using a non-platformer renderer, can be a singular platform level for now.
-        public static Level WorldMap { get; set; }
-        public static bool isWorldClear { get; set; } = false;
+        public  Level WorldMap { get; set; }
+        public  bool isWorldClear { get; set; } = false;
 
         //NOTE, DUE TO SIMILARITIES TO AREA, IT MIGHT BE USEFUL TO USE AN INHERITANCE INSTEAD OF A BASE WA-TYPE
         public WorldStructure(
@@ -40,6 +41,16 @@ namespace Plat2d_2.EngineCore.ObjectTypes
             WorldOrderInteger = worldOrderInteger;
             WorldMap = worldMap;
         }
+        public WorldStructure(
+            List<Level> levels, 
+            string worldName, 
+            int worldOrderInteger
+            )
+        {
+            Levels = levels;
+            WorldName = worldName;
+            WorldOrderInteger = worldOrderInteger;
+        }
 
         /// <summary>
         /// Returns world 1 data
@@ -49,7 +60,7 @@ namespace Plat2d_2.EngineCore.ObjectTypes
         {
             WorldStructure harenimus = new WorldStructure(
 
-                Areas = new List<Area> 
+                new List<Area> 
                 { 
                     LevelController.GetAreaW1_1(),
                     LevelController.GetAreaW1_2(),
@@ -58,13 +69,32 @@ namespace Plat2d_2.EngineCore.ObjectTypes
                     LevelController.GetAreaW1_5(),
                     LevelController.GetAreaW1_6(),
                 },
-                ClearAreas = new List<int> { 1, 2, 3, 4, 5, 6 },
-                WorldName = "The Kingdom of Harenimus",
-                WorldOrderInteger = 1,
-                WorldMap = LevelController.GetWM_1()
+                new List<int> { 1, 2, 3, 4, 5, 6 },
+                "The Kingdom of Harenimus",
+                1,
+                LevelController.GetWM_1()
             );
 
             return harenimus;
+        }
+        /// <summary>
+        /// Returns games utility screens that are levels
+        /// </summary>
+        /// <returns>Utility data as a WorldStructure </returns>
+        public static WorldStructure GetScreens()
+        {
+            WorldStructure screens = new WorldStructure(
+
+                new List<Level> 
+                { 
+                    LevelController.GetTitleScreen(),
+                    LevelController.GetGameOverScreen(),
+                },
+                "Utility",
+                0
+            );
+
+            return screens;
         }
     }
 

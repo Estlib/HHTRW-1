@@ -11,20 +11,20 @@ namespace Plat2d_2.EngineCore.ObjectTypes
         //the data an area has:
 
         //list of existing level-type items
-        public static List<Level> Levels { get; set; }
+        public List<Level> Levels { get; set; }
 
         //an array of area numbers to compose a "clear map"
         //an array of area numbers player needs to clear to consider world complete - can be used to exclude bonus levels.
-        public static List<int> ClearMap = GetIDsFromLevels(Levels);
+        public List<int> ClearMap { get; set; }
         //areanumber
-        public static int AreaNumber { get; set; }
+        public int AreaNumber { get; set; }
         //areaname
-        public static string AreaName { get; set; }
+        public string AreaName { get; set; }
         //areamap
         /*same as clearmap*/
-        public static bool isAreaClear { get; set; }
-        public static bool isRequiredToBeCleared { get; set; }
-        public static bool canPassOnMap { get; set; } = false;
+        public  bool isAreaClear { get; set; }
+        public  bool isRequiredToBeCleared { get; set; }
+        public  bool canPassOnMap { get; set; } = false;
 
 
 
@@ -35,7 +35,7 @@ namespace Plat2d_2.EngineCore.ObjectTypes
             Levels = levels;
             AreaNumber = areaNumber;
             AreaName = areaName;
-            //ClearMap = clearMap;
+            ClearMap = GetIDsFromLevels(Levels);
         }
         private static List<int> GetIDsFromLevels(List<Level> levels)
         {

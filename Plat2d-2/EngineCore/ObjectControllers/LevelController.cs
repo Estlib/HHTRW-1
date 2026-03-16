@@ -10,6 +10,13 @@ namespace Plat2d_2.EngineCore.ObjectControllers
 {
     public class LevelController
     {
+        public static Sprite2d[] NoArtRefs = ArtData.GetArtRefs("NoArtRefs");
+        public static Sprite2d[] PlainsArtRefs = ArtData.GetArtRefs("PlainsArtRefs");
+        public static Sprite2d[] TitleMenuMapRefs = ArtData.GetArtRefs("TitleMenuMapRefs");
+        public static Sprite2d[] UndergroundArtRefs = ArtData.GetArtRefs("UndergroundArtRefs");
+        public static Sprite2d[] DesertArtRefs = ArtData.GetArtRefs("DesertArtRefs");
+        public static Sprite2d[] ForestArtRefs = ArtData.GetArtRefs("ForestArtRefs");
+        public static Sprite2d[] CastleArtRefs = ArtData.GetArtRefs("CastleArtRefs");
         public LevelController() { }
 
         //levels
@@ -25,7 +32,9 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 "Screen",
                 "",
                 Color.FromArgb(255, 0, 0, 0),
-                false)
+                false,
+                TitleMenuMapRefs
+                )
             { };
             return harenimusWorldMap;
         }
@@ -43,7 +52,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 "",
                 Color.FromArgb(255, 0, 0, 0),
                 false, 
-                null
+                PlainsArtRefs
                 )
             { };
             return harenimus1_1;
@@ -62,7 +71,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 "",
                 Color.FromArgb(255, 0, 0, 0),
                 false, 
-                null
+                UndergroundArtRefs
             )
             { };
             return harenimus1_2;
@@ -81,7 +90,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 "",
                 Color.FromArgb(255, 88, 216, 88),
                 false, 
-                null
+                ForestArtRefs
             )
             { };
             return harenimus1_3_1;
@@ -100,7 +109,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 "",
                 Color.FromArgb(255, 88, 216, 88),
                 false, 
-                null
+                ForestArtRefs
             )
             { };
             return harenimus1_3_2;
@@ -119,7 +128,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 "",
                 Color.FromArgb(255, 164, 232, 252),
                 false, 
-                null
+                DesertArtRefs
             )
             { };
             return harenimus1_4;
@@ -138,7 +147,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 "",
                 Color.FromArgb(255, 56, 192, 252),
                 false, 
-                null
+                PlainsArtRefs
             )
             { };
             return harenimus1_5;
@@ -157,7 +166,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 "",
                 Color.FromArgb(255, 0, 0, 0),
                 false, 
-                null
+                CastleArtRefs
             )
             { };
             return harenimus1_6_1;
@@ -176,10 +185,50 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 "",
                 Color.FromArgb(255, 0, 0, 0),
                 false, 
-                null
+                CastleArtRefs
             )
             { };
             return harenimus1_6_2;
+        }
+
+        //utility levels
+        internal static Level GetTitleScreen()
+        {
+            Level titlescreen = new Level(
+                6,
+                "screens",
+                ArtData.CastleArtRefsTags(),
+                LevelData.RetrieveData("TS1", 0),
+                LevelData.RetrieveData("TS1", 1),
+                LevelData.RetrieveData("TS1", 2),
+                LevelData.RetrieveData("TS1", 3),
+                "Screen",
+                "",
+                Color.FromArgb(255, 0, 0, 0),
+                false, 
+                TitleMenuMapRefs
+            )
+            { };
+            return titlescreen;
+        }
+        internal static Level GetGameOverScreen()
+        {
+            Level titlescreen = new Level(
+                6,
+                "screens",
+                ArtData.CastleArtRefsTags(),
+                LevelData.RetrieveData("GO1", 0),
+                LevelData.RetrieveData("GO1", 1),
+                LevelData.RetrieveData("GO1", 2),
+                LevelData.RetrieveData("GO1", 3),
+                "Screen",
+                "",
+                Color.FromArgb(255, 0, 0, 0),
+                false, 
+                TitleMenuMapRefs
+            )
+            { };
+            return titlescreen;
         }
 
         //areas

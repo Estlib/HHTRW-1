@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -587,5 +588,51 @@ namespace Plat2d_2.EngineCore
                 }
             return artrefs;
         }
+
+        internal static List<Bitmap> PlayerSprites()
+        {
+            return new List<Bitmap>()
+            {
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1.png")),           //0 - standing --------------*
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1.png")),             //1 - running 1/6
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run2.png")),             //2 - running 2/6
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run3.png")),             //3 - running 3/6
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run4.png")),             //4 - running 4/6
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run5.png")),             //5 - running 5/6
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run6.png")),             //6 - running 6/6
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand2.png")),           //7 - inbetween for standing and crouching
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3duck.png")),       //8 - crouching
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3jump.png")),       //9 - jumping
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfall.png")),          //10 - falling
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand1flip.png")),       //11 - standing flipped --------------*
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run1flip.png")),         //12 - running 1/6 flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run2flip.png")),         //13 - running 2/6 flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run3flip.png")),         //14 - running 3/6 flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run4flip.png")),         //15 - running 4/6 flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run5flip.png")),         //16 - running 5/6 flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/run6flip.png")),         //17 - running 6/6 flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand2flip.png")),       //18 - inbetween for standing and crouching flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3duckflip.png")),   //19 - crouching flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3jumpflip.png")),   //20 - jumping flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfallFLIP.png"))       //21 - falling flipped
+            };
+        }
+
+        internal static List<Bitmap> MenuSprites()
+        {
+            return new List<Bitmap>()
+            {
+                new Bitmap(Image.FromFile($"assets/sprites/menu/00.png")),  //0 - unselected menu level 0 template
+                new Bitmap(Image.FromFile($"assets/sprites/menu/01.png")),  //1 - item 1/4 selected, level 0 (start game)
+                new Bitmap(Image.FromFile($"assets/sprites/menu/02.png")),  //2 - item 2/4 selected, level 0 (save load)
+                new Bitmap(Image.FromFile($"assets/sprites/menu/03.png")),  //3 - item 3/4 selected, level 0 (options)-(submenu)
+                new Bitmap(Image.FromFile($"assets/sprites/menu/04.png")),  //4 - item 4/4 selected, level 0 (exit)
+                new Bitmap(Image.FromFile($"assets/sprites/menu/05.png")),  //5 - item 1/3 selected, level 1 options (info)-(subscreen)
+                new Bitmap(Image.FromFile($"assets/sprites/menu/06.png")),  //6 - item 2/3 selected, level 1 options (sound test)-(subscreen)
+                new Bitmap(Image.FromFile($"assets/sprites/menu/07.png")),  //7 - item 3/3 selected, level 1 options (fullscreen)-(function toggle)
+            };                                                            
+        }
+
+
     }
 }

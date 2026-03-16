@@ -22,18 +22,23 @@ namespace Plat2d_2.EngineCore.ObjectTypes
         public List<Bitmap> Graphics { get; set; } // weapon graphics, DOES NOT APPLY FOR WIELDED OR SCREEN
 
         public Weapon(
-            string weaponName, 
-            WeaponType weaponType, 
-            int maxBulletcount, 
+            string weaponName,
+            WeaponType weaponType,
+            int maxBulletcount,
             int ammoConsumption,
-            bool firingLock)
+            bool firingLock,
+            int firingLockFrameCount,
+            List<Bitmap> projectileBitmaps
+            )
         {
             WeaponName = weaponName;
             ThisWeaponType = weaponType;
             MaxBulletCount = maxBulletcount;
             AmmoConsumption = ammoConsumption;
-            Graphics = new List<Bitmap>();
             FiringLock = firingLock;
+            FiringLockTimer = firingLockFrameCount;
+            Graphics = projectileBitmaps;
+
         }
 
         internal static Weapon GetWeapon(string weaponName)
@@ -41,11 +46,32 @@ namespace Plat2d_2.EngineCore.ObjectTypes
             switch (weaponName)
             {
                 case "debug":
+                    Log.Normal("Player is given weapon \"debug\"");
+                    return DebugWeapon();
                     break;
                 default:
                     Log.Warning("No weapon is selected");
+                    return DebugWeapon();
                     break;
             }
         }
+
+        private static Weapon DebugWeapon()
+        {
+            return new Weapon(
+                "debug",
+                WeaponType.Shot,
+                3,
+                1,
+                false,
+                10,
+                new List<Bitmap>()
+                    {
+                        new Bitmap(Image.FromFile($"assets/sprites/bullets/weapon1A.png")),
+                        new Bitmap(Image.FromFile($"assets/sprites/bullets/weapon1B.png"))
+                    }
+            );
+        }
+
     }
 }

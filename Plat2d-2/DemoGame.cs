@@ -52,6 +52,7 @@ namespace Plat2d_2
         Label AmmoLabel;
         Label LevelLabel;
         Label SelectedWeaponLabel;
+        
         Sprite2d player; //variable to hold players sprite
 
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>();

@@ -351,6 +351,34 @@ namespace Plat2d_2.EngineCore
             Log.Warning("Function does not contain any sprites assigned, not implemented.");
             switch (enemyType)
             {
+                case "walking":
+                    return new List<Bitmap>() 
+                    {
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand1.png")), //0 - standing --------------*
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run1.png")), //1 - running 1/6
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run2.png")), //2 - running 2/6
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run3.png")), //3 - running 3/6
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run4.png")), //4 - running 4/6
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run5.png")), //5 - running 5/6
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run6.png")), //6 - running 6/6
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand2.png")), //7 - inbetween for standing and crouching
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3duck.png")), //8 - crouching
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3jump.png")), //9 - jumping
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/ALTfall.png")), //10 - falling
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand1flip.png")), //11 - standing flipped --------------*
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run1flip.png")), //12 - running 1/6 flipped
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run2flip.png")), //13 - running 2/6 flipped
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run3flip.png")), //14 - running 3/6 flipped
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run4flip.png")), //15 - running 4/6 flipped
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run5flip.png")), //16 - running 5/6 flipped
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/run6flip.png")), //17 - running 6/6 flipped
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand2flip.png")), //18 - inbetween for standing and crouching flipped
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3duckflip.png")), //19 - crouching flipped
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/stand3jumpflip.png")), //20 - jumping flipped
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/ALTfallFLIP.png")), //21 - falling flipped
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/errorstate.png")), //22 - errorstate sprite
+                        new Bitmap(Image.FromFile($"assets/sprites/enemy/wipspriteset/nosprite.png")) //23 - sprite missing sprite
+                    };
                 default:
                     return new List<Bitmap>();
                     break;
