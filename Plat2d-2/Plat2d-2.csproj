@@ -176,6 +176,7 @@
     <Compile Include="EngineCore\ObjectControllers\WorldController.cs" />
     <Compile Include="EngineCore\ObjectTypes\Area.cs" />
     <Compile Include="EngineCore\ObjectTypes\Block.cs" />
+    <Compile Include="EngineCore\ObjectTypes\Weapon.cs" />
     <Compile Include="EngineCore\ObjectTypes\WorldStructure.cs" />
     <Compile Include="EngineCore\RuntimeDebuggingTools.cs" />
     <Compile Include="EngineCore\SFX.cs" />
