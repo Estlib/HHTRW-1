@@ -16,6 +16,10 @@ using System.Windows.Forms;
 
 namespace Plat2d_2
 {
+    public enum KeyMode
+    {
+        KeyBoard_Form, KeyBoard_WinAPI, Controller
+    }
     public class DemoGameRF : EngineCore.EngineCore
     {
         // Fields that this engine has:
@@ -67,6 +71,8 @@ namespace Plat2d_2
         bool isGodMode; //is players current mode godmode or normalmode.
         int playerSpeed = 10; //TODO; verify necessity
         int currentSprite;//TODO; verify necessity
+        int steps = 0;
+        int slowDownFrameRate = 0;
         //weapons-player
         List<Weapon> unlockedWeapons = new List<Weapon>();
         //weapons-player-active
@@ -80,6 +86,11 @@ namespace Plat2d_2
         int weapon1cyclespeed = 4;
         int selectedweapon = 1;
         List<Bullet> bullets = new List<Bullet>();
+        //huddata
+        public static int crystalScoreTally = 0;
+        public static int pointScoreTally = 0;
+        public static int playerHealth = 100;
+        public static int playerLives = 5;
 
         //enemies
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>(); //enemies that exist
@@ -90,7 +101,7 @@ namespace Plat2d_2
         public static bool exitTool = false;
         //animation
         int runRate = 3; //how many frames pass, before sprite is animated again
-        int animationClock = 0; //where the animation clock currently is
+        public static int animationClock = 0; //where the animation clock currently is
         //level
         public static int currentLevelEndSize = 0; // how long the level is
         public static bool reloadtrigger = false; //level reloading trigger
@@ -129,7 +140,7 @@ namespace Plat2d_2
         public static int nextRoomElementInt = 1;
         Level activeLevel;
         public static bool isThisLevelClear = false;
-
+        public static KeyMode currentKeyMode = KeyMode.KeyBoard_Form;
 
 
 
@@ -188,6 +199,7 @@ namespace Plat2d_2
             //integer value for holding the current player sprite, through which the list is accessed and player is animated through the use of
             currentSprite = 0; //TODO; verify necessity
 
+
             foreach (var sfxR in allSFX)
             {
                 sfxInstance.RegisterSound(sfxR.Name, sfxR.Filepath);
@@ -200,6 +212,7 @@ namespace Plat2d_2
             whichScreen = 0;
             isPlayerRequestingLevel = false;
             LoadArea(isOnScreen, whichScreen, worlds);
+            currentKeyMode = KeyMode.KeyBoard_Form;
 
         }
 
@@ -209,9 +222,287 @@ namespace Plat2d_2
             GameStateHandler2();
 
             // key detection
+            if (currentKeyMode == KeyMode.KeyBoard_Form)
+            {
+                if (up)
+                {
+                    if (up == true && left == true)
+                    {
+                        up = false;
+                    }
+                    if (up == true && right == true)
+                    {
+                        up = false;
+                    }
+                    Log.Warning("Up has no animation currently.");
+                }
+                if (down)
+                {
+                    if (down == true && left == true)
+                    {
+                        down = false;
+                    }
+                    if (down == true && right == true)
+                    {
+                        down = false;
+                    }
+                    if (facedirection == 0)
+                    {
+                        AnimatePlayer(19, 19);
+                    }
+                    else if (facedirection == 1)
+                    {
+                        AnimatePlayer(8, 8);
+                    }
+                }
+                if (left)
+                {
+                    facedirection = 0;
+                    AnimatePlayer(12, 17);
+                }
+                if (right)
+                {
+                    facedirection = 1;
+                    AnimatePlayer(1, 6);
+                }
+                if (jump)
+                {
 
+                    if (facedirection == 0)
+                    {
+                        AnimatePlayer(21, 21);
+                    }
+                    else if (facedirection == 1)
+                    {
+                        AnimatePlayer(10, 10);
+                    }
+                }
+                if (jump == false && jumpmode == true)
+                {
+                    if (facedirection == 0)
+                    {
+                        AnimatePlayer(20, 20);
+                    }
+                    else if (facedirection == 1)
+                    {
+                        AnimatePlayer(9, 9);
+                    }
+                }
+                if (StillInput(nokey))
+                {
+                    if (facedirection == 0)
+                    {
+                        AnimatePlayer(11, 11);
+                    }
+                    else if (facedirection == 1)
+                    {
+                        AnimatePlayer(0, 0);
+                    }
+                }
+                if (pauseGameKey)
+                {
+                    Log.DebugFunction("Game halted.");
+                    //sfxInstance.StopAll();
+                    while (pauseGameKey != false)
+                    {
+                        if (exitTool != true)
+                        {
+                            DebugUtility.ToolMenu();
+                        }
+                    }
+                    Log.DebugFunction("Halt ended.");
+                }
+            }
+
+            // collisions
+            int remainingJumpSteps = 0;
+
+            // camera
+            UpdatePlayerCamera();
         }
 
+        public override void OnUpdate()
+        {
+            //frame measuring tools
+            double frameStart = stopwatch.Elapsed.TotalMilliseconds;
+            Log.runtimeframes++;
+
+            //reset animationclock at runrate
+            if (animationClock == runRate)
+            {
+                animationClock = 0;
+            }
+            animationClock++;
+            // visualisation for animation clock in the console
+            //Log.Info($"Animation clock is currently {animationClock}");
+            switch (animationClock)
+            {
+                case 0:
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ░░ ░░ ");
+                    break;
+                case 1:
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ██ ░░ ░░ ░░ ");
+                    break;
+                case 2:
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ██ ░░ ░░ ");
+                    break;
+                case 3:
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ██ ░░ ");
+                    break;
+                case 4:
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ░░ ██ ");
+                    break;
+                default:
+                    break;
+            }
+
+            //update player statuses
+            if (player.Position.Y >= 320 || playerHealth < 1)
+            {
+                LoseLife();
+            }
+            currentbulletsonscreen = bullets.Count();
+            if (crystalScoreTally == 100)
+            {
+                crystalScoreTally = 0;
+                playerLives++;
+            }
+            //shooting
+            if (firinglock)
+            {
+                if (firinglockcounter != 0)
+                {
+                    //Log.Info("Subtracting one from firinglockcounter");
+                    firinglockcounter--;
+                }
+                else if (firinglockcounter == 0)
+                {
+                    firinglock = false;
+                }
+            }
+            if (firinglock == false)
+            {
+                //Log.Info("setting firinglockcounter to 10");
+                firinglockcounter = 10;
+            }
+            //enemies
+            if (enemiesv2 != null)
+            {
+                AnimateEnemiesV2sys(false);
+            }
+            if (bullets != null)
+            {
+                AnimateBullets();
+            }
+        }
+        private void LoseLife()
+        {
+            Log.Info("LoseLife has been called");
+            playerLives--;
+            playerHealth = 100;
+            Log.Info($"X = {player.Position.X}. Y = {player.Position.Y}");
+            Log.Info($"respawn X = {respawnlocation.X}. respawnY = {respawnlocation.Y}");
+            player.SetLocation(respawnlocation);
+            Log.Info($"X = {player.Position.X}. Y = {player.Position.Y}");
+            Log.Info($"respawn X = {respawnlocation.X}. respawnY = {respawnlocation.Y}");
+
+        }
+        private void AnimateEnemiesV2sys(bool loglevel, int animationClock)
+        {
+            if (loglevel)
+            {
+                Log.Info("AnimateEnemiesV2sys called");
+            }
+
+            for (int i = 0; i < enemiesv2.Count; i++)
+            {
+                if (loglevel)
+                {
+                    Log.Info("for loop accessed");
+                }
+
+                if (enemiesv2.ElementAt(i).sprite2d.HasBody())
+                {
+                    if (loglevel)
+                    {
+                        Log.Info("sprite has body");
+                    }
+                    if (logThisEnemy == true && i == loggedEnemyArrayID)
+                    {
+                        loglevel = true;
+                    }
+                    else
+                    {
+                        loglevel = false;
+                    }
+                    EnemyV2.AnimateThisV2Enemy(enemiesv2.ElementAt(i), animationClock, loglevel);
+                    loglevel = false;
+                    //}
+
+                }
+                else
+                {
+                    Log.Warning("sprite has no body");
+                    EnemyV2.AnimateThisV2Enemy(enemiesv2.ElementAt(i), animationClock, loglevel);
+                }
+
+                
+            }
+
+        }
+        public bool StillInput(bool nokey)
+        {
+            bool check;
+            if (up == false && down == false && left == false && right == false && jump == false)
+            {
+                check = true;
+            }
+            else
+            {
+                check = false;
+            }
+            nokey = check;
+            return nokey;
+        }
+        private void AnimatePlayer(int start, int end)
+        {
+            //Log.Info("AnimatePlayer has been called");
+            slowDownFrameRate += 1;
+            if (slowDownFrameRate == 3)
+            {
+                steps++;
+                slowDownFrameRate = 0;
+            }
+            if (steps > end || steps < start)
+            {
+                steps = start;
+            }
+            //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
+            player.Sprite = playerSpritesBitmap[steps];
+        }
+        private void UpdatePlayerCamera()
+        {
+            if (player.Position.X <= 160)
+            {
+                CameraPosition.X = 0;
+            }
+            else if (player.Position.X > 160 && player.Position.X <= currentLevelEndSize - 160)
+            {
+                int diff = (int)player.Position.X - 160;
+                CameraPosition.X = -diff;
+            }
+            else if (player.Position.X > currentLevelEndSize - 160)
+            {
+                if (currentLevelEndSize == 320)
+                {
+                    CameraPosition.X = currentLevelEndSize - 320;
+                }
+                else
+                {
+                    CameraPosition.X = -(currentLevelEndSize - 320);
+                }
+            }
+        }
         private void GameStateHandler2()
         {
             if (isThisLevelClear)

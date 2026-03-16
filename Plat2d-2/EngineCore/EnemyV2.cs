@@ -385,7 +385,224 @@ namespace Plat2d_2.EngineCore
             }
             return new List<Bitmap>();
         }
+        public static void AnimateThisV2Enemy(EnemyV2 enemy, int animationClock, bool loglevel = false)
+        {
+            //EnemyV2 enemyv2 = new EnemyV2
+            //                    (
+            //                        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), walkingEnemySpritesBitmap[0], "Enemy"),
+            //                        walkingEnemySpritesBitmap,
+            //                        new List<int> { 12, 13, 14, 15, 16, 17 }, //walkleft
+            //                        new List<int> { 1, 2, 3, 4, 5, 6 }, //walkright
+            //                        new List<int> { 20 }, //jumpleft
+            //                        new List<int> { 9 }, //jumpright
+            //                        new List<int> { 11 }, //stillleft
+            //                        new List<int> { 0 }, //stillright
+            //                        new List<int> { 23 }, //fireleft
+            //                        new List<int> { 23 }, //fireright
+            //                        new List<int> { 23 }, //fly
+            //                        new List<int> { 22 }, //error
+            //                        i * 16,
+            //                        j * 16,
+            //                        0,
+            //                        new List<int> {}, //behaviourloop
+            //                        0, //where is its action currently in behaviourloop
+            //                        false,
+            //                        true,
+            //                        "Test - Walking enemy",
+            //                        "Enemy"
+            //                    );
+            //Log.Info("AnimateThisV2Enemy()");
 
+            /*
+             * 1 - determine type of enemy in switch case
+             * 2 - determine current actionstate of enemy in switch case
+             * 3 - animate the frame
+             */
+
+            if (enemy.CurrentBehaviourStep > enemy.BehaviourData.Count())
+            {
+                enemy.CurrentBehaviourStep = 0;
+            }
+            switch (enemy.enemyType)
+            {
+                case "Enemy":
+                    // enemy actions
+                    //if (true) //used to house loglevel as the condition
+                    //{
+                    //    Log.Warning($"at BHSTEP {enemy.CurrentBehaviourStep} " +
+                    //        $"BHData is: {enemy.BehaviourData[enemy.CurrentBehaviourStep]}" +
+                    //        $"CAState is {enemy.CurrentActionState}");
+                    //}
+                    //if (enemy.CurrentActionState != (ActionState)enemy.BehaviourData[enemy.CurrentBehaviourStep])
+                    //{
+                    //    enemy.CurrentActionState = (ActionState)enemy.BehaviourData[enemy.CurrentBehaviourStep];
+                    //}
+                    enemy.CurrentActionState = (ActionState)enemy.BehaviourData[enemy.CurrentBehaviourStep];
+                    switch (enemy.CurrentActionState)
+                    {
+                        case (ActionState)0: //standing left
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} with Step {tempint}");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
+                            enemy.SetDirection();
+                            //
+                            //do not move
+                            enemy.NextStep();
+                            //enemy.CurrentBehaviourStep += 1; // advance step
+                            break;
+
+                        case (ActionState)1: //standing right
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} with Step {tempint}");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
+                            enemy.SetDirection();
+                            //
+                            //do not move
+                            enemy.NextStep();
+                            //enemy.CurrentBehaviourStep += 1; // advance step
+                            break;
+
+                        case (ActionState)2: //walking left
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                //string tempint = enemy.CurrentBehaviourStep.ToString() + " ";
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} " +
+                                    //$"with Step {tempint} " +
+                                    $"arrayframe {enemy.currentFrame}" +
+                                    $"arraylength {enemy.walkRightData.Count()}" +
+                                    $"actualframe {enemy.animationFramesBitmap.IndexOf(enemy.sprite2d.Sprite)}" +
+                                    $"");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
+                            enemy.MoveEnemyInDirection(animationClock);
+                            enemy.NextStep();
+                            //enemy.CurrentBehaviourStep += 1; // advance step
+
+                            break;
+                        case (ActionState)3: //walking right
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                //string tempint = enemy.CurrentBehaviourStep.ToString() + "     ";
+
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} " +
+                                    //$"with Step {tempint} " +
+                                    $"arrayframe {enemy.currentFrame}" +
+                                    $"arraylength {enemy.walkRightData.Count()}" +
+                                    $"actualframe {enemy.animationFramesBitmap.IndexOf(enemy.sprite2d.Sprite)}" +
+                                    $"");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
+                            enemy.MoveEnemyInDirection(animationClock);
+                            enemy.NextStep();
+                            //enemy.CurrentBehaviourStep += 1; // advance step
+
+                            break;
+                        case (ActionState)4: //jumping left
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                //string tempint = enemy.CurrentBehaviourStep.ToString() + "     ";
+
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} " +
+                                    //$"with Step {tempint} " +
+                                    $"arrayframe {enemy.currentFrame}" +
+                                    $"arraylength {enemy.walkRightData.Count()}" +
+                                    $"actualframe {enemy.animationFramesBitmap.IndexOf(enemy.sprite2d.Sprite)}" +
+                                    $"");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
+                            enemy.JumpEnemyInDirection(animationClock);
+                            enemy.NextStep();
+                            break;
+                        case (ActionState)5: //jumping right
+                            //Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                            if (loglevel)
+                            {
+                                //string tempint = enemy.CurrentBehaviourStep.ToString() + "     ";
+
+                                LogUtility.MonitorEnemy($"This enemy actionstate is {enemy.CurrentActionState} " +
+                                    //$"with Step {tempint} " +
+                                    $"arrayframe {enemy.currentFrame}" +
+                                    $"arraylength {enemy.walkRightData.Count()}" +
+                                    $"actualframe {enemy.animationFramesBitmap.IndexOf(enemy.sprite2d.Sprite)}" +
+                                    $"");
+                                Log.Select($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+                                string behaviourDataString = string.Join(":", enemy.BehaviourData);
+                                Log.Select($"{enemy.enemyName} bot data: {behaviourDataString}");
+                                Log.Select($"{enemy.enemyName} current bot data: {enemy.CurrentBehaviourStep}");
+                            }
+                            enemy.JumpEnemyInDirection(animationClock);
+                            enemy.NextStep();
+
+                            break;
+                        case (ActionState)6: //firing left
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        case (ActionState)7: //firing right
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        case (ActionState)8: //generic flight
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        case (ActionState)9: //is error
+                            Log.Info($"{enemy.enemyName} actionstate is {enemy.CurrentActionState}");
+
+                            break;
+                        default:
+                            if (enemy.CurrentBehaviourStep == null ||
+                                enemy.CurrentBehaviourStep < 0 ||
+                                enemy.CurrentBehaviourStep > enemy.BehaviourData.Count)
+                            {
+                                Log.Error($"CurrentBehaviourStep is not set. - {enemy.CurrentBehaviourStep}");
+                                Log.Error($"Setting to 0");
+                                enemy.CurrentBehaviourStep = 0;
+                            }
+                            break;
+                    }
+                    break;
+                default:
+                    if (enemy.enemyType != null)
+                    {
+                        Log.Error($"Enemy Type undeterminable. - {enemy.enemyType}");
+                    }
+                    else if (enemy.enemyType == null)
+                    {
+                        Log.Error($"Enemy Type is not set. - {enemy.enemyType}");
+                    }
+                    break;
+            }
+
+            enemy.sprite2d.UpdatePosition();
+            
+        }
         ~EnemyV2() { }
 
     }
