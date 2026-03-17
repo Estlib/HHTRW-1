@@ -938,7 +938,20 @@ namespace Plat2d_2
             Level selectedLevel_l = new Level() { };
             if (selectedWorld.Areas != null)
             {
-                selectedLevel_a = selectedWorld.Areas[whichLevel[1]];
+                if (whichLevel[1]==99)
+                {
+                    selectedLevel_a = new Area
+                    (
+                        new List<Level> { selectedWorld.WorldMap },
+                        0,
+                        "World Map"
+                    );
+                }
+                else
+                {
+                    selectedLevel_a = selectedWorld.Areas[whichLevel[1]];
+                }
+                    
             }
             if (selectedWorld.Levels != null)
             {
@@ -1205,7 +1218,7 @@ namespace Plat2d_2
                             if (artTagDefinitions[tryint] == "Start")
                             {
                                 var datasprite = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint])/*.CreateStatic()*/;
-                                datasprite.worldData = new int[] { 1, 0 };
+                                datasprite.worldData = new int[] { 1, 99 };
                             }
                             else
                             {

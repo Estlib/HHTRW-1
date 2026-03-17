@@ -89,13 +89,26 @@ namespace Plat2d_2.EngineCore.ObjectTypes
         {
             WorldStructure screens = new WorldStructure(
 
-                new List<Level> 
-                { 
-                    LevelController.GetTitleScreen(),
-                    LevelController.GetGameOverScreen(),
+                new List<Area>
+                {
+                    new Area
+                    {
+                        Levels = new List<Level>{ LevelController.GetTitleScreen() },
+                        AreaNumber = 1,
+                        AreaName = "Title Screen"
+                    },
+                    new Area
+                    {
+                        Levels = new List<Level>{ LevelController.GetTitleScreen() },
+                        AreaNumber = 1,
+                        AreaName = "Game Over"
+                    },
                 },
+                null,
+                null,
                 "Utility",
-                0
+                0,
+                null
             );
 
             return screens;
