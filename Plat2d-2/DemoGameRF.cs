@@ -17,6 +17,16 @@ using System.Windows.Forms;
 
 namespace Plat2d_2
 {
+    public enum CallState
+    {
+        TitleScreen,
+        WorldMap,
+        PlayingLevel,
+        RoomTransition,
+        GameOver,
+        Cutscene,
+        OptionsMenu
+    }
     public enum KeyMode
     {
         KeyBoard_Form, KeyBoard_WinAPI, Controller
@@ -798,16 +808,6 @@ namespace Plat2d_2
                 }
                 LoadLevel(worlds, whichLevel);
                 isPlayerRequestingLevel = false;
-                //UnloadLastLevel();
-                //if (isPlayerRequestingScreen == true && whichScreen != -1)
-                //{
-                //    LoadArea(isPlayerRequestingScreen, whichScreen, worlds);
-                //}
-                //else if(!isPlayerRequestingScreen)
-                //{
-                //    LoadLevel(worlds, whichLevel);
-                //}
-                //isPlayerRequestingLevel = false;
             }
             else if (isPlayerGoingNextRoom)
             {
@@ -821,15 +821,6 @@ namespace Plat2d_2
                 LoadArea(isPlayerRequestingScreen, whichScreen, worlds);
                 isPlayerRequestingScreen = false;
             }
-            //else
-            //{
-            //    UnloadLastLevel();
-            //    Log.Error("Cannot determine next level, returning to title screen.");
-            //    LoadArea(true, 0, worlds);
-            //    isPlayerRequestingLevel = false;
-            //    isPlayerGoingNextRoom = false;
-            //    isPlayerRequestingScreen = false;
-            //}
 
         }
 
@@ -1004,7 +995,7 @@ namespace Plat2d_2
                 //find utility world
                 foreach (var world in worlds)
                 {
-                    if (world.WorldName == "utility")
+                    if (world.WorldName == "Utility")
                     {
                         //set as loadable source into empty temp world
                         selectedWorld = world;
