@@ -335,7 +335,7 @@ namespace Plat2d_2.EngineCore
             this.Window.StartPosition = FormStartPosition.Manual;
             this.Window.Location = new Point(0, 0);
             this.Window.WindowState = FormWindowState.Maximized;
-            this.Window.TopMost = true; // Optional
+            this.Window.TopMost = false; // Optional
         }
         public void FullscreenMode()
         {

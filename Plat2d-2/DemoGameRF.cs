@@ -134,7 +134,7 @@ namespace Plat2d_2
         //GameWorlds
         List<WorldStructure> worlds = new List<WorldStructure>();
         //Current gamestate
-        public static bool isOnScreen = true;
+        public static bool isPlayerRequestingScreen = true;
         public static int whichScreen = 0;
         public static bool isPlayerRequestingLevel = false;
         public static int[] whichLevel = { 1, 0 };
@@ -211,10 +211,10 @@ namespace Plat2d_2
             LogUtility.ClearLineOnly(6);
 
             //Start game on title screen   \/
-            isOnScreen = true;
+            isPlayerRequestingScreen = true;
             whichScreen = 0;
             isPlayerRequestingLevel = false;
-            LoadArea(isOnScreen, whichScreen, worlds);
+            LoadArea(isPlayerRequestingScreen, whichScreen, worlds);
             currentKeyMode = KeyMode.KeyBoard_Form;
 
         }
@@ -786,26 +786,40 @@ namespace Plat2d_2
             if (isPlayerRequestingLevel)
             {
                 UnloadLastLevel();
-                if (isOnScreen == true && whichScreen != -1)
-                {
-                    LoadArea(isOnScreen, whichScreen, worlds);
-                }
-                else
-                {
-                    LoadLevel(worlds, whichLevel);
-                }
+                LoadLevel(worlds, whichLevel);
+                isPlayerRequestingLevel = false;
+                //UnloadLastLevel();
+                //if (isPlayerRequestingScreen == true && whichScreen != -1)
+                //{
+                //    LoadArea(isPlayerRequestingScreen, whichScreen, worlds);
+                //}
+                //else if(!isPlayerRequestingScreen)
+                //{
+                //    LoadLevel(worlds, whichLevel);
+                //}
+                //isPlayerRequestingLevel = false;
             }
             else if (isPlayerGoingNextRoom)
             {
                 UnloadLastLevel();
                 LoadLevel(activeLevel, nextRoomElementInt);
+                isPlayerGoingNextRoom = false;
             }
-            else
+            else if (isPlayerRequestingScreen)
             {
                 UnloadLastLevel();
-                Log.Error("Cannot determine next level, returning to title screen.");
-                LoadArea(true, 0, worlds);
+                LoadArea(isPlayerRequestingScreen, whichScreen, worlds);
+                isPlayerRequestingScreen = false;
             }
+            //else
+            //{
+            //    UnloadLastLevel();
+            //    Log.Error("Cannot determine next level, returning to title screen.");
+            //    LoadArea(true, 0, worlds);
+            //    isPlayerRequestingLevel = false;
+            //    isPlayerGoingNextRoom = false;
+            //    isPlayerRequestingScreen = false;
+            //}
 
         }
 

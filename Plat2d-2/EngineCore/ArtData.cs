@@ -194,6 +194,7 @@ namespace Plat2d_2.EngineCore
                     artrefs[63] = new Sprite2d("tiles/plains/63");
                     break;
                 case "TitleMenuMapRefs":
+                    artrefs = new Sprite2d[89];
                     artrefs[0] = new Sprite2d("tiles/titlemapmenu/00");
                     artrefs[1] = new Sprite2d("tiles/titlemapmenu/01");
                     artrefs[2] = new Sprite2d("tiles/titlemapmenu/02");

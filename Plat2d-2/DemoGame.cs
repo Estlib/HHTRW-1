@@ -1170,7 +1170,7 @@ namespace Plat2d_2
         /// </summary>
         public DemoGame() : base(new Vector2(320 + 16, 240 + 40), "HHTRW-engine1 demo")
         {
-
+            isWindow = true;
         }
 
         /// <summary>
