@@ -18,7 +18,7 @@ namespace Plat2d_2.EngineCore
         public static string[] TitleMenuMapRefsTags()
         {
             return new string[] {
-                "Air","Finish","Air","Air","Air","Air","Air","Air",
+                "Air","Start","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",

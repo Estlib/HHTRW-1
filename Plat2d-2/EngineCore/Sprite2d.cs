@@ -307,7 +307,7 @@ namespace Plat2d_2.EngineCore
                 {
                     if (b.worldData != null)
                     {
-                        Log.Info("This detected sprite has worldData, it is " + worldData.ToString());
+                        Log.Info("This detected sprite has worldData, it is " /*+ worldData.ToString()*/);
                     }
                     if (Position.X + 8 < b.Position.X + b.Scale.X && //+8 trim off x
                         Position.X - 8 + Scale.X > b.Position.X &&

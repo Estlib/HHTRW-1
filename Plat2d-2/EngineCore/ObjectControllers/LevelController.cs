@@ -30,7 +30,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("WM1", 2),
                 LevelData.RetrieveData("WM1", 3),
                 "Screen",
-                "",
+                "World Map",
                 Color.FromArgb(255, 0, 0, 0),
                 false,
                 TitleMenuMapRefs
@@ -49,7 +49,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("L_01", 2),
                 LevelData.RetrieveData("L_01", 3),
                 "Level",
-                "",
+                "Harenimus 1-1 Plains",
                 Color.FromArgb(255, 0, 0, 0),
                 false, 
                 PlainsArtRefs
@@ -68,7 +68,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("L_02", 2),
                 LevelData.RetrieveData("L_02", 3),
                 "Level",
-                "",
+                "Harenimus 1-2 Cave",
                 Color.FromArgb(255, 0, 0, 0),
                 false, 
                 UndergroundArtRefs
@@ -87,7 +87,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("L_03", 2),
                 LevelData.RetrieveData("L_03", 3),
                 "Level",
-                "",
+                "Harenimus 1-3 Forest 1",
                 Color.FromArgb(255, 88, 216, 88),
                 false, 
                 ForestArtRefs
@@ -106,7 +106,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("L_04", 2),
                 LevelData.RetrieveData("L_04", 3),
                 "Level",
-                "",
+                "Harenimus 1-3 Forest 2",
                 Color.FromArgb(255, 88, 216, 88),
                 false, 
                 ForestArtRefs
@@ -125,7 +125,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("L_05", 2),
                 LevelData.RetrieveData("L_05", 3),
                 "Level",
-                "",
+                "Harenimus 2-1 Desert",
                 Color.FromArgb(255, 164, 232, 252),
                 false, 
                 DesertArtRefs
@@ -144,7 +144,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("L_06", 2),
                 LevelData.RetrieveData("L_06", 3),
                 "Level",
-                "",
+                "Harenimus 1-5 Plains",
                 Color.FromArgb(255, 56, 192, 252),
                 false, 
                 PlainsArtRefs
@@ -163,7 +163,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("L_07", 2),
                 LevelData.RetrieveData("L_07", 3),
                 "Level",
-                "",
+                "Harenimus 1-6 Castle 1",
                 Color.FromArgb(255, 0, 0, 0),
                 false, 
                 CastleArtRefs
@@ -182,7 +182,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("L_08", 2),
                 LevelData.RetrieveData("L_08", 3),
                 "Level",
-                "",
+                "Harenimus 1-6 Castle 2",
                 Color.FromArgb(255, 0, 0, 0),
                 false, 
                 CastleArtRefs
@@ -195,15 +195,15 @@ namespace Plat2d_2.EngineCore.ObjectControllers
         internal static Level GetTitleScreen()
         {
             Level titlescreen = new Level(
-                6,
+                1,
                 "screens",
-                ArtData.CastleArtRefsTags(),
+                ArtData.TitleMenuMapRefsTags(),
                 LevelData.RetrieveData("TS1", 0),
                 LevelData.RetrieveData("TS1", 1),
                 LevelData.RetrieveData("TS1", 2),
                 LevelData.RetrieveData("TS1", 3),
                 "Screen",
-                "",
+                "Title Screen",
                 Color.FromArgb(255, 0, 0, 0),
                 false, 
                 TitleMenuMapRefs
@@ -222,7 +222,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("GO1", 2),
                 LevelData.RetrieveData("GO1", 3),
                 "Screen",
-                "",
+                "Game Over",
                 Color.FromArgb(255, 0, 0, 0),
                 false, 
                 TitleMenuMapRefs

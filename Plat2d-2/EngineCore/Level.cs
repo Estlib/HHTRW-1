@@ -184,6 +184,11 @@ namespace Plat2d_2.EngineCore
             this.artRefs = artRefs;
         }
 
+        public Level()
+        {
+                
+        }
+
         public string[,] LevelLayers(string levelname, int layernumber)
         {
             return LevelData.ReturnLayer(levelname, layernumber);

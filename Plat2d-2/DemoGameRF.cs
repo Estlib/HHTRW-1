@@ -143,6 +143,7 @@ namespace Plat2d_2
         Level activeLevel;
         public static bool isThisLevelClear = false;
         public static KeyMode currentKeyMode = KeyMode.KeyBoard_Form;
+        public static int[] currentLevel = { 1, 1 };
 
 
 
@@ -187,8 +188,8 @@ namespace Plat2d_2
 
             //setup procedure
             BGColor = System.Drawing.Color.FromArgb(255, 0, 0, 0);
-            worlds.Add(harenimus);
             worlds.Add(utility);
+            worlds.Add(harenimus);
 
             //audio tool
             SetSFXengineB();
@@ -602,6 +603,7 @@ namespace Plat2d_2
             {
                 isPlayerRequestingLevel = true;
                 whichLevel = levelstart.worldData;
+                return;
             }
 
             Sprite2d nextroom = player.IsColliding("NextRoom");
@@ -786,6 +788,14 @@ namespace Plat2d_2
             if (isPlayerRequestingLevel)
             {
                 UnloadLastLevel();
+                if (whichLevel[1] == -1)
+                {
+                    Log.Error($"world {whichLevel[0]} with levelid {whichLevel[1]} does not exist");
+                    isPlayerRequestingLevel = false;
+                    isPlayerRequestingScreen = true;
+                    whichScreen = 0;
+                    return;
+                }
                 LoadLevel(worlds, whichLevel);
                 isPlayerRequestingLevel = false;
                 //UnloadLastLevel();
@@ -921,25 +931,43 @@ namespace Plat2d_2
             }
         }
         private void LoadLevel(List<WorldStructure> worlds, int[] whichLevel)
-        {   
+        {
+
             WorldStructure selectedWorld = worlds[whichLevel[0]];
-            Area selectedLevel = selectedWorld.Areas[whichLevel[1]];
+            Area selectedLevel_a = new Area() { };
+            Level selectedLevel_l = new Level() { };
+            if (selectedWorld.Areas != null)
+            {
+                selectedLevel_a = selectedWorld.Areas[whichLevel[1]];
+            }
+            if (selectedWorld.Levels != null)
+            {
+                selectedLevel_l = selectedWorld.Levels[whichLevel[1]];
+            }
+
             if (whichLevel[1] != -1)
-            {                
-                if (selectedLevel.isAreaClear)
+            {
+                if (selectedWorld.WorldName != "Utility")
                 {
-                    return;
+                    if (selectedLevel_a.isAreaClear)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        LoadScreen(selectedLevel_a, whichLevel[1]);
+                    }
                 }
                 else
                 {
-                    LoadScreen(selectedLevel, 0);
+                    LoadLevel(selectedWorld.WorldMap, 0);
                 }
             }
-            else 
+            else
             {
                 Area wm = new Area
                     (
-                        new List<Level>{ selectedWorld.WorldMap },
+                        new List<Level> { selectedWorld.WorldMap },
                         0,
                         "World Map"
                     );
@@ -1173,7 +1201,16 @@ namespace Plat2d_2
                         }
                         else
                         {
-                            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint])/*.CreateStatic()*/;
+
+                            if (artTagDefinitions[tryint] == "Start")
+                            {
+                                var datasprite = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint])/*.CreateStatic()*/;
+                                datasprite.worldData = new int[] { 1, 0 };
+                            }
+                            else
+                            {
+                                new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint])/*.CreateStatic()*/;
+                            }
                         }
                     }
                 }
@@ -1256,7 +1293,7 @@ namespace Plat2d_2
         }
         public override void UpdateHud()
         {
-            Log.Highlight("UpdateHud() has no function");
+            //Log.Highlight("UpdateHud() has no function");
             //float aspect = ScreenSize.X / ScreenSize.Y;
 
             //float drawHeight = Window.ClientSize.Height;

@@ -37,6 +37,10 @@ namespace Plat2d_2.EngineCore.ObjectTypes
             AreaName = areaName;
             ClearMap = GetIDsFromLevels(Levels);
         }
+        public Area()
+        {
+            
+        }
         private static List<int> GetIDsFromLevels(List<Level> levels)
         {
             List<int> ids = new List<int>();
