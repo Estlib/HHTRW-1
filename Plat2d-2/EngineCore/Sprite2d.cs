@@ -22,6 +22,7 @@ namespace Plat2d_2.EngineCore
         private Vector2 vector22;
         private string v;
         private Bitmap bitmap;
+        public int[] worldData = null;
         /// <summary>
         /// 
         /// </summary>
@@ -304,6 +305,10 @@ namespace Plat2d_2.EngineCore
                 Sprite2d b = thisLevel[i];
                 if (b.Tag == tag)
                 {
+                    if (b.worldData != null)
+                    {
+                        Log.Info("This detected sprite has worldData, it is " + worldData.ToString());
+                    }
                     if (Position.X + 8 < b.Position.X + b.Scale.X && //+8 trim off x
                         Position.X - 8 + Scale.X > b.Position.X &&
                         Position.Y < b.Position.Y + b.Scale.Y &&

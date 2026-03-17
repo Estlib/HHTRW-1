@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -574,9 +575,8 @@ namespace Plat2d_2
 
             }
 
-            //crystalcollecting
+            //object collisions
             Sprite2d coin = player.IsColliding("Coin"); //checks for collisions between the player and the coin.
-
             if (coin != null) //if the coin is being touched
             {
                 sfxInstance.Play("Gem collect");
@@ -585,6 +585,71 @@ namespace Plat2d_2
                 Log.Info($"Coin is being touched. Current Crystalcount: {crystalScoreTally}"); //then it logs a message to the console
                 coin.DestroySelf(); //and destroys the object
             }
+
+            Sprite2d levelfinish = player.IsColliding("Finish"); //checks for collisions between the player and the level finishing trigger object.
+            if (levelfinish != null) //if the trigger object is being touched
+            {
+                isPlayerRequestingLevel = true;
+                //TODO; check if world is completed, then increment worldcounter, and load next world map instead
+                whichLevel = new int[] { 1, -1 };
+                Log.Info("Player has triggered level finish"); //then it logs a message to the console
+                levelfinish.DestroySelf(); //destroys itself
+                BGMPlayer.PlayNow(jukeBox.ElementAt(7).Filepath);
+            }
+
+            Sprite2d levelstart = player.IsColliding("Start");
+            if (levelstart != null)
+            {
+                isPlayerRequestingLevel = true;
+                whichLevel = levelstart.worldData;
+            }
+
+            Sprite2d nextroom = player.IsColliding("NextRoom");
+            if (nextroom != null) //if the trigger object is being touched
+            {
+                isPlayerGoingNextRoom = true;
+                whichLevel[1]++;
+                Log.Info("Player is going to next room"); //then it logs a message to the console
+                nextroom.DestroySelf(); //destroys itself
+            }
+
+            Sprite2d enemy = player.IsColliding("Enemy"); //checks for collisions between the player and the level finishing trigger object.
+            Sprite2d bulletcollision = null;
+            if (enemy != null) //if the trigger object is being touched
+            {
+                playerHealth--;
+                bulletcollision = enemy.IsColliding("Bullet");
+                //Log.Info($"Player has touched an enemy. Health left: {playerHealth}. Lives left: {playerLives}"); //then it logs a message to the console
+            }
+            if (bulletcollision != null)
+            {
+                pointScoreTally += 250;
+                enemy.DestroySelf();
+            }
+
+            //frame measuring tools again
+            double frameTime = stopwatch.Elapsed.TotalMilliseconds - frameStart;
+            double remaining = MaxFT - frameTime;
+            // coarse wait first
+            if (remaining > 2.0)
+            {
+                Thread.Sleep((int)(remaining - 1.0));
+            }
+            // fine wait for the last bit
+            while (stopwatch.Elapsed.TotalMilliseconds - frameStart < MaxFT)
+            {
+                Thread.SpinWait(20);
+            }
+            // final frame time after waiting
+            frameTime = stopwatch.Elapsed.TotalMilliseconds - frameStart;
+            fpsCounter++;
+            if (fpsTimer.Elapsed.TotalMilliseconds >= 1000)
+            {
+                LogUtility.LogCurrentFrame($"FPS: {fpsCounter}, FrameTime: {frameTime}ms                   ");
+                fpsCounter = 0;
+                fpsTimer.Restart();
+            }
+
         }
         private void AnimateBullets()
         {
@@ -842,16 +907,29 @@ namespace Plat2d_2
             }
         }
         private void LoadLevel(List<WorldStructure> worlds, int[] whichLevel)
-        {
+        {   
             WorldStructure selectedWorld = worlds[whichLevel[0]];
             Area selectedLevel = selectedWorld.Areas[whichLevel[1]];
-            if (selectedLevel.isAreaClear)
-            {
-                return;
+            if (whichLevel[1] != -1)
+            {                
+                if (selectedLevel.isAreaClear)
+                {
+                    return;
+                }
+                else
+                {
+                    LoadScreen(selectedLevel, 0);
+                }
             }
-            else
+            else 
             {
-                LoadScreen(selectedLevel, 0);
+                Area wm = new Area
+                    (
+                        new List<Level>{ selectedWorld.WorldMap },
+                        0,
+                        "World Map"
+                    );
+                LoadScreen(wm, 0);
             }
         }
 
@@ -1119,11 +1197,11 @@ namespace Plat2d_2
         }
         private void SetJukebox()
         {
-            List<string> levelsNames = new List<string>();
-            foreach (var level in levels)
-            {
-                levelsNames.Add(level.levelname);
-            }
+            //List<string> levelsNames = new List<string>();
+            //foreach (var level in levels)
+            //{
+            //    levelsNames.Add(level.levelname);
+            //}
             //BGMPlayer bgm = new BGMPlayer(jukeBox);
             //foreach (var levelName in levelsNames)
             //{
@@ -1161,6 +1239,118 @@ namespace Plat2d_2
             }
             BGMPlayer.songs = jukeBox;
             //Console.ReadLine();
+        }
+        public override void UpdateHud()
+        {
+            Log.Highlight("UpdateHud() has no function");
+            //float aspect = ScreenSize.X / ScreenSize.Y;
+
+            //float drawHeight = Window.ClientSize.Height;
+            //float drawWidth = drawHeight * aspect;
+
+            //float offsetX = (Window.ClientSize.Width - drawWidth) / 2f;
+            //float offsetY = 0f;
+
+            //float hudScaleX = drawWidth / ScreenSize.X;
+            //float hudScaleY = drawHeight / ScreenSize.Y;
+
+            //CrystalLabel.BackColor = System.Drawing.Color.Black;
+            //CrystalLabel.ForeColor = System.Drawing.Color.White;
+            //CrystalLabel.Location = new System.Drawing.Point(
+            //    (int)(offsetX + 32 * hudScaleX),
+            //    (int)(offsetY + 216 * hudScaleY)
+            //);
+
+            //HealthLabel.BackColor = System.Drawing.Color.Black;
+            //HealthLabel.ForeColor = System.Drawing.Color.White;
+            //HealthLabel.Location = new System.Drawing.Point(
+            //    (int)(offsetX + 128 * hudScaleX),
+            //    (int)(offsetY + 216 * hudScaleY)
+            //);
+
+            //LivesLabel.BackColor = System.Drawing.Color.Black;
+            //LivesLabel.ForeColor = System.Drawing.Color.White;
+            //LivesLabel.Location = new System.Drawing.Point(
+            //    (int)(offsetX + 160 * hudScaleX),
+            //    (int)(offsetY + 216 * hudScaleY)
+            //);
+
+            //AmmoLabel.BackColor = System.Drawing.Color.Black;
+            //AmmoLabel.ForeColor = System.Drawing.Color.White;
+            //AmmoLabel.Location = new System.Drawing.Point(
+            //    (int)(offsetX + 188 * hudScaleX),
+            //    (int)(offsetY + 216 * hudScaleY)
+            //);
+
+            //ScoreLabel.BackColor = System.Drawing.Color.Black;
+            //ScoreLabel.ForeColor = System.Drawing.Color.White;
+            //ScoreLabel.Location = new System.Drawing.Point(
+            //    (int)(offsetX + 64 * hudScaleX),
+            //    (int)(offsetY + 216 * hudScaleY)
+            //);
+
+            //SelectedWeaponLabel.BackColor = System.Drawing.Color.Black;
+            //SelectedWeaponLabel.ForeColor = System.Drawing.Color.White;
+            //SelectedWeaponLabel.Location = new System.Drawing.Point(
+            //    (int)(offsetX + 32 * hudScaleX),
+            //    (int)(offsetY + 224 * hudScaleY)
+            //);
+
+            //LevelLabel.BackColor = System.Drawing.Color.Black;
+            //LevelLabel.ForeColor = System.Drawing.Color.Yellow;
+            //LevelLabel.Location = new System.Drawing.Point(
+            //    (int)(offsetX + 0 * hudScaleX),
+            //    (int)(offsetY + 0 * hudScaleY)
+            //);
+
+            //if (CrystalLabel != null)
+            //    CrystalLabel.Text = $"{DemoGame.crystalScoreTally}";
+
+            //if (HealthLabel != null)
+            //    HealthLabel.Text = $"{DemoGame.playerHealth}";
+
+            //if (LivesLabel != null)
+            //    LivesLabel.Text = $"{DemoGame.playerLives}";
+
+            //if (AmmoLabel != null)
+            //{
+            //    if (weapon1Ammo < 0)
+            //        AmmoLabel.Text = "∞";
+            //    else
+            //        AmmoLabel.Text = $"{DemoGame.weapon1Ammo}";
+            //}
+
+            //if (ScoreLabel != null)
+            //    ScoreLabel.Text = $"{DemoGame.pointScoreTally}";
+
+            //if (LevelLabel != null)
+            //    LevelLabel.Text = $"{CheckLevel(levelclearingsforlabel)}";
+        }
+        public override void GetKeyDown(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up) { up = true; }
+            if (e.KeyCode == Keys.Left) { left = true; }
+            if (e.KeyCode == Keys.Down) { down = true; }
+            if (e.KeyCode == Keys.Right) { right = true; }
+            if (e.KeyCode == Keys.Z) { fire = true; }
+            if (e.KeyCode == Keys.Space) { jump = true; }
+            if (e.KeyCode == Keys.Q) { respawntester = true; }
+            if (e.KeyCode == Keys.Enter) { togglePause(); }
+            //if (e.KeyCode == Keys.Return) { EngineCore.EngineCore.pausebuttoninput = !pausebuttoninput; }
+        }
+        public override void GetKeyUp(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up) { up = false; }
+            if (e.KeyCode == Keys.Left) { left = false; }
+            if (e.KeyCode == Keys.Down) { down = false; }
+            if (e.KeyCode == Keys.Right) { right = false; }
+            if (e.KeyCode == Keys.Z) { fire = false; }
+            if (e.KeyCode == Keys.Space) { jump = false; }
+            if (e.KeyCode == Keys.Q) { respawntester = false; }
+        }
+        private void togglePause()
+        {
+            pauseGameKey = !pauseGameKey;
         }
     }
 }
