@@ -16,7 +16,8 @@ namespace Plat2d_2.EngineCore.ObjectTypes
         public string WeaponName { get; set; }
         public WeaponType ThisWeaponType { get; set; }
         public int MaxBulletCount { get; set; }
-        public int AmmoConsumption { get; set; } = -1;
+        public int AmmoConsumption { get; set; } = 0;
+        public int AmmoLeft { get; set; } = 1;
         public bool FiringLock { get; set; } //can weapon currently be fired
         public int FiringLockTimer { get; set; } //how many frames is lock applied for
         public List<Bitmap> Graphics { get; set; } // weapon graphics, DOES NOT APPLY FOR WIELDED OR SCREEN
@@ -28,7 +29,8 @@ namespace Plat2d_2.EngineCore.ObjectTypes
             int ammoConsumption,
             bool firingLock,
             int firingLockFrameCount,
-            List<Bitmap> projectileBitmaps
+            List<Bitmap> projectileBitmaps,
+            int ammoLeft
             )
         {
             WeaponName = weaponName;
@@ -38,6 +40,7 @@ namespace Plat2d_2.EngineCore.ObjectTypes
             FiringLock = firingLock;
             FiringLockTimer = firingLockFrameCount;
             Graphics = projectileBitmaps;
+            AmmoLeft = ammoLeft;
 
         }
 
@@ -69,7 +72,8 @@ namespace Plat2d_2.EngineCore.ObjectTypes
                     {
                         new Bitmap(Image.FromFile($"assets/sprites/bullets/weapon1A.png")),
                         new Bitmap(Image.FromFile($"assets/sprites/bullets/weapon1B.png"))
-                    }
+                    },
+                0
             );
         }
 

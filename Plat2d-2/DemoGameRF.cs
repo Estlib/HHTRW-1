@@ -73,6 +73,7 @@ namespace Plat2d_2
         int currentSprite;//TODO; verify necessity
         int steps = 0;
         int slowDownFrameRate = 0;
+        int remainingJumpSteps = 0;
         //weapons-player
         List<Weapon> unlockedWeapons = new List<Weapon>();
         //weapons-player-active
@@ -84,7 +85,7 @@ namespace Plat2d_2
         int firinglockcounter = 10;
         int weapon1speed = 1;
         int weapon1cyclespeed = 4;
-        int selectedweapon = 1;
+        int selectedweapon = 0;
         List<Bullet> bullets = new List<Bullet>();
         //huddata
         public static int crystalScoreTally = 0;
@@ -194,6 +195,7 @@ namespace Plat2d_2
 
             //weapon config
             unlockedWeapons.Add(Weapon.GetWeapon("debug"));
+            activeWeapon = unlockedWeapons[selectedweapon];
 
             //player config
             //integer value for holding the current player sprite, through which the list is accessed and player is animated through the use of
@@ -314,9 +316,6 @@ namespace Plat2d_2
                 }
             }
 
-            // collisions
-            int remainingJumpSteps = 0;
-
             // camera
             UpdatePlayerCamera();
         }
@@ -368,31 +367,240 @@ namespace Plat2d_2
                 playerLives++;
             }
             //shooting
-            if (firinglock)
+
+            if (activeWeapon.FiringLock)
             {
-                if (firinglockcounter != 0)
+                if (activeWeapon.FiringLockTimer != 0)
                 {
                     //Log.Info("Subtracting one from firinglockcounter");
-                    firinglockcounter--;
+                    activeWeapon.FiringLockTimer--;
                 }
-                else if (firinglockcounter == 0)
+                else if (activeWeapon.FiringLockTimer == 0)
                 {
-                    firinglock = false;
+                    activeWeapon.FiringLock = false;
                 }
             }
-            if (firinglock == false)
+            if (activeWeapon.FiringLock == false)
             {
                 //Log.Info("setting firinglockcounter to 10");
-                firinglockcounter = 10;
+                activeWeapon.FiringLockTimer = 10;
             }
+
             //enemies
             if (enemiesv2 != null)
             {
-                AnimateEnemiesV2sys(false);
+                AnimateEnemiesV2sys(false, animationClock);
             }
             if (bullets != null)
             {
                 AnimateBullets();
+            }
+            //shooting again
+            if (fire == true && activeWeapon.FiringLock == false)
+            {
+                if (activeWeapon.AmmoLeft != 0)
+                {
+                    activeWeapon.AmmoLeft -= activeWeapon.AmmoConsumption;
+                    activeWeapon.FiringLock = true;
+                    if (bullets.Count <= 2 || bullets == null)
+                    {
+                        //shoot new bullet
+
+                        sfxInstance.Play("W1 - single shot");
+                        if (facedirection == 0)
+                        {
+                            if (down) //fires bullet lower than when standing
+                            {
+                                LogUtility.LogCurrentWeaponState("Bullet is fired to the left at a lower altitude");
+                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 16), new Vector2(8, 8), bulletgraphics[0], "Bullet"), true, "weapon1");
+                                //newbullet.sprite2d.CreateDynamic();
+                                bullets.Add(newbullet);
+                                //shoot bullet to the left of player
+                            }
+                            else
+                            {
+                                LogUtility.LogCurrentWeaponState("Bullet is fired to the left");
+                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 8), new Vector2(8, 8), bulletgraphics[0], "Bullet"), true, "weapon1");
+                                //newbullet.sprite2d.CreateDynamic();
+                                bullets.Add(newbullet);
+                                //shoot bullet to the left of player
+
+                            }
+                        }
+                        else if (facedirection == 1)
+                        {
+                            if (down)//fires bullet lower than when standing
+                            {
+                                LogUtility.LogCurrentWeaponState("Bullet is fired to the right at a lower altitude");
+                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 16), new Vector2(8, 8), bulletgraphics[0], "Bullet"), false, "weapon1");
+                                //newbullet.sprite2d.CreateDynamic();
+                                bullets.Add(newbullet);
+                                //shoot bullet to the right of player
+
+                            }
+                            else
+                            {
+                                LogUtility.LogCurrentWeaponState("Bullet is fired to the right");
+                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 8), new Vector2(8, 8), bulletgraphics[0], "Bullet"), false, "weapon1");
+                                //newbullet.sprite2d.CreateDynamic();
+                                bullets.Add(newbullet);
+                                //shoot bullet to the right of player
+
+                            }
+                        }
+                        currentbulletsonscreen++;
+                        //Log.Info($"Bullet fired. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}");
+                    }
+                    else
+                    {
+                        LogUtility.LogCurrentWeaponState($"Fired Bullet Limit reached. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}", true);
+                    }
+                }
+            }
+
+            //player control & collisions
+            if (respawntester)
+            {
+                player.SetLocation(respawnlocation);
+            }
+            if (up) //applies an impulse in the up direction when up key boolean is true
+            {
+                player.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
+            }
+            if (down) //return a console message when down key boolean is true
+            {
+                //Log.Warning("Down has no action currently. Sprite change is visual only.");
+                //TODO: shrink the collider when ducking.
+            }
+            if (left) //applies a velocity to the player in the left direction when left key boolean is true
+            {
+                player.SetVelocity(new Vector2(-120, player.GetYVelocity()));
+            }
+            if (right) //applies a velocity to the player in the right direction when right key boolean is true
+            {
+                player.SetVelocity(new Vector2(120, player.GetYVelocity()));
+            }
+            if (jump) //performs jumpstepping when the jump key boolean is true
+            {
+                if (player.IsColliding("Ground") != null) //if player is colliding with the ground, only then allow the player to jump
+                {
+                    sfxInstance.Play("jump");
+                    remainingJumpSteps = 9; //jump steps are set to 9 frames
+                }
+                jumpmode = true; //sets the jumpmode as true, the player is currently jumping
+            }
+            if (remainingJumpSteps > 0) //if the jump steps are greater than 0
+            {
+                player.SetVelocity(new Vector2(player.GetXVelocity(), -12800)); //then it applies a velocity to the player in the up direction, forming a jump
+                remainingJumpSteps--; //subtract a frame from the jumpsteps
+            }
+            if (player.IsColliding("Ground") != null) //if player is colliding with ground then it sets current jumpmode to false, as player is not currently jumping and logs a message
+            {
+                jumpmode = false;
+                //Log.Info("Player is colliding with Ground");
+                //ground.DestroyStatic(player);
+            }
+            else if (player.IsColliding("Ground") == null) //if player is not colliding with ground then it logs a warning to the console that the player cant press jump key.
+            {
+                //Log.Warning("Player is not colliding with Ground and thus cannot jump.");
+                //jumpstate handling for this is done in the if() structure that checks for jumpsteps
+            }
+            player.UpdatePosition(); //updates players position
+
+            //enemies' bizarre encounter with boolet
+            if (enemiesv2 != null)
+            {
+                for (int i = 0; i < enemiesv2.Count; i++)
+                {
+                    EnemyV2 enemyobject = enemiesv2[i];
+                    enemyobject.sprite2d.UpdatePosition();
+                    if (enemyobject.sprite2d.IsColliding("Bullet") != null)
+                    {
+                        foreach (var bullet in bullets)
+                        {
+                            if (bullet.sprite2d.IsColliding("Enemy") != null)
+                            {
+                                bullet.sprite2d.Tag = "RemoveThis";
+                            }
+                        }
+                        sfxInstance.Play("enemy ow");
+                        pointScoreTally += 250;
+                        enemyobject.sprite2d.DestroySelf();
+                        enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
+                        enemiesv2.Remove(enemiesv2.ElementAt(i));
+                        foreach (var bullet in bullets)
+                        {
+                            if (bullet.sprite2d.Tag != "Bullet")
+                            {
+                                bullet.sprite2d.DestroySelf();
+                                bullets.Remove(bullet);
+                            }
+                        }
+                    }
+                }
+            }
+
+            //bullet cleanup
+            if (bullets != null)
+            {
+                for (int i = 0; i < weapon1cyclespeed; i++)
+                {
+                    foreach (var bullet in bullets)
+                    {
+                        if (bullet.isfacingleft == true)
+                        {
+                            bullet.sprite2d.AdvanceLeft(weapon1speed);
+                        }
+                        else
+                        {
+                            bullet.sprite2d.AdvanceRight(weapon1speed);
+                        }
+                        //bullet.sprite2d.UpdatePosition();
+                    }
+                    foreach (var bullet in bullets)
+                    {
+                        if (bullet.sprite2d.Position.X - player.Position.X < -256 || bullet.sprite2d.Position.X - player.Position.X > 256)
+                        {
+                            bullet.sprite2d.DestroySelf();
+                            bullets.Remove(bullet);
+                        }
+                    }
+
+                }
+                if (bullets.Count() == 0)
+                {
+                    LogUtility.LogCurrentWeaponState("No bullets remain on screen");
+                }
+
+            }
+
+            //crystalcollecting
+            Sprite2d coin = player.IsColliding("Coin"); //checks for collisions between the player and the coin.
+
+            if (coin != null) //if the coin is being touched
+            {
+                sfxInstance.Play("Gem collect");
+                pointScoreTally += 100;
+                crystalScoreTally++;
+                Log.Info($"Coin is being touched. Current Crystalcount: {crystalScoreTally}"); //then it logs a message to the console
+                coin.DestroySelf(); //and destroys the object
+            }
+        }
+        private void AnimateBullets()
+        {
+            foreach (var bullet in bullets)
+            {
+                if (bullet.weaponName == "weapon1")
+                {
+                    if (bullet.sprite2d.Sprite == bulletgraphics[0])
+                    {
+                        bullet.sprite2d.Sprite = bulletgraphics[1];
+                    }
+                    else
+                    {
+                        bullet.sprite2d.Sprite = bulletgraphics[0];
+                    }
+                }
             }
         }
         private void LoseLife()
@@ -446,7 +654,7 @@ namespace Plat2d_2
                     EnemyV2.AnimateThisV2Enemy(enemiesv2.ElementAt(i), animationClock, loglevel);
                 }
 
-                
+
             }
 
         }
@@ -577,9 +785,9 @@ namespace Plat2d_2
                     {
                         hasAnyForgot = false;
                     }
-                    else 
-                    { 
-                        hasAnyForgot = true; 
+                    else
+                    {
+                        hasAnyForgot = true;
                     }
                 }
                 if (hasAnyForgot == false)
