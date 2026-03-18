@@ -450,44 +450,16 @@ namespace Plat2d_2.EngineCore
         }*/
         private void Renderer(object sender, PaintEventArgs e)
         {
-            //Log.Info("Render CameraPosition: " + CameraPosition.X + ", " + CameraPosition.Y);
             // Instruct the world to perform a single step of simulation. It is
             // generally best to keep the time step and iterations fixed.
             Graphics g = e.Graphics;
             g.Clear(BGColor);
             //GameLoopThread.Abort();
 
-            //using (Bitmap testBuffer = new Bitmap((int)ScreenSize.X, (int)ScreenSize.Y))
-            //using (Graphics tg = Graphics.FromImage(testBuffer))
-            //{
-            //    tg.Clear(BGColor);
-            //    tg.TranslateTransform(CameraPosition.X, CameraPosition.Y);
-            //    tg.RotateTransform(CameraAngle);
-            //    tg.ScaleTransform(CameraZoom.X, CameraZoom.Y);
-
-            //    for (int i = 0; i < AllSprites.Count; i++)
-            //    {
-            //        Sprite2d sprite = AllSprites[i];
-            //        if (!sprite.IsReference)
-            //        {
-            //            tg.DrawImage(
-            //                sprite.Sprite,
-            //                sprite.Position.X,
-            //                sprite.Position.Y,
-            //                sprite.Scale.X,
-            //                sprite.Scale.Y
-            //            );
-            //        }
-            //    }
-
-            //    testBuffer.Save("windowed_source.png", System.Drawing.Imaging.ImageFormat.Png);
-            //}
-
-
-            float scaleX = (float)Window.ClientSize.Width / ScreenSize.X;
-            float scaleY = (float)Window.ClientSize.Height / ScreenSize.Y;
-            float scale = System.Math.Min(scaleX, scaleY); // Keep aspect ratio
-            // new code for pixellated fullscreen
+            //float scaleX = (float)Window.ClientSize.Width / ScreenSize.X;
+            //float scaleY = (float)Window.ClientSize.Height / ScreenSize.Y;
+            //float scale = System.Math.Min(scaleX, scaleY); // Keep aspect ratio
+            //// new code for pixellated fullscreen
             //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             //g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 

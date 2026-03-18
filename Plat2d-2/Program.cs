@@ -10,7 +10,7 @@ namespace Plat2d_2
     {
         static void Main(string[] args)
         {
-            DemoGameRF game = new DemoGameRF();
+            DemoGameRF game = new DemoGameRF(true);
         }
     }
 }
