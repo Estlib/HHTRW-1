@@ -46,7 +46,8 @@ namespace Plat2d_2.EngineCore
             "Finish","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
-            "Air","Air","Air","Air","Air","Ground","Ground","Ground"};
+            "Air","Air","Air","Air","Air","Ground","Ground","Ground",
+            "NextRoom",};
         }
 
         /// <summary>
@@ -63,7 +64,8 @@ namespace Plat2d_2.EngineCore
             "Finish","Air","Air","Air","Ground","Air","Air","Ground",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
-            "Air","Air","Air","Air","Air","Ground","Ground","Air"};
+            "Air","Air","Air","Air","Air","Ground","Ground","Air",
+            "NextRoom",};
         }
 
         /// <summary>
@@ -80,7 +82,8 @@ namespace Plat2d_2.EngineCore
             "Finish","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
-            "Air","Air","Air","Air","Air","Air","Air","Air"};
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "NextRoom",};
         }
 
         /// <summary>
@@ -97,7 +100,8 @@ namespace Plat2d_2.EngineCore
             "Finish","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
-            "Air","Air","Air","Air","Air","Air","Air","Air"};
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "NextRoom",};
         }
 
         /// <summary>
@@ -114,7 +118,8 @@ namespace Plat2d_2.EngineCore
             "Finish","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
-            "Air","Air","Air","Air","Air","Air","Air","Air"};
+            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "NextRoom",};
         }
 
         /// <summary>
@@ -124,7 +129,7 @@ namespace Plat2d_2.EngineCore
         /// <returns>Array of Sprite2d references</returns>
         public static Sprite2d[] GetArtRefs(string type = null)
         {
-            Sprite2d[] artrefs = new Sprite2d[64];
+            Sprite2d[] artrefs = new Sprite2d[65];
             switch (type)
             {
                 case "PlainsArtRefs":
@@ -192,6 +197,7 @@ namespace Plat2d_2.EngineCore
                     artrefs[61] = new Sprite2d("tiles/plains/61");
                     artrefs[62] = new Sprite2d("tiles/plains/62");
                     artrefs[63] = new Sprite2d("tiles/plains/63");
+                    artrefs[64] = new Sprite2d("tiles/plains/63");
                     break;
                 case "TitleMenuMapRefs":
                     artrefs = new Sprite2d[89];
@@ -350,6 +356,7 @@ namespace Plat2d_2.EngineCore
                     artrefs[61] = new Sprite2d("tiles/underground/61");
                     artrefs[62] = new Sprite2d("tiles/underground/62");
                     artrefs[63] = new Sprite2d("tiles/underground/63");
+                    artrefs[64] = new Sprite2d("tiles/underground/63");
                     break;
                 case "DesertArtRefs":
                     artrefs[0] = new Sprite2d("tiles/desert/00");
@@ -416,6 +423,7 @@ namespace Plat2d_2.EngineCore
                     artrefs[61] = new Sprite2d("tiles/desert/61");
                     artrefs[62] = new Sprite2d("tiles/desert/62");
                     artrefs[63] = new Sprite2d("tiles/desert/63");
+                    artrefs[64] = new Sprite2d("tiles/desert/63");
                     break;
                 case "ForestArtRefs":
                     artrefs[0] = new Sprite2d("tiles/forest/00");
@@ -482,6 +490,7 @@ namespace Plat2d_2.EngineCore
                     artrefs[61] = new Sprite2d("tiles/forest/61");
                     artrefs[62] = new Sprite2d("tiles/forest/62");
                     artrefs[63] = new Sprite2d("tiles/forest/63");
+                    artrefs[64] = new Sprite2d("tiles/forest/63");
                     break;
                 case "CastleArtRefs":
                     artrefs[0] = new Sprite2d("tiles/castle/00");
@@ -548,6 +557,7 @@ namespace Plat2d_2.EngineCore
                     artrefs[61] = new Sprite2d("tiles/castle/61");
                     artrefs[62] = new Sprite2d("tiles/castle/62");
                     artrefs[63] = new Sprite2d("tiles/castle/63");
+                    artrefs[64] = new Sprite2d("tiles/castle/63");
                     break;
                 case "NoArtRefs":
                 default:

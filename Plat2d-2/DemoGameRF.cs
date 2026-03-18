@@ -648,45 +648,46 @@ namespace Plat2d_2
             }
 
             Sprite2d setlevel1 = player.IsColliding("Level1");
-            if (setlevel1 != null)
+            if (setlevel1 != null && CheckDestination(new Destination(currentDestination.WorldNumber, 0, 0), worlds[currentDestination.WorldNumber]))
             {
+                Destination candidateDestination = new Destination(currentDestination.WorldNumber, 0, 0);                
                 transitionIsCalled = true;
-                reloadDestination = new Destination(1, 0, 0);
-                return;
+                reloadDestination = candidateDestination;
+                return;                
             }
             Sprite2d setlevel2 = player.IsColliding("Level2");
-            if (setlevel2 != null)
+            if (setlevel2 != null && CheckDestination(new Destination(currentDestination.WorldNumber, 1, 0), worlds[currentDestination.WorldNumber]))
             {
                 transitionIsCalled = true;
-                reloadDestination = new Destination(1, 1, 0);
+                reloadDestination = new Destination(currentDestination.WorldNumber, 1, 0);
                 return;
             }
             Sprite2d setlevel3 = player.IsColliding("Level3");
-            if (setlevel3 != null)
+            if (setlevel3 != null && CheckDestination(new Destination(currentDestination.WorldNumber, 2, 0), worlds[currentDestination.WorldNumber]))
             {
                 transitionIsCalled = true;
-                reloadDestination = new Destination(1, 2, 0);
+                reloadDestination = new Destination(currentDestination.WorldNumber, 2, 0);
                 return;
             }
             Sprite2d setlevel4 = player.IsColliding("Level4");
-            if (setlevel4 != null)
+            if (setlevel4 != null && CheckDestination(new Destination(currentDestination.WorldNumber, 3, 0), worlds[currentDestination.WorldNumber]))
             {
                 transitionIsCalled = true;
-                reloadDestination = new Destination(1, 3, 0);
+                reloadDestination = new Destination(currentDestination.WorldNumber, 3, 0);
                 return;
             }
             Sprite2d setlevel5 = player.IsColliding("Level5");
-            if (setlevel5 != null)
+            if (setlevel5 != null && CheckDestination(new Destination(currentDestination.WorldNumber, 4, 0), worlds[currentDestination.WorldNumber]))
             {
                 transitionIsCalled = true;
-                reloadDestination = new Destination(1, 4, 0);
+                reloadDestination = new Destination(currentDestination.WorldNumber, 4, 0);
                 return;
             }
             Sprite2d setlevel6 = player.IsColliding("Level6");
-            if (setlevel6 != null)
+            if (setlevel6 != null && CheckDestination(new Destination(currentDestination.WorldNumber, 5, 0), worlds[currentDestination.WorldNumber]))
             {
                 transitionIsCalled = true;
-                reloadDestination = new Destination(1, 5, 0);
+                reloadDestination = new Destination(currentDestination.WorldNumber, 5, 0);
                 return;
             }
 
@@ -739,6 +740,19 @@ namespace Plat2d_2
             }
 
         }
+
+        private bool CheckDestination(Destination candidateDestination, WorldStructure worldStructure)
+        {
+            if (worldStructure.AreAreasClear[candidateDestination.AreaNumber] == false)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private void GoToLevel(CallState state, Destination reloadDestination, List<WorldStructure> worlds)
         {
             if (navCause == NavigationReason.ReturnToMap)
