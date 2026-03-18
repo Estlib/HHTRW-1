@@ -1,6 +1,7 @@
 ﻿using Box2DX.Common;
 using Box2DX.Dynamics;
 using Plat2d_2.EngineCore;
+using Plat2d_2.EngineCore.ObjectControllers;
 using Plat2d_2.EngineCore.ObjectTypes;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,35 @@ using System.Windows.Forms;
 
 namespace Plat2d_2
 {
+    public struct Destination
+    {
+        public int WorldNumber;
+        public int AreaNumber;
+        public int LevelNumber;
+        public bool IsWorldMap;
+        public Destination(int worldNumber, int areaNumber, int levelNumber)
+        {
+            WorldNumber = worldNumber;
+            AreaNumber = areaNumber;
+            LevelNumber = levelNumber;
+            IsWorldMap = false;
+        }     
+        public Destination(int worldNumber, bool isWorldMap = true)
+        {
+            WorldNumber = worldNumber;
+            AreaNumber = 0;
+            LevelNumber = 0;
+            IsWorldMap = isWorldMap;
+        }        
+    }
+    public enum NavigationReason
+    {
+        None,
+        LevelCleared,
+        ReturnToMap,
+        ToTitleScreen,
+        ToOptions,
+    }
     public enum CallState
     {
         TitleScreen,
@@ -144,16 +174,14 @@ namespace Plat2d_2
         //GameWorlds
         List<WorldStructure> worlds = new List<WorldStructure>();
         //Current gamestate
-        public static bool isPlayerRequestingScreen = true;
-        public static int whichScreen = 0;
-        public static bool isPlayerRequestingLevel = false;
-        public static int[] whichLevel = { 1, 0 };
-        public static bool isPlayerGoingNextRoom = false;
-        public static int nextRoomElementInt = 1;
+        public static CallState state = CallState.TitleScreen;
         Level activeLevel;
         public static bool isThisLevelClear = false;
         public static KeyMode currentKeyMode = KeyMode.KeyBoard_Form;
-        public static int[] currentLevel = { 1, 1 };
+        public static Destination reloadDestination = new Destination(0,0,0);
+        public static Destination currentDestination = new Destination(0,0,0);
+        public static bool transitionIsCalled = true;
+        public static NavigationReason navCause = NavigationReason.ToTitleScreen;
 
 
 
@@ -212,7 +240,7 @@ namespace Plat2d_2
             //player config
             //integer value for holding the current player sprite, through which the list is accessed and player is animated through the use of
             currentSprite = 0; //TODO; verify necessity
-
+            currentKeyMode = KeyMode.KeyBoard_Form;
 
             foreach (var sfxR in allSFX)
             {
@@ -222,13 +250,12 @@ namespace Plat2d_2
             LogUtility.ClearLineOnly(6);
 
             //Start game on title screen   \/
-            isPlayerRequestingScreen = true;
-            whichScreen = 0;
-            isPlayerRequestingLevel = false;
-            LoadArea(isPlayerRequestingScreen, whichScreen, worlds);
-            currentKeyMode = KeyMode.KeyBoard_Form;
+            state = CallState.TitleScreen;
+            GoToLevel(state, reloadDestination, worlds);
+            
 
         }
+
 
         public override void OnDraw()
         {
@@ -600,29 +627,78 @@ namespace Plat2d_2
             Sprite2d levelfinish = player.IsColliding("Finish"); //checks for collisions between the player and the level finishing trigger object.
             if (levelfinish != null) //if the trigger object is being touched
             {
-                isPlayerRequestingLevel = true;
-                //TODO; check if world is completed, then increment worldcounter, and load next world map instead
-                whichLevel = new int[] { 1, -1 };
+                
+                transitionIsCalled = true;
+                reloadDestination = new Destination(reloadDestination.WorldNumber);
+                state = CallState.WorldMap;
+                navCause = NavigationReason.LevelCleared;
                 Log.Info("Player has triggered level finish"); //then it logs a message to the console
                 levelfinish.DestroySelf(); //destroys itself
-                BGMPlayer.PlayNow(jukeBox.ElementAt(7).Filepath);
+                BGMPlayer.PlayNow(jukeBox.ElementAt(6).Filepath);
+                return;
             }
 
             Sprite2d levelstart = player.IsColliding("Start");
             if (levelstart != null)
             {
-                isPlayerRequestingLevel = true;
-                whichLevel = levelstart.worldData;
+                transitionIsCalled = true;
+                reloadDestination = new Destination(1);
+                navCause = NavigationReason.ReturnToMap;
+                return;
+            }
+
+            Sprite2d setlevel1 = player.IsColliding("Level1");
+            if (setlevel1 != null)
+            {
+                transitionIsCalled = true;
+                reloadDestination = new Destination(1, 0, 0);
+                return;
+            }
+            Sprite2d setlevel2 = player.IsColliding("Level2");
+            if (setlevel2 != null)
+            {
+                transitionIsCalled = true;
+                reloadDestination = new Destination(1, 1, 0);
+                return;
+            }
+            Sprite2d setlevel3 = player.IsColliding("Level3");
+            if (setlevel3 != null)
+            {
+                transitionIsCalled = true;
+                reloadDestination = new Destination(1, 2, 0);
+                return;
+            }
+            Sprite2d setlevel4 = player.IsColliding("Level4");
+            if (setlevel4 != null)
+            {
+                transitionIsCalled = true;
+                reloadDestination = new Destination(1, 3, 0);
+                return;
+            }
+            Sprite2d setlevel5 = player.IsColliding("Level5");
+            if (setlevel5 != null)
+            {
+                transitionIsCalled = true;
+                reloadDestination = new Destination(1, 4, 0);
+                return;
+            }
+            Sprite2d setlevel6 = player.IsColliding("Level6");
+            if (setlevel6 != null)
+            {
+                transitionIsCalled = true;
+                reloadDestination = new Destination(1, 5, 0);
                 return;
             }
 
             Sprite2d nextroom = player.IsColliding("NextRoom");
             if (nextroom != null) //if the trigger object is being touched
             {
-                isPlayerGoingNextRoom = true;
-                whichLevel[1]++;
+                transitionIsCalled = true;
+                reloadDestination = new Destination(reloadDestination.WorldNumber,reloadDestination.AreaNumber,reloadDestination.LevelNumber+1);
                 Log.Info("Player is going to next room"); //then it logs a message to the console
                 nextroom.DestroySelf(); //destroys itself
+                BGMPlayer.PlayNow(jukeBox.ElementAt(8).Filepath);
+                return;
             }
 
             Sprite2d enemy = player.IsColliding("Enemy"); //checks for collisions between the player and the level finishing trigger object.
@@ -662,6 +738,27 @@ namespace Plat2d_2
                 fpsTimer.Restart();
             }
 
+        }
+        private void GoToLevel(CallState state, Destination reloadDestination, List<WorldStructure> worlds)
+        {
+            if (navCause == NavigationReason.ReturnToMap)
+            {
+                LoadScreen(new Area
+                {
+                    Levels = new List<Level> { worlds[reloadDestination.WorldNumber].WorldMap },
+                    AreaNumber = 0,
+                    AreaName = worlds[reloadDestination.WorldNumber].WorldMap.levelname
+                },
+                0
+                );
+            }
+            else
+            {
+                LoadScreen(
+                    worlds[reloadDestination.WorldNumber].Areas[reloadDestination.AreaNumber],
+                    reloadDestination.LevelNumber
+                    );
+            }
         }
         private void AnimateBullets()
         {
@@ -790,61 +887,92 @@ namespace Plat2d_2
         }
         private void GameStateHandler2()
         {
-            if (isThisLevelClear)
-            {
-                SetLevelCleared(worlds, activeLevel);
+            if (transitionIsCalled)
+            {        
+                if (reloadDestination.IsWorldMap == true) 
+                {
+                    if (navCause == NavigationReason.LevelCleared)
+                    {
+                        SetLevelCleared(worlds, currentDestination);
+                    }
+                    UnloadLastLevel();
+                    navCause = NavigationReason.ReturnToMap;
+                    GoToLevel(state, reloadDestination, worlds);
+                    currentDestination = reloadDestination;
+                    state = CallState.WorldMap;
+                    
+                }
+                else if (currentDestination.WorldNumber == reloadDestination.WorldNumber 
+                    && currentDestination.AreaNumber == reloadDestination.AreaNumber
+                    && currentDestination.LevelNumber != reloadDestination.LevelNumber) 
+                {
+                    state = CallState.RoomTransition;
+                    navCause = NavigationReason.None;
+                    UnloadLastLevel();
+                    GoToLevel(state, reloadDestination, worlds);
+                    currentDestination = reloadDestination;
+                    state = CallState.PlayingLevel;
+                }
+                else
+                {
+                    UnloadLastLevel();
+                    navCause = NavigationReason.None;
+                    GoToLevel(state, reloadDestination, worlds);
+                    currentDestination = reloadDestination;
+                    state = CallState.PlayingLevel;
+                }
+                transitionIsCalled = false;
             }
             //check wether to change level or go to screen or do nothing
-            if (isPlayerRequestingLevel)
-            {
-                UnloadLastLevel();
-                if (whichLevel[1] == -1)
-                {
-                    Log.Error($"world {whichLevel[0]} with levelid {whichLevel[1]} does not exist");
-                    isPlayerRequestingLevel = false;
-                    isPlayerRequestingScreen = true;
-                    whichScreen = 0;
-                    return;
-                }
-                LoadLevel(worlds, whichLevel);
-                isPlayerRequestingLevel = false;
-            }
-            else if (isPlayerGoingNextRoom)
-            {
-                UnloadLastLevel();
-                LoadLevel(activeLevel, nextRoomElementInt);
-                isPlayerGoingNextRoom = false;
-            }
-            else if (isPlayerRequestingScreen)
-            {
-                UnloadLastLevel();
-                LoadArea(isPlayerRequestingScreen, whichScreen, worlds);
-                isPlayerRequestingScreen = false;
-            }
-
         }
 
-        private void SetLevelCleared(List<WorldStructure> worlds, Level activeLevel)
+        private void SetLevelCleared(List<WorldStructure> worlds, Destination thisIsCleared)
+        {
+
+            worlds[thisIsCleared.WorldNumber]
+                .Areas[thisIsCleared.AreaNumber].isAreaClear = true;
+            int areanum = worlds[thisIsCleared.WorldNumber]
+                .Areas[thisIsCleared.AreaNumber].AreaNumber;
+            int clearbool = worlds[thisIsCleared.WorldNumber].ClearAreas.IndexOf(areanum);
+            worlds[thisIsCleared.WorldNumber]
+                .AreAreasClear[clearbool] = true;
+
+            //also set world clear
+            if (worlds[thisIsCleared.WorldNumber]
+                .AreAreasClear.Contains(false))
+            {
+                worlds[thisIsCleared.WorldNumber].isWorldClear = false;
+            }
+            else
+            {
+                worlds[thisIsCleared.WorldNumber].isWorldClear = true;
+            }
+        }
+
+        private void SetLevelClearedOld(List<WorldStructure> worlds, Level activeLevel)
         {
             int areanum = 0;
             int numindspot = 0;
             foreach (var world in worlds)
             {
-                if (world.WorldName != "Utility" || world.isWorldClear != true)
+                if (world.WorldName != "Utility" && world.isWorldClear != true)
                 {
-                    foreach (var area in world.Areas)
+                    if (world.isWorldClear != true)
                     {
-                        bool thisIsCleared = false;
-                        foreach (var level in area.Levels)
+                        foreach (var area in world.Areas)
                         {
-                            if (level == activeLevel)
+                            bool thisIsCleared = false;
+                            foreach (var level in area.Levels)
                             {
-                                thisIsCleared = true;
+                                if (level == activeLevel)
+                                {
+                                    thisIsCleared = true;
+                                }
                             }
+                            area.isAreaClear = thisIsCleared;
+                            areanum = area.AreaNumber;
+                            break;
                         }
-                        area.isAreaClear = thisIsCleared;
-                        areanum = area.AreaNumber;
-                        break;
                     }
                 }
                 //what is the area number

@@ -100,7 +100,7 @@ namespace Plat2d_2.EngineCore.ObjectTypes
                     new Area
                     {
                         Levels = new List<Level>{ LevelController.GetTitleScreen() },
-                        AreaNumber = 1,
+                        AreaNumber = 2,
                         AreaName = "Game Over"
                     },
                 },
@@ -110,6 +110,7 @@ namespace Plat2d_2.EngineCore.ObjectTypes
                 0,
                 null
             );
+            screens.isWorldClear = true;
 
             return screens;
         }
