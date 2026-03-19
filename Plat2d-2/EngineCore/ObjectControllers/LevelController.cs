@@ -50,7 +50,7 @@ namespace Plat2d_2.EngineCore.ObjectControllers
                 LevelData.RetrieveData("L_01", 3),
                 "Level",
                 "Harenimus 1-1 Plains",
-                Color.FromArgb(255, 0, 0, 0),
+                Color.FromArgb(255, 56, 192, 252),
                 false, 
                 PlainsArtRefs
                 )

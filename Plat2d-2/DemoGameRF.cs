@@ -105,6 +105,7 @@ namespace Plat2d_2
         bool fire; // key fire bool
         bool jump; // key jump bool
         bool respawntester; // respawns player at spawn location
+        bool nextweapon;
         bool jumpmode; // can player currently jump
         bool nokey; // is any key being pressed
         Vec2 respawnlocation; // where to put the player when they lose life.
@@ -182,7 +183,9 @@ namespace Plat2d_2
         public static Destination currentDestination = new Destination(0,0,0);
         public static bool transitionIsCalled = true;
         public static NavigationReason navCause = NavigationReason.ToTitleScreen;
-
+        int keyTimeoutX = 25;
+        Random rngFrom8To8 = new Random();
+        int waitForThisManyFrames = 100;
 
 
         /// <summary>
@@ -202,6 +205,7 @@ namespace Plat2d_2
 
         public override void OnLoad()
         {
+            int gameHasWaitedFor = 0;
             //fps tools
             timeBeginPeriod(1); //set time measuring to milliseconds
             stopwatch.Start(); //make stopwatch go
@@ -234,6 +238,9 @@ namespace Plat2d_2
             SetJukebox();
 
             //weapon config
+            unlockedWeapons.Add(Weapon.GetWeapon(""));
+            unlockedWeapons.Add(Weapon.GetWeapon("plasma"));
+            unlockedWeapons.Add(Weapon.GetWeapon("flint"));
             unlockedWeapons.Add(Weapon.GetWeapon("debug"));
             activeWeapon = unlockedWeapons[selectedweapon];
 
@@ -404,9 +411,44 @@ namespace Plat2d_2
             {
                 crystalScoreTally = 0;
                 playerLives++;
+                sfxInstance.Play("GEMS 1-up");
             }
-            //shooting
 
+            //weapon selecting
+            if (nextweapon && keyTimeoutX==0)
+            {
+                keyTimeoutX = 25;
+                sfxInstance.Play("ammo notification");
+                if (selectedweapon != unlockedWeapons.Count)
+                {
+                    selectedweapon++;
+                }
+                else
+                {
+                    selectedweapon = 0;
+                }
+                activeWeapon = unlockedWeapons[selectedweapon];
+                Log.Normal("Weapon in active slot: "+activeWeapon.WeaponName);
+                Log.Info( "FiringLock: "+activeWeapon.FiringLock.ToString());
+                Log.Info( "AmmoConsumption: " + activeWeapon.AmmoConsumption);
+                Log.Info( "FiringLockTimer: " + activeWeapon.FiringLockTimer);
+                Log.Info( "AmmoLeft: " +activeWeapon.AmmoLeft);
+                Log.Info( "MaxBulletCount: " + activeWeapon.MaxBulletCount);
+                Log.Info( "ThisWeaponType: " + activeWeapon.ThisWeaponType);
+                Log.Info( "SpriteCount: " + activeWeapon.Graphics.Count);
+            }
+            else
+            {
+                //sfxInstance.Play("error");
+            }
+            if (keyTimeoutX > 0)
+            {
+                keyTimeoutX--;
+
+            }
+
+
+            //shooting
             if (activeWeapon.FiringLock)
             {
                 if (activeWeapon.FiringLockTimer != 0)
@@ -422,7 +464,7 @@ namespace Plat2d_2
             if (activeWeapon.FiringLock == false)
             {
                 //Log.Info("setting firinglockcounter to 10");
-                activeWeapon.FiringLockTimer = 10;
+                activeWeapon.FiringLockTimer = activeWeapon.FiringLockTimerOriginal;
             }
 
             //enemies
@@ -434,24 +476,35 @@ namespace Plat2d_2
             {
                 AnimateBullets();
             }
+
+
+
             //shooting again
             if (fire == true && activeWeapon.FiringLock == false)
             {
                 if (activeWeapon.AmmoLeft != 0)
                 {
-                    activeWeapon.AmmoLeft -= activeWeapon.AmmoConsumption;
-                    activeWeapon.FiringLock = true;
-                    if (bullets.Count <= 2 || bullets == null)
+                    if (activeWeapon.WeaponName != "debug")
                     {
-                        //shoot new bullet
+                        activeWeapon.AmmoLeft -= activeWeapon.AmmoConsumption;
+                    }
+                    activeWeapon.FiringLock = true;
+                    if (bullets.Count < activeWeapon.MaxBulletCount || bullets == null)
+                    {
 
-                        sfxInstance.Play("W1 - single shot");
+                        //shoot new bullet
+                        int heightmod = 0;
+                        if (activeWeapon.WeaponName == "Willo")
+                        {
+                            heightmod = rngFrom8To8.Next(-6, 6);
+                        }
+                            GunSound(activeWeapon.WeaponName);
                         if (facedirection == 0)
                         {
                             if (down) //fires bullet lower than when standing
                             {
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the left at a lower altitude");
-                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 16), new Vector2(8, 8), bulletgraphics[0], "Bullet"), true, "weapon1");
+                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 16+ heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
                                 //newbullet.sprite2d.CreateDynamic();
                                 bullets.Add(newbullet);
                                 //shoot bullet to the left of player
@@ -459,7 +512,7 @@ namespace Plat2d_2
                             else
                             {
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the left");
-                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 8), new Vector2(8, 8), bulletgraphics[0], "Bullet"), true, "weapon1");
+                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 8+ heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
                                 //newbullet.sprite2d.CreateDynamic();
                                 bullets.Add(newbullet);
                                 //shoot bullet to the left of player
@@ -471,7 +524,7 @@ namespace Plat2d_2
                             if (down)//fires bullet lower than when standing
                             {
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the right at a lower altitude");
-                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 16), new Vector2(8, 8), bulletgraphics[0], "Bullet"), false, "weapon1");
+                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 16 + heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), false, activeWeapon.WeaponName);
                                 //newbullet.sprite2d.CreateDynamic();
                                 bullets.Add(newbullet);
                                 //shoot bullet to the right of player
@@ -480,7 +533,7 @@ namespace Plat2d_2
                             else
                             {
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the right");
-                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 8), new Vector2(8, 8), bulletgraphics[0], "Bullet"), false, "weapon1");
+                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 8 + heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), false, activeWeapon.WeaponName);
                                 //newbullet.sprite2d.CreateDynamic();
                                 bullets.Add(newbullet);
                                 //shoot bullet to the right of player
@@ -492,7 +545,8 @@ namespace Plat2d_2
                     }
                     else
                     {
-                        LogUtility.LogCurrentWeaponState($"Fired Bullet Limit reached. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}", true);
+                        //sfxInstance.Play("error");
+                        LogUtility.LogCurrentWeaponState($"Fired Bullet Limit reached. Limit {activeWeapon.MaxBulletCount}. Onscreen {currentbulletsonscreen}", true);
                     }
                 }
             }
@@ -603,6 +657,15 @@ namespace Plat2d_2
                             bullet.sprite2d.DestroySelf();
                             bullets.Remove(bullet);
                         }
+                        if (bullet.weaponName == "Willo")
+                        {
+                            Sprite2d hitblock = bullet.sprite2d.IsColliding("Ground");
+                            if (hitblock != null)
+                            {
+                                bullet.sprite2d.DestroySelf();
+                                bullets.Remove(bullet);
+                            }
+                        }
                     }
 
                 }
@@ -635,6 +698,7 @@ namespace Plat2d_2
                 Log.Info("Player has triggered level finish"); //then it logs a message to the console
                 levelfinish.DestroySelf(); //destroys itself
                 BGMPlayer.PlayNow(jukeBox.ElementAt(6).Filepath);
+                Thread.Sleep(5000);
                 return;
             }
 
@@ -698,7 +762,7 @@ namespace Plat2d_2
                 reloadDestination = new Destination(reloadDestination.WorldNumber,reloadDestination.AreaNumber,reloadDestination.LevelNumber+1);
                 Log.Info("Player is going to next room"); //then it logs a message to the console
                 nextroom.DestroySelf(); //destroys itself
-                BGMPlayer.PlayNow(jukeBox.ElementAt(8).Filepath);
+                sfxInstance.Play("enter door");
                 return;
             }
 
@@ -741,6 +805,28 @@ namespace Plat2d_2
 
         }
 
+        private void GunSound(string weaponName)
+        {
+            switch (weaponName)
+            {
+                case "debug":
+                    sfxInstance.Play("W1 - single shot");
+                    break;
+                case "Väits":
+                    sfxInstance.Play("swipe");
+                    break;
+                case "Barker":
+                    sfxInstance.Play("flintlock");
+                    break;
+                case "Willo":
+                    sfxInstance.Play("W3 - continuous shot");
+                    break;
+                default:
+                    sfxInstance.Play("error");
+                    break;
+            }
+        }
+
         private bool CheckDestination(Destination candidateDestination, WorldStructure worldStructure)
         {
             if (worldStructure.AreAreasClear[candidateDestination.AreaNumber] == false)
@@ -778,19 +864,76 @@ namespace Plat2d_2
         {
             foreach (var bullet in bullets)
             {
-                if (bullet.weaponName == "weapon1")
+                Weapon weapon = unlockedWeapons.FirstOrDefault(w => w.WeaponName == bullet.weaponName);
+                if (weapon == null || weapon.Graphics == null || weapon.Graphics.Count == 0)
+                    continue;
+
+                int currentFrame = weapon.Graphics.IndexOf(bullet.sprite2d.Sprite);
+
+                if (currentFrame == -1)
                 {
-                    if (bullet.sprite2d.Sprite == bulletgraphics[0])
-                    {
-                        bullet.sprite2d.Sprite = bulletgraphics[1];
-                    }
-                    else
-                    {
-                        bullet.sprite2d.Sprite = bulletgraphics[0];
-                    }
+                    bullet.sprite2d.Sprite = weapon.Graphics[0];
+                    continue;
                 }
+
+                int nextFrame = currentFrame + 1;
+                if (nextFrame >= weapon.Graphics.Count)
+                    nextFrame = 0;
+
+                bullet.sprite2d.Sprite = weapon.Graphics[nextFrame];
             }
         }
+
+        //private void AnimateBullets()
+        //{
+        //    foreach (var bullet in bullets)
+        //    {
+        //        switch (bullet.weaponName)
+        //        {
+        //            //case "Barker":
+        //            //    Weapon barker = unlockedWeapons.SingleOrDefault(w => w.WeaponName == "Barker");
+        //            //    int barkerTotalFrames = barker.Graphics.Count;
+        //            //    int currentframeb = barker.Graphics.IndexOf(bullet.sprite2d.Sprite);
+        //            //    if (currentframeb++ < barkerTotalFrames)
+        //            //    {
+        //            //        bullet.sprite2d.Sprite = barker.Graphics[currentframeb + 1];
+        //            //    }
+        //            //    else
+        //            //    {
+        //            //        bullet.sprite2d.Sprite = barker.Graphics[0];
+        //            //    }
+        //            //    break;
+        //            case "debug":
+        //                Weapon debug = unlockedWeapons.SingleOrDefault(w => w.WeaponName == "debug");
+        //                int debugTotalFrames = debug.Graphics.Count-1;
+        //                int currentframed = debug.Graphics.IndexOf(bullet.sprite2d.Sprite);
+        //                if (currentframed++ < debugTotalFrames)
+        //                {
+        //                    bullet.sprite2d.Sprite = debug.Graphics[currentframed];
+        //                }
+        //                else
+        //                {
+        //                    bullet.sprite2d.Sprite = debug.Graphics[0];
+        //                }
+        //                break;
+        //            case "Willo":
+        //                Weapon willo = unlockedWeapons.SingleOrDefault(w => w.WeaponName == "Willo");
+        //                int willoTotalFrames = willo.Graphics.Count;
+        //                int currentframew = willo.Graphics.IndexOf(bullet.sprite2d.Sprite);
+        //                if (currentframew++ < willoTotalFrames)
+        //                {
+        //                    bullet.sprite2d.Sprite = willo.Graphics[currentframew + 1];
+        //                }
+        //                else
+        //                {
+        //                    bullet.sprite2d.Sprite = willo.Graphics[0];
+        //                }
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
+        //}
         private void LoseLife()
         {
             Log.Info("LoseLife has been called");
@@ -1175,7 +1318,14 @@ namespace Plat2d_2
                     RenderLayer(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
                 }
             }
-            PlayLevelTrack(loadTarget);
+            if (reloadDestination.LevelNumber == 0)
+            {
+                PlayLevelTrack(loadTarget);
+            }
+            else 
+            {
+                sfxInstance.Play("door close");
+            }
         }
         private void LoadScreen(int whichScreen, WorldStructure selectedWorld)
         {
@@ -1533,6 +1683,7 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.Space) { jump = true; }
             if (e.KeyCode == Keys.Q) { respawntester = true; }
             if (e.KeyCode == Keys.Enter) { togglePause(); }
+            if (e.KeyCode == Keys.X) { nextweapon = true; }
             //if (e.KeyCode == Keys.Return) { EngineCore.EngineCore.pausebuttoninput = !pausebuttoninput; }
         }
         public override void GetKeyUp(KeyEventArgs e)
@@ -1544,6 +1695,7 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.Z) { fire = false; }
             if (e.KeyCode == Keys.Space) { jump = false; }
             if (e.KeyCode == Keys.Q) { respawntester = false; }
+            if (e.KeyCode == Keys.X) { nextweapon = false; }
         }
         private void togglePause()
         {
