@@ -79,6 +79,7 @@ namespace Plat2d_2.EngineCore
 
         public static List<Shape2d> AllShapes = new List<Shape2d>();
         public static List<Sprite2d> AllSprites = new List<Sprite2d>();
+        public static List<Sprite2d> HUDSprites = new List<Sprite2d>();
         //public static List<Shape2d>[] LevelShapes = new List<Shape2d>[10];
         //public static List<Sprite2d>[] LevelSprites = new List<Sprite2d>[10];
         public static bool pausebuttoninput = false;
@@ -179,7 +180,10 @@ namespace Plat2d_2.EngineCore
         public static void RegisterSprite(Sprite2d sprite)
         {
             AllSprites.Add(sprite);
-            //LevelSprites[DemoGame.currentLevel].Add(sprite);
+        }
+        public static void RegisterHudElement(Sprite2d sprite)
+        {
+            HUDSprites.Add(sprite);
         }
         public static void UnRegisterSprite(Sprite2d sprite)
         {
@@ -192,17 +196,7 @@ namespace Plat2d_2.EngineCore
         }
         public static void RemoveAllSprites()
         {
-            //foreach (var sprite in LevelSprites[DemoGame.currentLevel])
-            //{
-            //    if (sprite.HasBody())
-            //    {
-            //        if (sprite.Tag == "Enemy")
-            //        {
-            //            Log.Highlight("DestroyStatic is destroying an Enemy");
-            //        }
-            //        sprite.DestroyStatic(sprite);
-            //    }
-            //}
+            
             foreach (var sprite in AllSprites)
             {
                 if (sprite.HasBody())
@@ -214,22 +208,13 @@ namespace Plat2d_2.EngineCore
                     sprite.DestroyStatic(sprite);
                 }
             }
-            //foreach (var enemy in DemoGame.enemies)
-            //{
-            //    if (enemy.sprite2d.HasBody())
-            //    {
-            //        enemy.sprite2d.DestroyStatic(enemy.sprite2d);
-            //    }
-            //}
             AllSprites = new List<Sprite2d>();
-            //LevelSprites[DemoGame.currentLevel] = new List<Sprite2d>();
-            //for (int i = 0; i < AllSprites.Count; i++)
-            //{
-            //    Sprite2d sprite = AllSprites[i];
-            //    AllSprites.Remove(sprite);
-            //}
-
         }
+        public static void RemoveHudSprites()
+        {
+            HUDSprites = new List<Sprite2d>();
+        }
+
         // Prepare for simulation. Typically we use a time step of 1/60 of a
         // second (60Hz) and 10 iterations. This provides a high quality simulation
         // in most game scenarios.
@@ -253,7 +238,7 @@ namespace Plat2d_2.EngineCore
                     //Thread.Sleep(2);
                     if (Window != null)
                     {
-                        Window.BeginInvoke((MethodInvoker)delegate { UpdateHud(); });
+                        //Window.BeginInvoke((MethodInvoker)delegate { UpdateHud(); });
                     }
                 }
                 catch (Exception ex)
@@ -371,6 +356,23 @@ namespace Plat2d_2.EngineCore
                     );
                 }
             }
+
+            for (int i = 0; i < HUDSprites.Count; i++) 
+            {
+                Sprite2d hudsprite = HUDSprites[i];
+                if (!hudsprite.IsReference) 
+                {
+                    backGraphics.DrawImage(
+                        hudsprite.Sprite,
+                        hudsprite.Position.X,
+                        hudsprite.Position.Y,
+                        hudsprite.Scale.X,
+                        hudsprite.Scale.Y
+                    );
+                }
+            }
+
+            //Render hud here too via another forcycle TODO
 
             // Present backbuffer to fullscreen
             g.Clear(BGColor);

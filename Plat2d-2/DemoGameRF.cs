@@ -30,14 +30,14 @@ namespace Plat2d_2
             AreaNumber = areaNumber;
             LevelNumber = levelNumber;
             IsWorldMap = false;
-        }     
+        }
         public Destination(int worldNumber, bool isWorldMap = true)
         {
             WorldNumber = worldNumber;
             AreaNumber = 0;
             LevelNumber = 0;
             IsWorldMap = isWorldMap;
-        }        
+        }
     }
     public enum NavigationReason
     {
@@ -134,6 +134,8 @@ namespace Plat2d_2
         public static int pointScoreTally = 0;
         public static int playerHealth = 100;
         public static int playerLives = 5;
+        List<Bitmap> HudBMP = ArtData.HudSprites();
+        Sprite2d hud;
 
         //enemies
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>(); //enemies that exist
@@ -179,8 +181,8 @@ namespace Plat2d_2
         Level activeLevel;
         public static bool isThisLevelClear = false;
         public static KeyMode currentKeyMode = KeyMode.KeyBoard_Form;
-        public static Destination reloadDestination = new Destination(0,0,0);
-        public static Destination currentDestination = new Destination(0,0,0);
+        public static Destination reloadDestination = new Destination(0, 0, 0);
+        public static Destination currentDestination = new Destination(0, 0, 0);
         public static bool transitionIsCalled = true;
         public static NavigationReason navCause = NavigationReason.ToTitleScreen;
         int keyTimeoutX = 25;
@@ -259,7 +261,7 @@ namespace Plat2d_2
             //Start game on title screen   \/
             state = CallState.TitleScreen;
             GoToLevel(state, reloadDestination, worlds);
-            
+
 
         }
 
@@ -415,7 +417,7 @@ namespace Plat2d_2
             }
 
             //weapon selecting
-            if (nextweapon && keyTimeoutX==0)
+            if (nextweapon && keyTimeoutX == 0)
             {
                 keyTimeoutX = 25;
                 sfxInstance.Play("ammo notification");
@@ -428,14 +430,14 @@ namespace Plat2d_2
                     selectedweapon = 0;
                 }
                 activeWeapon = unlockedWeapons[selectedweapon];
-                Log.Normal("Weapon in active slot: "+activeWeapon.WeaponName);
-                Log.Info( "FiringLock: "+activeWeapon.FiringLock.ToString());
-                Log.Info( "AmmoConsumption: " + activeWeapon.AmmoConsumption);
-                Log.Info( "FiringLockTimer: " + activeWeapon.FiringLockTimer);
-                Log.Info( "AmmoLeft: " +activeWeapon.AmmoLeft);
-                Log.Info( "MaxBulletCount: " + activeWeapon.MaxBulletCount);
-                Log.Info( "ThisWeaponType: " + activeWeapon.ThisWeaponType);
-                Log.Info( "SpriteCount: " + activeWeapon.Graphics.Count);
+                Log.Normal("Weapon in active slot: " + activeWeapon.WeaponName);
+                Log.Info("FiringLock: " + activeWeapon.FiringLock.ToString());
+                Log.Info("AmmoConsumption: " + activeWeapon.AmmoConsumption);
+                Log.Info("FiringLockTimer: " + activeWeapon.FiringLockTimer);
+                Log.Info("AmmoLeft: " + activeWeapon.AmmoLeft);
+                Log.Info("MaxBulletCount: " + activeWeapon.MaxBulletCount);
+                Log.Info("ThisWeaponType: " + activeWeapon.ThisWeaponType);
+                Log.Info("SpriteCount: " + activeWeapon.Graphics.Count);
             }
             else
             {
@@ -498,23 +500,44 @@ namespace Plat2d_2
                         {
                             heightmod = rngFrom8To8.Next(-6, 6);
                         }
-                            GunSound(activeWeapon.WeaponName);
+                        else if (activeWeapon.WeaponName == "Väits")
+                        {
+                            heightmod = -8;
+                        }
+                        GunSound(activeWeapon.WeaponName);
                         if (facedirection == 0)
                         {
                             if (down) //fires bullet lower than when standing
                             {
+
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the left at a lower altitude");
-                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 16+ heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
+                                if (activeWeapon.WeaponName == "Väits")
+                                {
+                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X-24, player.Position.Y + 16 + heightmod), new Vector2(24, 24), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
+                                    bullets.Add(newbullet);
+                                }
+                                else
+                                {
+                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 16 + heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
+                                    bullets.Add(newbullet);
+                                }
                                 //newbullet.sprite2d.CreateDynamic();
-                                bullets.Add(newbullet);
                                 //shoot bullet to the left of player
                             }
                             else
                             {
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the left");
-                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 8+ heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
+                                if(activeWeapon.WeaponName == "Väits")
+                                {
+                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X-24, player.Position.Y + 8 + heightmod), new Vector2(24, 24), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
+                                    bullets.Add(newbullet);
+                                }
+                                else
+                                {
+                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X, player.Position.Y + 8 + heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
+                                    bullets.Add(newbullet);
+                                }
                                 //newbullet.sprite2d.CreateDynamic();
-                                bullets.Add(newbullet);
                                 //shoot bullet to the left of player
 
                             }
@@ -524,18 +547,34 @@ namespace Plat2d_2
                             if (down)//fires bullet lower than when standing
                             {
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the right at a lower altitude");
-                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 16 + heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), false, activeWeapon.WeaponName);
+                                if (activeWeapon.WeaponName == "Väits")
+                                {
+                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 16 + heightmod), new Vector2(24, 24), activeWeapon.Graphics[0], "Bullet"), false, activeWeapon.WeaponName);
+                                    bullets.Add(newbullet);
+                                }
+                                else
+                                {
+                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 16 + heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), false, activeWeapon.WeaponName);
+                                    bullets.Add(newbullet);
+                                }
                                 //newbullet.sprite2d.CreateDynamic();
-                                bullets.Add(newbullet);
                                 //shoot bullet to the right of player
 
                             }
                             else
                             {
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the right");
-                                var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 8 + heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), false, activeWeapon.WeaponName);
+                                if (activeWeapon.WeaponName == "Väits")
+                                {
+                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 8 + heightmod), new Vector2(24, 24), activeWeapon.Graphics[0], "Bullet"), false, activeWeapon.WeaponName);
+                                    bullets.Add(newbullet);
+                                }
+                                else
+                                {
+                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X + 32, player.Position.Y + 8 + heightmod), new Vector2(8, 8), activeWeapon.Graphics[0], "Bullet"), false, activeWeapon.WeaponName);
+                                    bullets.Add(newbullet);
+                                }
                                 //newbullet.sprite2d.CreateDynamic();
-                                bullets.Add(newbullet);
                                 //shoot bullet to the right of player
 
                             }
@@ -625,8 +664,12 @@ namespace Plat2d_2
                         {
                             if (bullet.sprite2d.Tag != "Bullet")
                             {
-                                bullet.sprite2d.DestroySelf();
-                                bullets.Remove(bullet);
+                                if (bullet.weaponName != "Väits")
+                                {
+                                    bullet.sprite2d.DestroySelf();
+                                    bullets.Remove(bullet);
+                                }
+
                             }
                         }
                     }
@@ -636,17 +679,33 @@ namespace Plat2d_2
             //bullet cleanup
             if (bullets != null)
             {
+
                 for (int i = 0; i < weapon1cyclespeed; i++)
                 {
                     foreach (var bullet in bullets)
                     {
+
                         if (bullet.isfacingleft == true)
                         {
-                            bullet.sprite2d.AdvanceLeft(weapon1speed);
+                            if (bullet.weaponName != "Väits")
+                            {
+                                bullet.sprite2d.AdvanceLeft(weapon1speed);
+                            }
+                            else
+                            {
+                                bullet.sprite2d.AtPlayerLocation();
+                            }
                         }
                         else
                         {
-                            bullet.sprite2d.AdvanceRight(weapon1speed);
+                            if (bullet.weaponName != "Väits")
+                            {
+                                bullet.sprite2d.AdvanceRight(weapon1speed);
+                            }
+                            else
+                            {
+                                bullet.sprite2d.AtPlayerLocation();
+                            }
                         }
                         //bullet.sprite2d.UpdatePosition();
                     }
@@ -690,7 +749,7 @@ namespace Plat2d_2
             Sprite2d levelfinish = player.IsColliding("Finish"); //checks for collisions between the player and the level finishing trigger object.
             if (levelfinish != null) //if the trigger object is being touched
             {
-                
+
                 transitionIsCalled = true;
                 reloadDestination = new Destination(reloadDestination.WorldNumber);
                 state = CallState.WorldMap;
@@ -714,10 +773,10 @@ namespace Plat2d_2
             Sprite2d setlevel1 = player.IsColliding("Level1");
             if (setlevel1 != null && CheckDestination(new Destination(currentDestination.WorldNumber, 0, 0), worlds[currentDestination.WorldNumber]))
             {
-                Destination candidateDestination = new Destination(currentDestination.WorldNumber, 0, 0);                
+                Destination candidateDestination = new Destination(currentDestination.WorldNumber, 0, 0);
                 transitionIsCalled = true;
                 reloadDestination = candidateDestination;
-                return;                
+                return;
             }
             Sprite2d setlevel2 = player.IsColliding("Level2");
             if (setlevel2 != null && CheckDestination(new Destination(currentDestination.WorldNumber, 1, 0), worlds[currentDestination.WorldNumber]))
@@ -759,7 +818,7 @@ namespace Plat2d_2
             if (nextroom != null) //if the trigger object is being touched
             {
                 transitionIsCalled = true;
-                reloadDestination = new Destination(reloadDestination.WorldNumber,reloadDestination.AreaNumber,reloadDestination.LevelNumber+1);
+                reloadDestination = new Destination(reloadDestination.WorldNumber, reloadDestination.AreaNumber, reloadDestination.LevelNumber + 1);
                 Log.Info("Player is going to next room"); //then it logs a message to the console
                 nextroom.DestroySelf(); //destroys itself
                 sfxInstance.Play("enter door");
@@ -865,22 +924,57 @@ namespace Plat2d_2
             foreach (var bullet in bullets)
             {
                 Weapon weapon = unlockedWeapons.FirstOrDefault(w => w.WeaponName == bullet.weaponName);
-                if (weapon == null || weapon.Graphics == null || weapon.Graphics.Count == 0)
-                    continue;
-
-                int currentFrame = weapon.Graphics.IndexOf(bullet.sprite2d.Sprite);
-
-                if (currentFrame == -1)
+                switch (weapon.ThisWeaponType)
                 {
-                    bullet.sprite2d.Sprite = weapon.Graphics[0];
-                    continue;
+                    case WeaponType.Wielded:
+                        if (weapon == null || weapon.Graphics == null || weapon.Graphics.Count == 0)
+                            continue;
+
+                        int currentFrameW = weapon.Graphics.IndexOf(bullet.sprite2d.Sprite);
+
+                        if (currentFrameW == -1 && animationClock == 3)
+                        {
+                            bullet.sprite2d.Sprite = weapon.Graphics[0];
+                            continue;
+                        }
+
+                        int nextFrameW = currentFrameW + 1;
+                        if (nextFrameW >= weapon.Graphics.Count && animationClock == 3)
+                        {
+                            bullet.sprite2d.DestroySelf();
+                            bullets.Remove(bullet);
+                        }
+
+                        bullet.sprite2d.Sprite = weapon.Graphics[nextFrameW];
+                        break;
+                    case WeaponType.Shot:
+                        if (weapon == null || weapon.Graphics == null || weapon.Graphics.Count == 0)
+                            continue;
+
+                        int currentFrame = weapon.Graphics.IndexOf(bullet.sprite2d.Sprite);
+
+                        if (currentFrame == -1)
+                        {
+                            bullet.sprite2d.Sprite = weapon.Graphics[0];
+                            continue;
+                        }
+
+                        int nextFrame = currentFrame + 1;
+                        if (nextFrame >= weapon.Graphics.Count)
+                            nextFrame = 0;
+
+                        bullet.sprite2d.Sprite = weapon.Graphics[nextFrame];
+                        break;
+                    case WeaponType.Gravity:
+                        break;
+                    case WeaponType.Tool:
+                        break;
+                    case WeaponType.Screen:
+                        break;
+                    default:
+                        break;
                 }
 
-                int nextFrame = currentFrame + 1;
-                if (nextFrame >= weapon.Graphics.Count)
-                    nextFrame = 0;
-
-                bullet.sprite2d.Sprite = weapon.Graphics[nextFrame];
             }
         }
 
@@ -1041,12 +1135,22 @@ namespace Plat2d_2
                     CameraPosition.X = -(currentLevelEndSize - 320);
                 }
             }
+            UpdateSpriteHud(CameraPosition.X);
         }
+
+        private void UpdateSpriteHud(float x)
+        {
+            for (int i = 0; i < HUDSprites.Count; i++)
+            {
+                HUDSprites[i].Position.X = -(x-32);
+            }
+        }
+
         private void GameStateHandler2()
         {
             if (transitionIsCalled)
-            {        
-                if (reloadDestination.IsWorldMap == true) 
+            {
+                if (reloadDestination.IsWorldMap == true)
                 {
                     if (navCause == NavigationReason.LevelCleared)
                     {
@@ -1057,11 +1161,11 @@ namespace Plat2d_2
                     GoToLevel(state, reloadDestination, worlds);
                     currentDestination = reloadDestination;
                     state = CallState.WorldMap;
-                    
+
                 }
-                else if (currentDestination.WorldNumber == reloadDestination.WorldNumber 
+                else if (currentDestination.WorldNumber == reloadDestination.WorldNumber
                     && currentDestination.AreaNumber == reloadDestination.AreaNumber
-                    && currentDestination.LevelNumber != reloadDestination.LevelNumber) 
+                    && currentDestination.LevelNumber != reloadDestination.LevelNumber)
                 {
                     state = CallState.RoomTransition;
                     navCause = NavigationReason.None;
@@ -1166,6 +1270,10 @@ namespace Plat2d_2
         {
             RemoveEnemies();
             RemoveAllSprites();
+            if (state != CallState.RoomTransition)
+            {
+                RemoveHudSprites();
+            }
         }
         private static void RemoveEnemies()
         {
@@ -1214,7 +1322,7 @@ namespace Plat2d_2
             Level selectedLevel_l = new Level() { };
             if (selectedWorld.Areas != null)
             {
-                if (whichLevel[1]==99)
+                if (whichLevel[1] == 99)
                 {
                     selectedLevel_a = new Area
                     (
@@ -1227,7 +1335,7 @@ namespace Plat2d_2
                 {
                     selectedLevel_a = selectedWorld.Areas[whichLevel[1]];
                 }
-                    
+
             }
             if (selectedWorld.Levels != null)
             {
@@ -1315,6 +1423,10 @@ namespace Plat2d_2
                 }
                 else
                 {
+                    if (layersToRender.IndexOf(layer) == 3)
+                    {
+                        //
+                    }
                     RenderLayer(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
                 }
             }
@@ -1322,7 +1434,7 @@ namespace Plat2d_2
             {
                 PlayLevelTrack(loadTarget);
             }
-            else 
+            else
             {
                 sfxInstance.Play("door close");
             }
@@ -1481,6 +1593,7 @@ namespace Plat2d_2
                     bool skipcheck = false;
                     int tryint = 0;
                     int result = 0;
+                    List<string> hudelements = new List<string>() { "HUD", "Lives", "Score", "Health", "Gems", "Ammoleft", "Weaponname"};
                     if (layer[j, i] == "  ")
                     {
                         skipcheck = true;
@@ -1506,6 +1619,18 @@ namespace Plat2d_2
                             else
                             {
                                 new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint])/*.CreateStatic()*/;
+                            }
+                        }
+                        if (hudelements.Contains(layer[j, i]))
+                        {
+                            switch (layer[j, i])
+                            {
+                                case "HUD":
+                                    hud = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(256, 32), $"hud/{hudelements[0]}");
+                                    break;
+                                default:
+                                    Log.Warning("Nothing has been rendered, but a hud element was detected: " + layer[j,i]);
+                                    break;
                             }
                         }
                     }
@@ -1588,7 +1713,8 @@ namespace Plat2d_2
             //Console.ReadLine();
         }
         public override void UpdateHud()
-        {
+        { 
+
             //Log.Highlight("UpdateHud() has no function");
             //float aspect = ScreenSize.X / ScreenSize.Y;
 
@@ -1673,6 +1799,8 @@ namespace Plat2d_2
             //if (LevelLabel != null)
             //    LevelLabel.Text = $"{CheckLevel(levelclearingsforlabel)}";
         }
+
+
         public override void GetKeyDown(KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Up) { up = true; }

@@ -644,6 +644,9 @@ namespace Plat2d_2.EngineCore
             };                                                            
         }
 
-
+        internal static List<Bitmap> HudSprites()
+        {
+            return new List<Bitmap>() { new Bitmap(Image.FromFile($"assets/sprites/hud/HUD.png")) };
+        }
     }
 }

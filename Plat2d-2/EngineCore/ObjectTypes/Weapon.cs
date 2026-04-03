@@ -132,10 +132,10 @@ namespace Plat2d_2.EngineCore.ObjectTypes
             return new Weapon(
                 "Väits",
                 WeaponType.Wielded,
-                3,
+                1,
                 0,
                 false,
-                5,
+                10,
                 new List<Bitmap>()
                     {
                         new Bitmap(Image.FromFile($"assets/sprites/bullets/weapon4A.png")),

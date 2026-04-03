@@ -53,6 +53,25 @@ namespace Plat2d_2.EngineCore
             EngineCore.RegisterSprite(this);
         }
         /// <summary>
+        /// constructor for Sprite2d. taking in position and scale vectors aswell as the bitmaps directory and a tag string.
+        /// This is the constructor specifically for a hud element, box2d doesnt know this exists
+        /// </summary>
+        /// <param name="Position">Sprite location</param>
+        /// <param name="Scale">Sprite size.</param>
+        /// <param name="Directory">string for loading sprite from directory</param>
+        public Sprite2d(Vector2 Position, Vector2 Scale, string Directory)
+        {
+            this.Position = Position;
+            this.Scale = Scale;
+            this.Directory = Directory;
+
+            Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
+            this.Sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
+
+            Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been added to hudsprites");
+            EngineCore.RegisterHudElement(this);
+        }
+        /// <summary>
         /// constructor for a reference sprite. this only takes in a directory for the bitmap.
         /// it is used to create a sprite into memory for use by a different constructor in order to
         /// save memory space and disk access reads for faster, more efficient processing.
@@ -424,6 +443,7 @@ namespace Plat2d_2.EngineCore
             //this.body.SetLinearVelocity(new Vec2(240000, 0));
         }
 
+
         internal void AdvanceLeftFloat(int weaponspeed)
         {
             this.Position.X -= weaponspeed;
@@ -434,5 +454,12 @@ namespace Plat2d_2.EngineCore
             this.Position.X += weaponspeed;
             //this.body.SetLinearVelocity(new Vec2(240000, 0));
         }
+
+        internal void AtPlayerLocation()
+        {
+            this.Position.X = Position.X;
+            this.Position.Y = Position.Y;
+        }
+
     }
 }
