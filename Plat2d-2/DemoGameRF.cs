@@ -133,7 +133,7 @@ namespace Plat2d_2
         public static int crystalScoreTally = 0;
         public static int pointScoreTally = 0;
         public static int playerHealth = 100;
-        public static int playerLives = 5;
+        public static int playerLives = 99;
         List<Bitmap> HudBMP = ArtData.HudSprites();
         List<Bitmap> DigitBMP = ArtData.DigitSprites();
         Sprite2d hud;
@@ -1164,7 +1164,15 @@ namespace Plat2d_2
             }
             for (int i = 0; i < HUDObjects.Count; i++)
             {
-                HUDObjects[i].Position.X = -(x - 32);
+                //HUDObjects[i].Position.X = -(x - 64);
+                if (HUDObjects[i].Tag == "LifeElement0")
+                {
+                    HUDObjects[i].Position.X = -(x - 64);
+                }
+                if (HUDObjects[i].Tag == "LifeElement1")
+                {
+                    HUDObjects[i].Position.X = -(x - 72);
+                }
             }
             
         }
@@ -1296,6 +1304,7 @@ namespace Plat2d_2
             if (state != CallState.RoomTransition)
             {
                 RemoveHudSprites();
+
             }
         }
         private static void RemoveEnemies()
@@ -1660,14 +1669,14 @@ namespace Plat2d_2
                                     {
                                         Lives.Add(
                                             new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16, (j * 16 + 8)), new Vector2(8, 8), $"hud/0", true, "LifeElement0"),
+                                                new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/0", true, "LifeElement0"),
                                                 DigitBMP,
                                                 0
                                                 )
                                             );
                                         Lives.Add(
                                             new HUDObject(
-                                                new Sprite2d(new Vector2((i * 16 + 8), (j * 16 + 8)), new Vector2(8, 8), $"hud/0", true, "LifeElement1"),
+                                                new Sprite2d(new Vector2(i * 16 - 8, (j * 16)), new Vector2(8, 8), $"hud/0", true, "LifeElement1"),
                                                 DigitBMP,
                                                 0
                                                 )
@@ -1677,14 +1686,14 @@ namespace Plat2d_2
                                     {
                                         Lives.Add(
                                         new HUDObject(
-                                            new Sprite2d(new Vector2(i * 16, (j * 16 + 8)), new Vector2(8, 8), $"hud/0", true, "LifeElement0"),
+                                            new Sprite2d(new Vector2(i * 16, (j * 16 )), new Vector2(8, 8), $"hud/0", true, "LifeElement0"),
                                             DigitBMP,
                                             0
                                             )
                                         );
                                         Lives.Add(
                                             new HUDObject(
-                                                new Sprite2d(new Vector2((i * 16 + 8), (j * 16 + 8)), new Vector2(8, 8), $"hud/{playerLives}", true, "LifeElement1"),
+                                                new Sprite2d(new Vector2(i * 16+8, (j * 16 )), new Vector2(8, 8), $"hud/{playerLives}", true, "LifeElement1"),
                                                 DigitBMP,
                                                 playerLives
                                                 )
@@ -1695,14 +1704,14 @@ namespace Plat2d_2
                                         string digits = playerLives.ToString();
                                         Lives.Add(
                                             new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16, (j * 16 + 8)), new Vector2(8, 8), $"hud/{digits[0]}", true, "LifeElement0"),
+                                                new Sprite2d(new Vector2(i * 16, (j * 16 )), new Vector2(8, 8), $"hud/{digits[0]}", true, "LifeElement0"),
                                                 DigitBMP,
                                                 int.Parse(digits[0].ToString())
                                                 )
                                             );
                                         Lives.Add(
                                             new HUDObject(
-                                                new Sprite2d(new Vector2((i * 16 + 8), (j * 16 + 8)), new Vector2(8, 8), $"hud/{digits[1]}", true, "LifeElement1"),
+                                                new Sprite2d(new Vector2(i * 16 - 8, (j * 16 )), new Vector2(8, 8), $"hud/{digits[1]}", true, "LifeElement1"),
                                                 DigitBMP,
                                                 int.Parse(digits[1].ToString())
                                                 )
@@ -1713,14 +1722,14 @@ namespace Plat2d_2
 
                                         Lives.Add(
                                             new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16, (j * 16 + 8)), new Vector2(8, 8), $"hud/9", true, "LifeElement0"),
+                                                new Sprite2d(new Vector2(i * 16, (j * 16 )), new Vector2(8, 8), $"hud/9", true, "LifeElement0"),
                                                 DigitBMP,
                                                 9
                                                 )
                                             );
                                         Lives.Add(
                                             new HUDObject(
-                                                new Sprite2d(new Vector2((i * 16 + 8), (j * 16 + 8)), new Vector2(8, 8), $"hud/9", true, "LifeElement1"),
+                                                new Sprite2d(new Vector2(i * 16 - 8, (j * 16 )), new Vector2(8, 8), $"hud/9", true, "LifeElement1"),
                                                 DigitBMP,
                                                 9
                                                 )
@@ -1930,7 +1939,7 @@ namespace Plat2d_2
                 {
                     if (sprite.Tag == "LifeElement1")
                     {
-                        Lives[0].DisplayedDataInt = playerLives;
+                        Lives[1].DisplayedDataInt = playerLives;
                     }
                 }
                 
@@ -1967,13 +1976,15 @@ namespace Plat2d_2
                 }               
                 
             }
-            foreach (var lifedigit in lives)
+            foreach (var hudsprite in HUDObjects)
             {
-                Log.Highlight("Sprites contained: " + HUDObjects.Count);
-                foreach (var sprite in HUDObjects)
+                if (hudsprite.Tag == "LifeElement0")
                 {
-                    Log.Info(sprite.Tag);
-                    Log.Info(sprite.Position.ToString());
+                    hudsprite.Sprite = Lives[0].DisplayElements[Lives[0].DisplayedDataInt];
+                }
+                if (hudsprite.Tag == "LifeElement1")
+                {
+                    hudsprite.Sprite = Lives[1].DisplayElements[Lives[1].DisplayedDataInt];
                 }
                 //lifedigit.Display = HUDObjects[];
                 //hudobjects hold all digit sprites, in 0-9 order

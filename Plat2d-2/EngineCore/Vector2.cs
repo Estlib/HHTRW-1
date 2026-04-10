@@ -34,7 +34,7 @@ namespace Plat2d_2.EngineCore
 
         public override string ToString()
         {
-            return base.ToString();
+            return $"X - {X} / Y - {Y}";
         }
     }
 }

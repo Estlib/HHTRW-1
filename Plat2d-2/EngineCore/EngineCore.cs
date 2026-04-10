@@ -222,6 +222,7 @@ namespace Plat2d_2.EngineCore
         public static void RemoveHudSprites()
         {
             HUDSprites = new List<Sprite2d>();
+            HUDObjects = new List<Sprite2d>();
         }
 
         // Prepare for simulation. Typically we use a time step of 1/60 of a
