@@ -135,7 +135,9 @@ namespace Plat2d_2
         public static int playerHealth = 100;
         public static int playerLives = 5;
         List<Bitmap> HudBMP = ArtData.HudSprites();
+        List<Bitmap> DigitBMP = ArtData.DigitSprites();
         Sprite2d hud;
+        List<HUDObject> Lives = new List<HUDObject>();
 
         //enemies
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>(); //enemies that exist
@@ -366,6 +368,7 @@ namespace Plat2d_2
 
             // camera
             UpdatePlayerCamera();
+
         }
 
         public override void OnUpdate()
@@ -373,6 +376,9 @@ namespace Plat2d_2
             //frame measuring tools
             double frameStart = stopwatch.Elapsed.TotalMilliseconds;
             Log.runtimeframes++;
+
+            //playerdata buffervalues
+            int bufferLives = playerLives;
 
             //reset animationclock at runrate
             if (animationClock == runRate)
@@ -407,15 +413,17 @@ namespace Plat2d_2
             if (player.Position.Y >= 320 || playerHealth < 1)
             {
                 LoseLife();
+                
             }
             currentbulletsonscreen = bullets.Count();
             if (crystalScoreTally == 100)
             {
                 crystalScoreTally = 0;
                 playerLives++;
+                
                 sfxInstance.Play("GEMS 1-up");
             }
-
+            
             //weapon selecting
             if (nextweapon && keyTimeoutX == 0)
             {
@@ -513,7 +521,7 @@ namespace Plat2d_2
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the left at a lower altitude");
                                 if (activeWeapon.WeaponName == "Väits")
                                 {
-                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X-24, player.Position.Y + 16 + heightmod), new Vector2(24, 24), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
+                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X - 24, player.Position.Y + 16 + heightmod), new Vector2(24, 24), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
                                     bullets.Add(newbullet);
                                 }
                                 else
@@ -527,9 +535,9 @@ namespace Plat2d_2
                             else
                             {
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the left");
-                                if(activeWeapon.WeaponName == "Väits")
+                                if (activeWeapon.WeaponName == "Väits")
                                 {
-                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X-24, player.Position.Y + 8 + heightmod), new Vector2(24, 24), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
+                                    var newbullet = new Bullet(new Sprite2d(new Vector2(player.Position.X - 24, player.Position.Y + 8 + heightmod), new Vector2(24, 24), activeWeapon.Graphics[0], "Bullet"), true, activeWeapon.WeaponName);
                                     bullets.Add(newbullet);
                                 }
                                 else
@@ -588,6 +596,8 @@ namespace Plat2d_2
                         LogUtility.LogCurrentWeaponState($"Fired Bullet Limit reached. Limit {activeWeapon.MaxBulletCount}. Onscreen {currentbulletsonscreen}", true);
                     }
                 }
+
+                
             }
 
             //player control & collisions
@@ -837,6 +847,13 @@ namespace Plat2d_2
             {
                 pointScoreTally += 250;
                 enemy.DestroySelf();
+            }
+
+            //hud management
+
+            if (bufferLives != playerLives)
+            {
+                UpdateHud();
             }
 
             //frame measuring tools again
@@ -1140,10 +1157,16 @@ namespace Plat2d_2
 
         private void UpdateSpriteHud(float x)
         {
+            //Hud plack
             for (int i = 0; i < HUDSprites.Count; i++)
             {
-                HUDSprites[i].Position.X = -(x-32);
+                HUDSprites[i].Position.X = -(x - 32);
             }
+            for (int i = 0; i < HUDObjects.Count; i++)
+            {
+                HUDObjects[i].Position.X = -(x - 32);
+            }
+            
         }
 
         private void GameStateHandler2()
@@ -1593,7 +1616,7 @@ namespace Plat2d_2
                     bool skipcheck = false;
                     int tryint = 0;
                     int result = 0;
-                    List<string> hudelements = new List<string>() { "HUD", "Lives", "Score", "Health", "Gems", "Ammoleft", "Weaponname"};
+                    List<string> hudelements = new List<string>() { "HUD", "Lives", "Score", "Health", "Gems", "Ammoleft", "Weaponname" };
                     if (layer[j, i] == "  ")
                     {
                         skipcheck = true;
@@ -1626,10 +1649,88 @@ namespace Plat2d_2
                             switch (layer[j, i])
                             {
                                 case "HUD":
-                                    hud = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(256, 32), $"hud/{hudelements[0]}");
+                                    hud = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(256, 32), $"hud/{hudelements[0]}", false, "HUD");
                                     break;
+                                    
+                                case "Lives":
+
+                                    //10
+                                    //>99
+                                    if (playerLives < 0)//0
+                                    {
+                                        Lives.Add(
+                                            new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16, (j * 16 + 8)), new Vector2(8, 8), $"hud/0", true, "LifeElement0"),
+                                                DigitBMP,
+                                                0
+                                                )
+                                            );
+                                        Lives.Add(
+                                            new HUDObject(
+                                                new Sprite2d(new Vector2((i * 16 + 8), (j * 16 + 8)), new Vector2(8, 8), $"hud/0", true, "LifeElement1"),
+                                                DigitBMP,
+                                                0
+                                                )
+                                            );
+                                    }
+                                    else if (playerLives < 10)
+                                    {
+                                        Lives.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, (j * 16 + 8)), new Vector2(8, 8), $"hud/0", true, "LifeElement0"),
+                                            DigitBMP,
+                                            0
+                                            )
+                                        );
+                                        Lives.Add(
+                                            new HUDObject(
+                                                new Sprite2d(new Vector2((i * 16 + 8), (j * 16 + 8)), new Vector2(8, 8), $"hud/{playerLives}", true, "LifeElement1"),
+                                                DigitBMP,
+                                                playerLives
+                                                )
+                                            );
+                                    }
+                                    else if (playerLives >= 10 || playerLives < 100)
+                                    {
+                                        string digits = playerLives.ToString();
+                                        Lives.Add(
+                                            new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16, (j * 16 + 8)), new Vector2(8, 8), $"hud/{digits[0]}", true, "LifeElement0"),
+                                                DigitBMP,
+                                                int.Parse(digits[0].ToString())
+                                                )
+                                            );
+                                        Lives.Add(
+                                            new HUDObject(
+                                                new Sprite2d(new Vector2((i * 16 + 8), (j * 16 + 8)), new Vector2(8, 8), $"hud/{digits[1]}", true, "LifeElement1"),
+                                                DigitBMP,
+                                                int.Parse(digits[1].ToString())
+                                                )
+                                            );
+                                    }
+                                    else
+                                    {
+
+                                        Lives.Add(
+                                            new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16, (j * 16 + 8)), new Vector2(8, 8), $"hud/9", true, "LifeElement0"),
+                                                DigitBMP,
+                                                9
+                                                )
+                                            );
+                                        Lives.Add(
+                                            new HUDObject(
+                                                new Sprite2d(new Vector2((i * 16 + 8), (j * 16 + 8)), new Vector2(8, 8), $"hud/9", true, "LifeElement1"),
+                                                DigitBMP,
+                                                9
+                                                )
+                                            );
+                                    }
+
+                                    break;
+                                    
                                 default:
-                                    Log.Warning("Nothing has been rendered, but a hud element was detected: " + layer[j,i]);
+                                    Log.Warning("Nothing has been rendered, but a hud element was detected: " + layer[j, i]);
                                     break;
                             }
                         }
@@ -1713,7 +1814,10 @@ namespace Plat2d_2
             //Console.ReadLine();
         }
         public override void UpdateHud()
-        { 
+        {
+
+            SetHudLives(Lives);
+
 
             //Log.Highlight("UpdateHud() has no function");
             //float aspect = ScreenSize.X / ScreenSize.Y;
@@ -1800,6 +1904,81 @@ namespace Plat2d_2
             //    LevelLabel.Text = $"{CheckLevel(levelclearingsforlabel)}";
         }
 
+        private void SetHudLives(List<HUDObject> lives)
+        {
+            //if lives are zero or lower, update both HUDObjects, to display " 0 0 "
+            //if lives are > 0 and < 10, just update item [1]
+            //if lives are >= 10, update both to display a new integer from playerlives
+            //else display " 9 9 "
+            if (playerLives <= 0)
+            {
+                foreach (var sprite in HUDObjects)
+                {
+                    if (sprite.Tag == "LifeElement0")
+                    {
+                        Lives[0].DisplayedDataInt = 0;
+                    }
+                    if (sprite.Tag == "LifeElement1")
+                    {
+                        Lives[1].DisplayedDataInt = 0;
+                    }
+                }                
+            }
+            else if (playerLives > 0 && playerLives < 10)
+            {
+                foreach (var sprite in HUDObjects)
+                {
+                    if (sprite.Tag == "LifeElement1")
+                    {
+                        Lives[0].DisplayedDataInt = playerLives;
+                    }
+                }
+                
+            }
+            else if (playerLives >= 10 && playerLives < 99)
+            {
+                string parsed = playerLives.ToString();
+
+                foreach (var sprite in HUDObjects)
+                {
+                    if (sprite.Tag == "LifeElement0")
+                    {
+                        Lives[0].DisplayedDataInt = int.Parse(parsed[0].ToString());
+                    }
+                    if (sprite.Tag == "LifeElement1")
+                    {
+                        Lives[1].DisplayedDataInt = int.Parse(parsed[1].ToString());
+                    }
+                }          
+                
+            }
+            else
+            {
+                foreach (var sprite in HUDObjects)
+                {
+                    if (sprite.Tag == "LifeElement0")
+                    {
+                        Lives[0].DisplayedDataInt = 9;
+                    }
+                    if (sprite.Tag == "LifeElement1")
+                    {
+                        Lives[1].DisplayedDataInt = 9;
+                    }
+                }               
+                
+            }
+            foreach (var lifedigit in lives)
+            {
+                Log.Highlight("Sprites contained: " + HUDObjects.Count);
+                foreach (var sprite in HUDObjects)
+                {
+                    Log.Info(sprite.Tag);
+                    Log.Info(sprite.Position.ToString());
+                }
+                //lifedigit.Display = HUDObjects[];
+                //hudobjects hold all digit sprites, in 0-9 order
+            }
+        }
 
         public override void GetKeyDown(KeyEventArgs e)
         {

@@ -648,5 +648,23 @@ namespace Plat2d_2.EngineCore
         {
             return new List<Bitmap>() { new Bitmap(Image.FromFile($"assets/sprites/hud/HUD.png")) };
         }
+
+        internal static List<Bitmap> DigitSprites()
+        {
+            return new List<Bitmap>() { 
+                new Bitmap(Image.FromFile($"assets/sprites/hud/0.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/1.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/2.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/3.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/4.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/5.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/6.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/7.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/8.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/9.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/_.png")) 
+            };
+        }
+
     }
 }

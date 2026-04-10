@@ -32,5 +32,9 @@ namespace Plat2d_2.EngineCore
             return new Vector2(0, 0);
         }
 
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

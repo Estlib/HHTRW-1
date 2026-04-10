@@ -23,6 +23,7 @@ namespace Plat2d_2.EngineCore
         private string v;
         private Bitmap bitmap;
         public int[] worldData = null;
+        public bool IsHudObject = false;
         /// <summary>
         /// 
         /// </summary>
@@ -59,16 +60,20 @@ namespace Plat2d_2.EngineCore
         /// <param name="Position">Sprite location</param>
         /// <param name="Scale">Sprite size.</param>
         /// <param name="Directory">string for loading sprite from directory</param>
-        public Sprite2d(Vector2 Position, Vector2 Scale, string Directory)
+        public Sprite2d(Vector2 Position, Vector2 Scale, string Directory, bool isObjectOrHudsprite, string elementTag )
         {
             this.Position = Position;
             this.Scale = Scale;
             this.Directory = Directory;
+            this.IsHudObject = isObjectOrHudsprite;
+            this.Tag= elementTag;
+            
 
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             this.Sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
 
             Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been added to hudsprites");
+
             EngineCore.RegisterHudElement(this);
         }
         /// <summary>

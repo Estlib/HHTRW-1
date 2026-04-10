@@ -1,6 +1,7 @@
 ﻿using Box2DX.Collision;
 using Box2DX.Common;
 using Box2DX.Dynamics;
+using Plat2d_2.EngineCore.ObjectTypes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -80,6 +81,7 @@ namespace Plat2d_2.EngineCore
         public static List<Shape2d> AllShapes = new List<Shape2d>();
         public static List<Sprite2d> AllSprites = new List<Sprite2d>();
         public static List<Sprite2d> HUDSprites = new List<Sprite2d>();
+        public static List<Sprite2d> HUDObjects = new List<Sprite2d>();
         //public static List<Shape2d>[] LevelShapes = new List<Shape2d>[10];
         //public static List<Sprite2d>[] LevelSprites = new List<Sprite2d>[10];
         public static bool pausebuttoninput = false;
@@ -183,7 +185,14 @@ namespace Plat2d_2.EngineCore
         }
         public static void RegisterHudElement(Sprite2d sprite)
         {
-            HUDSprites.Add(sprite);
+            if (!sprite.IsHudObject)
+            {
+                HUDSprites.Add(sprite);
+            }
+            else 
+            {
+                HUDObjects.Add(sprite);
+            }
         }
         public static void UnRegisterSprite(Sprite2d sprite)
         {
@@ -360,6 +369,21 @@ namespace Plat2d_2.EngineCore
             for (int i = 0; i < HUDSprites.Count; i++) 
             {
                 Sprite2d hudsprite = HUDSprites[i];
+                if (!hudsprite.IsReference) 
+                {
+                    backGraphics.DrawImage(
+                        hudsprite.Sprite,
+                        hudsprite.Position.X,
+                        hudsprite.Position.Y,
+                        hudsprite.Scale.X,
+                        hudsprite.Scale.Y
+                    );
+                }
+            }
+
+            for (int i = 0; i < HUDObjects.Count; i++) 
+            {
+                Sprite2d hudsprite = HUDObjects[i];
                 if (!hudsprite.IsReference) 
                 {
                     backGraphics.DrawImage(
