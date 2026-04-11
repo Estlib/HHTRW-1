@@ -2086,14 +2086,14 @@ namespace Plat2d_2
                 {
                     if (sprite.Tag == "CrystalElement2")
                     {
-                        Lives[2].DisplayedDataInt = crystalScoreTally;
+                        Gems[2].DisplayedDataInt = crystalScoreTally;
                     }
                 }
 
             }
-            else if (playerLives >= 10 && playerLives < 99)
+            else if (crystalScoreTally >= 10 && crystalScoreTally < 99)
             {
-                string parsed = playerLives.ToString();
+                string parsed = crystalScoreTally.ToString();
 
                 foreach (var sprite in HUDObjects)
                 {
@@ -2103,17 +2103,17 @@ namespace Plat2d_2
                     }
                     if (sprite.Tag == "CrystalElement1")
                     {
-                        Gems[1].DisplayedDataInt = int.Parse(parsed[1].ToString());
+                        Gems[1].DisplayedDataInt = int.Parse(parsed[0].ToString());
                     }
                     if (sprite.Tag == "CrystalElement2")
                     {
-                        Gems[2].DisplayedDataInt = int.Parse(parsed[2].ToString());
+                        Gems[2].DisplayedDataInt = int.Parse(parsed[1].ToString());
                     }
                 }
             }
-            else if (playerLives >= 100 && playerLives < 1000)
+            else if (crystalScoreTally >= 100 && crystalScoreTally < 1000)
             {
-                string parsed = playerLives.ToString();
+                string parsed = crystalScoreTally.ToString();
 
                 foreach (var sprite in HUDObjects)
                 {
