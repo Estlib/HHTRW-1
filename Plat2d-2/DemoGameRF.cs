@@ -1242,14 +1242,14 @@ namespace Plat2d_2
 
         private void SetLevelCleared(List<WorldStructure> worlds, Destination thisIsCleared)
         {
-
+            
             worlds[thisIsCleared.WorldNumber]
-                .Areas[thisIsCleared.AreaNumber].isAreaClear = true;
+                .Areas[thisIsCleared.AreaNumber].isAreaClear = false; //JZONE edit to allow replay of levels
             int areanum = worlds[thisIsCleared.WorldNumber]
                 .Areas[thisIsCleared.AreaNumber].AreaNumber;
             int clearbool = worlds[thisIsCleared.WorldNumber].ClearAreas.IndexOf(areanum);
             worlds[thisIsCleared.WorldNumber]
-                .AreAreasClear[clearbool] = true;
+                .AreAreasClear[clearbool] = false; //JZONE edit to allow replay of levels
 
             //also set world clear
             if (worlds[thisIsCleared.WorldNumber]
