@@ -133,7 +133,7 @@ namespace Plat2d_2
         public static int crystalScoreTally = 0;
         public static int pointScoreTally = 0;
         public static int playerHealth = 100;
-        public static int playerLives = 99;
+        public static int playerLives = 5;
         List<Bitmap> HudBMP = ArtData.HudSprites();
         List<Bitmap> DigitBMP = ArtData.DigitSprites();
         Sprite2d hud;
