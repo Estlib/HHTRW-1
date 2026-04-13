@@ -95,7 +95,7 @@ namespace Plat2d_2.EngineCore
             return new string[] {
             "Air","Coin","Ground","Ground","Ground","Ground","Ground","Air",
             "Air","Ground","Air","Air","Air","Ground","Air","Air",
-            "Air","Air","Air","Air","Air","Air","Air","Air",
+            "Ground","Ground","Ground","Ground","Ground","Ground","Air","Air",
             "Air","Air","Air","Air","Air","Air","Ground","Ground",
             "Finish","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",

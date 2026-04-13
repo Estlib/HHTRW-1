@@ -1214,6 +1214,7 @@ namespace Plat2d_2
                     GoToLevel(state, reloadDestination, worlds);
                     currentDestination = reloadDestination;
                     state = CallState.WorldMap;
+                    //worlds[reloadDestination.WorldNumber].AreAreasClear = new List<bool> { false, false, false, false, false, false };
 
                 }
                 else if (currentDestination.WorldNumber == reloadDestination.WorldNumber
@@ -1227,6 +1228,7 @@ namespace Plat2d_2
                     currentDestination = reloadDestination;
                     state = CallState.PlayingLevel;
                 }
+                //
                 else
                 {
                     UnloadLastLevel();
@@ -1244,12 +1246,12 @@ namespace Plat2d_2
         {
             
             worlds[thisIsCleared.WorldNumber]
-                .Areas[thisIsCleared.AreaNumber].isAreaClear = false; //JZONE edit to allow replay of levels
+                .Areas[thisIsCleared.AreaNumber].isAreaClear = true; //JZONE edit to allow replay of levels
             int areanum = worlds[thisIsCleared.WorldNumber]
                 .Areas[thisIsCleared.AreaNumber].AreaNumber;
             int clearbool = worlds[thisIsCleared.WorldNumber].ClearAreas.IndexOf(areanum);
             worlds[thisIsCleared.WorldNumber]
-                .AreAreasClear[clearbool] = false; //JZONE edit to allow replay of levels
+                .AreAreasClear[clearbool] = true; //JZONE edit to allow replay of levels
 
             //also set world clear
             if (worlds[thisIsCleared.WorldNumber]
