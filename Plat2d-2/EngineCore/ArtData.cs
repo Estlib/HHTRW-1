@@ -666,5 +666,16 @@ namespace Plat2d_2.EngineCore
             };
         }
 
+        internal static List<Bitmap> WeaponIconSprites()
+        {
+
+            return new List<Bitmap>() {
+                new Bitmap(Image.FromFile($"assets/sprites/hud/väits_icon.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/willo_icon.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/barker_icon.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/debug_icon.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")) 
+            };
+        }
     }
 }

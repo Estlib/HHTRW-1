@@ -136,10 +136,12 @@ namespace Plat2d_2
         public static int playerLives = 5;
         List<Bitmap> HudBMP = ArtData.HudSprites();
         List<Bitmap> DigitBMP = ArtData.DigitSprites();
+        List<Bitmap> WeaponIcons = ArtData.WeaponIconSprites();
         Sprite2d hud;
         List<HUDObject> Lives = new List<HUDObject>();
         List<HUDObject> Gems = new List<HUDObject>();
         List<HUDObject> ScoreNumbers = new List<HUDObject>();
+        HUDObject weaponicon;
 
         //enemies
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>(); //enemies that exist
@@ -449,6 +451,7 @@ namespace Plat2d_2
                 Log.Info("MaxBulletCount: " + activeWeapon.MaxBulletCount);
                 Log.Info("ThisWeaponType: " + activeWeapon.ThisWeaponType);
                 Log.Info("SpriteCount: " + activeWeapon.Graphics.Count);
+                UpdateHud();
             }
             else
             {
@@ -1192,6 +1195,10 @@ namespace Plat2d_2
                 {
                     HUDObjects[i].Position.X = -(x - 72);
                 }
+                if (HUDObjects[i].Tag == "WeaponIconElement")
+                {
+                    HUDObjects[i].Position.X = -(x - 256);
+                }
             }
             for (int i = 0; i < HUDObjects.Count; i++)
             {
@@ -1698,7 +1705,7 @@ namespace Plat2d_2
                     bool skipcheck = false;
                     int tryint = 0;
                     int result = 0;
-                    List<string> hudelements = new List<string>() { "HUD", "Lives", "Score", "Health", "Gems", "Ammoleft", "Weaponname" };
+                    List<string> hudelements = new List<string>() { "HUD", "Lives", "Score", "Health", "Gems", "Ammoleft", "Weaponname", "W_Icon" };
                     if (layer[j, i] == "  ")
                     {
                         skipcheck = true;
@@ -1732,6 +1739,49 @@ namespace Plat2d_2
                             {
                                 case "HUD":
                                     hud = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(256, 32), $"hud/{hudelements[0]}", false, "HUD");
+                                    break;
+
+                                case "W_Icon":
+                                    string whatthiswep = unlockedWeapons[selectedweapon].WeaponName;
+                                    switch (whatthiswep)
+                                    {
+                                        case "Debug":
+                                            weaponicon = new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/debug_icon", true, "WeaponIconElement"),
+                                            WeaponIcons,
+                                            0
+                                            );
+                                            break;
+                                        case "Barker":
+                                            weaponicon = new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/barker_icon", true, "WeaponIconElement"),
+                                            WeaponIcons,
+                                            0
+                                            );
+                                            break;
+                                        case "Väits":
+                                            weaponicon = new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/väits_icon", true, "WeaponIconElement"),
+                                            WeaponIcons,
+                                            0
+                                            );
+                                            break; 
+                                        case "Willo":
+                                            weaponicon = new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/willo_icon", true, "WeaponIconElement"),
+                                            WeaponIcons,
+                                            0
+                                            );
+                                            break;
+                                        default:
+                                            weaponicon = new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/none_icon", true, "WeaponIconElement"),
+                                            WeaponIcons,
+                                            0
+                                            );
+                                            break;
+                                    }
+
                                     break;
 
                                 case "Lives":
@@ -2003,6 +2053,7 @@ namespace Plat2d_2
             SetHudLives(Lives);
             SetHudGems(Gems);
             SetHudScore(ScoreNumbers);
+            SetCurrentWeapon(weaponicon);
 
 
             //Log.Highlight("UpdateHud() has no function");
@@ -2088,6 +2139,36 @@ namespace Plat2d_2
 
             //if (LevelLabel != null)
             //    LevelLabel.Text = $"{CheckLevel(levelclearingsforlabel)}";
+        }
+
+        private void SetCurrentWeapon(HUDObject weaponicon)
+        {
+            string whatthiswep = unlockedWeapons[selectedweapon].WeaponName;
+            foreach (var sprite in HUDObjects)
+            {
+                if (sprite.Tag == "WeaponIconElement")
+                {
+                    switch (whatthiswep)
+                    {
+                        case "Debug":
+                            weaponicon.Display.Sprite = weaponicon.DisplayElements[3];
+                            break;
+                        case "Barker":
+                            weaponicon.Display.Sprite = weaponicon.DisplayElements[2];
+                            break;      
+                        case "Väits":
+                            weaponicon.Display.Sprite = weaponicon.DisplayElements[0];
+                            break;      
+                        case "Willo":
+                            weaponicon.Display.Sprite = weaponicon.DisplayElements[1];
+                            break;      
+                        default:
+                            weaponicon.Display.Sprite = weaponicon.DisplayElements[4];
+                            break;
+                    }
+                }
+            }
+           
         }
 
         private void SetHudScore(List<HUDObject> scoreNumbers)
