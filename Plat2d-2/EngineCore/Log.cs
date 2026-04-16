@@ -17,6 +17,7 @@ namespace Plat2d_2.EngineCore
         public int HIGHCOUNT;
         public int startingline = 2;
         public static int runtimeframes = 0;
+        public static int cursorpos = 0;
 
         public static void DoNothing(string msg = "", int writeToLine = 7) { }
         /// <summary>
@@ -44,6 +45,21 @@ namespace Plat2d_2.EngineCore
             Console.Write(new string(' ', Console.WindowWidth));
             Console.ForegroundColor = ConsoleColor.White;
             DemoGame.nextusableline += 1;
+        }
+        public static void InfoContinuous(string msg, int writeToLine = 7)
+        {
+            writeToLine = ConsoleLineArrange(DemoGame.nextusableline);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.CursorLeft = cursorpos;
+            Console.Write($":|:{msg}");
+            Console.ForegroundColor = ConsoleColor.White;
+            cursorpos += $":|:{msg}".Length;
+            if (cursorpos > 100)
+            {
+                DemoGame.nextusableline += 1;
+                Console.Write("\n");
+                cursorpos = 0;
+            }
         }
         /// <summary>
         /// log an info message, specified on python debugging, to console
