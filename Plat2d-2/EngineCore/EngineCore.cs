@@ -62,7 +62,7 @@ namespace Plat2d_2.EngineCore
         private string Title = "Harold Harrisson the Rabbit Warrior";
         public Canvas Window = null;
         private Thread GameLoopThread = null;
-        public static bool showRuntimeGenericError = true;
+        public static bool showRuntimeGenericError = false;
         public static bool logAbortCLI = false;
         public static bool logAbortTXT = false;
         public static bool logIndexCLI = false;
@@ -296,6 +296,7 @@ namespace Plat2d_2.EngineCore
                     //DemoGame.pausebuttoninput = true;
                     TXTexport(ex);
 
+                //Console.ReadLine();
                 }
             }
 

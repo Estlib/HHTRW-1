@@ -139,6 +139,7 @@ namespace Plat2d_2
         Sprite2d hud;
         List<HUDObject> Lives = new List<HUDObject>();
         List<HUDObject> Gems = new List<HUDObject>();
+        List<HUDObject> ScoreNumbers = new List<HUDObject>();
 
         //enemies
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>(); //enemies that exist
@@ -678,6 +679,7 @@ namespace Plat2d_2
                         }
                         sfxInstance.Play("enemy ow");
                         pointScoreTally += 250;
+                        UpdateHud();
                         enemyobject.sprite2d.DestroySelf();
                         enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
                         enemiesv2.Remove(enemiesv2.ElementAt(i));
@@ -858,6 +860,7 @@ namespace Plat2d_2
             if (bulletcollision != null)
             {
                 pointScoreTally += 250;
+                UpdateHud();
                 enemy.DestroySelf();
             }
 
@@ -1204,6 +1207,41 @@ namespace Plat2d_2
                 if (HUDObjects[i].Tag == "CrystalElement2")
                 {
                     HUDObjects[i].Position.X = -(x - 184);
+                }
+            }
+            for(int i = 0;i < HUDObjects.Count;i++)
+            {
+                if (HUDObjects[i].Tag == "ScoreElement0")
+                {
+                    HUDObjects[i].Position.X = -(x - 96);
+                }
+                if (HUDObjects[i].Tag == "ScoreElement1")
+                {
+                    HUDObjects[i].Position.X = -(x - 104);
+                }
+                if (HUDObjects[i].Tag == "ScoreElement2")
+                {
+                    HUDObjects[i].Position.X = -(x - 112);
+                }
+                if (HUDObjects[i].Tag == "ScoreElement3")
+                {
+                    HUDObjects[i].Position.X = -(x - 120);
+                }
+                if (HUDObjects[i].Tag == "ScoreElement4")
+                {
+                    HUDObjects[i].Position.X = -(x - 128);
+                }
+                if (HUDObjects[i].Tag == "ScoreElement5")
+                {
+                    HUDObjects[i].Position.X = -(x - 136);
+                }
+                if (HUDObjects[i].Tag == "ScoreElement6")
+                {
+                    HUDObjects[i].Position.X = -(x - 144);
+                }
+                if (HUDObjects[i].Tag == "ScoreElement7")
+                {
+                    HUDObjects[i].Position.X = -(x - 152);
                 }
             }
 
@@ -1698,10 +1736,6 @@ namespace Plat2d_2
 
                                 case "Lives":
                                     string digitNormal = DigitNormalizer(playerLives, "Lives");
-                                    ////10
-                                    ////>99
-                                    //if (playerLives < 0)//0
-                                    //{
                                     Lives.Add(
                                         new HUDObject(
                                             new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormal[0]}", true, "LifeElement0"),
@@ -1716,68 +1750,11 @@ namespace Plat2d_2
                                             0
                                             )
                                         );
-                                    //}
-                                    //else if (playerLives < 10)
-                                    //{
-                                    //    Lives.Add(
-                                    //    new HUDObject(
-                                    //        new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/0", true, "LifeElement0"),
-                                    //        DigitBMP,
-                                    //        0
-                                    //        )
-                                    //    );
-                                    //    Lives.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 + 8, (j * 16)), new Vector2(8, 8), $"hud/{playerLives}", true, "LifeElement1"),
-                                    //            DigitBMP,
-                                    //            playerLives
-                                    //            )
-                                    //        );
-                                    //}
-                                    //else if (playerLives >= 10 || playerLives < 100)
-                                    //{
-                                    //    string digits = playerLives.ToString();
-                                    //    Lives.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digits[0]}", true, "LifeElement0"),
-                                    //            DigitBMP,
-                                    //            int.Parse(digits[0].ToString())
-                                    //            )
-                                    //        );
-                                    //    Lives.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 - 8, (j * 16)), new Vector2(8, 8), $"hud/{digits[1]}", true, "LifeElement1"),
-                                    //            DigitBMP,
-                                    //            int.Parse(digits[1].ToString())
-                                    //            )
-                                    //        );
-                                    //}
-                                    //else
-                                    //{
-
-                                    //    Lives.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/9", true, "LifeElement0"),
-                                    //            DigitBMP,
-                                    //            9
-                                    //            )
-                                    //        );
-                                    //    Lives.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 - 8, (j * 16)), new Vector2(8, 8), $"hud/9", true, "LifeElement1"),
-                                    //            DigitBMP,
-                                    //            9
-                                    //            )
-                                    //        );
-                                    //}
-
                                     break;
 
                                 case "Gems":
 
                                     string digitNormalG = DigitNormalizer(crystalScoreTally, "Gems");
-                                    //if (crystalScoreTally <= 0)//000
-                                    //{
                                         Gems.Add(
                                             new HUDObject(
                                                 new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalG[0]}", true, "CrystalElement0"),
@@ -1799,106 +1776,65 @@ namespace Plat2d_2
                                                 0
                                                 )
                                             );
-                                    //}
-                                    //else if (crystalScoreTally < 10) //lessthan 010
-                                    //{
-                                    //    Gems.Add(
-                                    //    new HUDObject(
-                                    //        new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/0", true, "CrystalElement0"),
-                                    //        DigitBMP,
-                                    //        0
-                                    //        )
-                                    //    );
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 + 8, (j * 16)), new Vector2(8, 8), $"hud/0", true, "CrystalElement1"),
-                                    //            DigitBMP,
-                                    //            playerLives
-                                    //            )
-                                    //        );
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 + 16, (j * 16)), new Vector2(8, 8), $"hud/{crystalScoreTally}", true, "CrystalElement2"),
-                                    //            DigitBMP,
-                                    //            playerLives
-                                    //            )
-                                    //        );
-                                    //}
-                                    //else if (crystalScoreTally >= 10 && crystalScoreTally < 100) //lessthan 100
-                                    //{
-                                    //    string digits = crystalScoreTally.ToString();
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digits[0]}", true, "CrystalElement0"),
-                                    //            DigitBMP,
-                                    //            int.Parse(digits[0].ToString())
-                                    //            )
-                                    //        );
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 - 8, (j * 16)), new Vector2(8, 8), $"hud/{digits[1]}", true, "CrystalElement1"),
-                                    //            DigitBMP,
-                                    //            int.Parse(digits[1].ToString())
-                                    //            )
-                                    //        );
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 - 8, (j * 16)), new Vector2(8, 8), $"hud/{digits[2]}", true, "CrystalElement2"),
-                                    //            DigitBMP,
-                                    //            int.Parse(digits[2].ToString())
-                                    //            )
-                                    //        );
-                                    //}
-                                    //else if (crystalScoreTally >= 100 && crystalScoreTally < 1000) //lessthan 1000
-                                    //{
-                                    //    string digits = crystalScoreTally.ToString();
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digits[0]}", true, "CrystalElement0"),
-                                    //            DigitBMP,
-                                    //            int.Parse(digits[0].ToString())
-                                    //            )
-                                    //        );
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 - 8, (j * 16)), new Vector2(8, 8), $"hud/{digits[1]}", true, "CrystalElement1"),
-                                    //            DigitBMP,
-                                    //            int.Parse(digits[1].ToString())
-                                    //            )
-                                    //        );
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 - 8, (j * 16)), new Vector2(8, 8), $"hud/{digits[2]}", true, "CrystalElement2"),
-                                    //            DigitBMP,
-                                    //            int.Parse(digits[2].ToString())
-                                    //            )
-                                    //        );
-                                    //}
-                                    //else //if more than 999
-                                    //{
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/9", true, "CrystalElement0"),
-                                    //            DigitBMP,
-                                    //            9
-                                    //            )
-                                    //        );
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 - 8, (j * 16)), new Vector2(8, 8), $"hud/9", true, "CrystalElement1"),
-                                    //            DigitBMP,
-                                    //            9
-                                    //            )
-                                    //        );
-                                    //    Gems.Add(
-                                    //        new HUDObject(
-                                    //            new Sprite2d(new Vector2(i * 16 - 8, (j * 16)), new Vector2(8, 8), $"hud/9", true, "CrystalElement2"),
-                                    //            DigitBMP,
-                                    //            9
-                                    //            )
-                                    //        );
-                                    //}
-
+                                    break;
+                                case "Score":
+                                    string digitNormalS = DigitNormalizer(pointScoreTally, "Score");
+                                    ScoreNumbers.Add(
+                                        new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[0]}", true, "ScoreElement0"),
+                                                DigitBMP,
+                                                0
+                                                )
+                                        );
+                                    ScoreNumbers.Add(
+                                        new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16+8, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[1]}", true, "ScoreElement1"),
+                                                DigitBMP,
+                                                0
+                                                )
+                                        );
+                                    ScoreNumbers.Add(
+                                        new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16+16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[2]}", true, "ScoreElement2"),
+                                                DigitBMP,
+                                                0
+                                                )
+                                        );
+                                    ScoreNumbers.Add(
+                                        new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16+24, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[3]}", true, "ScoreElement3"),
+                                                DigitBMP,
+                                                0
+                                                )
+                                        );
+                                    ScoreNumbers.Add(
+                                        new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16+32, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[4]}", true, "ScoreElement4"),
+                                                DigitBMP,
+                                                0
+                                                )
+                                        );
+                                    ScoreNumbers.Add(
+                                        new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16+40, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[5]}", true, "ScoreElement5"),
+                                                DigitBMP,
+                                                0
+                                                )
+                                        );
+                                    ScoreNumbers.Add(
+                                        new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16+48, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[6]}", true, "ScoreElement6"),
+                                                DigitBMP,
+                                                0
+                                                )
+                                        );
+                                    ScoreNumbers.Add(
+                                        new HUDObject(
+                                                new Sprite2d(new Vector2(i * 16+56, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[7]}", true, "ScoreElement7"),
+                                                DigitBMP,
+                                                0
+                                                )
+                                        );
                                     break;
                                 default:
                                     Log.Warning("Nothing has been rendered, but a hud element was detected: " + layer[j, i]);
@@ -1953,6 +1889,31 @@ namespace Plat2d_2
                 else
                 {
                     return "999";
+                }
+            }
+            else if (what == "Score")
+            {
+                switch (normalizeint.ToString().Length)
+                {
+                    case 0:
+                        return "00000000"+ normalizeint.ToString();
+                    case 1:
+                        return "0000000"+ normalizeint.ToString();
+                    case 2:
+                        return "000000"+ normalizeint.ToString();
+                    case 3:
+                        return "00000"+ normalizeint.ToString();
+                    case 4:
+                        return "0000"+ normalizeint.ToString();
+                    case 5:
+                        return "000"+ normalizeint.ToString();
+                    case 6:
+                        return "00"+ normalizeint.ToString();
+                    case 7:
+                        return "0"+ normalizeint.ToString();
+                    default:
+                        return "00000000";
+                        break;
                 }
             }
             else
@@ -2041,6 +2002,7 @@ namespace Plat2d_2
 
             SetHudLives(Lives);
             SetHudGems(Gems);
+            SetHudScore(ScoreNumbers);
 
 
             //Log.Highlight("UpdateHud() has no function");
@@ -2126,6 +2088,52 @@ namespace Plat2d_2
 
             //if (LevelLabel != null)
             //    LevelLabel.Text = $"{CheckLevel(levelclearingsforlabel)}";
+        }
+
+        private void SetHudScore(List<HUDObject> scoreNumbers)
+        {
+            string normalized = DigitNormalizer(pointScoreTally, "Score");
+            Log.Info(normalized+" "+pointScoreTally);
+            foreach (var sprite in HUDObjects)
+            {
+                switch (sprite.Tag)
+                {
+                    case "ScoreElement0":
+                        ScoreNumbers[0].DisplayedDataInt = int.Parse(normalized[0].ToString());
+                        sprite.Sprite = ScoreNumbers[0].DisplayElements[ScoreNumbers[0].DisplayedDataInt];
+                        break;
+                    case "ScoreElement1":
+                        ScoreNumbers[1].DisplayedDataInt = int.Parse(normalized[1].ToString());
+                        sprite.Sprite = ScoreNumbers[1].DisplayElements[ScoreNumbers[1].DisplayedDataInt];
+                        break;
+                    case "ScoreElement2":
+                        ScoreNumbers[2].DisplayedDataInt = int.Parse(normalized[2].ToString());
+                        sprite.Sprite = ScoreNumbers[2].DisplayElements[ScoreNumbers[2].DisplayedDataInt];
+                        break;
+                    case "ScoreElement3":
+                        ScoreNumbers[3].DisplayedDataInt = int.Parse(normalized[3].ToString());
+                        sprite.Sprite = ScoreNumbers[3].DisplayElements[ScoreNumbers[3].DisplayedDataInt];
+                        break;
+                    case "ScoreElement4":
+                        ScoreNumbers[4].DisplayedDataInt = int.Parse(normalized[4].ToString());
+                        sprite.Sprite = ScoreNumbers[4].DisplayElements[ScoreNumbers[4].DisplayedDataInt];
+                        break;
+                    case "ScoreElement5":
+                        ScoreNumbers[5].DisplayedDataInt = int.Parse(normalized[5].ToString());
+                        sprite.Sprite = ScoreNumbers[5].DisplayElements[ScoreNumbers[5].DisplayedDataInt];
+                        break;
+                    case "ScoreElement6":
+                        ScoreNumbers[6].DisplayedDataInt = int.Parse(normalized[6].ToString());
+                        sprite.Sprite = ScoreNumbers[6].DisplayElements[ScoreNumbers[6].DisplayedDataInt];
+                        break;
+                    case "ScoreElement7":
+                        ScoreNumbers[7].DisplayedDataInt = int.Parse(normalized[7].ToString());
+                        sprite.Sprite = ScoreNumbers[7].DisplayElements[ScoreNumbers[7].DisplayedDataInt];
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         private void SetHudGems(List<HUDObject> gems)
