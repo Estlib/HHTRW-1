@@ -289,8 +289,8 @@ namespace Plat2d_2.EngineCore
                     }
                     else
                     {
-                        //Log.Error("Unknown Exception.", 3);
-                        //Log.Error($"Exception trace: {ex.StackTrace}");
+                        Log.Error("Unknown Exception.", 3);
+                        Log.Error($"Exception trace: {ex.StackTrace}");
                     }
 
                     //DemoGame.pausebuttoninput = true;

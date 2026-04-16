@@ -50,7 +50,8 @@ namespace Plat2d_2.EngineCore
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             this.Sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
 
-            Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
+            //Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
+            Log.InfoContinuous($"{Directory} {Tag} ADD");
             EngineCore.RegisterSprite(this);
         }
         /// <summary>
@@ -72,7 +73,7 @@ namespace Plat2d_2.EngineCore
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             this.Sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
 
-            Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been added to hudsprites");
+            //Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been added to hudsprites");
 
             EngineCore.RegisterHudElement(this);
         }
@@ -92,7 +93,8 @@ namespace Plat2d_2.EngineCore
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             this.Sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
 
-            Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
+            //Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
+            Log.InfoContinuous($"{Directory} {Tag} ADD");
             EngineCore.RegisterSprite(this);
         }
         /// <summary>
@@ -113,7 +115,8 @@ namespace Plat2d_2.EngineCore
             //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
             this.Sprite = Reference.Sprite; //sets the sprite bitmap to be the one from the reference sprite
 
-            Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
+            //Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
+            Log.InfoContinuous($"{Directory} {Tag} ADD");
             EngineCore.RegisterSprite(this);
         }
         /// <summary>
@@ -134,7 +137,8 @@ namespace Plat2d_2.EngineCore
             //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
             this.Sprite = bitmap;
 
-            Log.Info($"[SPRITE2D]({Directory} {Tag}) has been registered");
+            //Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
+            Log.InfoContinuous($"{Directory} {Tag} ADD");
             EngineCore.RegisterSprite(this);
         }
         /// <summary>
