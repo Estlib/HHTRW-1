@@ -635,7 +635,8 @@ namespace Plat2d_2
             }
             if (remainingJumpSteps > 0) //if the jump steps are greater than 0
             {
-                player.SetVelocity(new Vector2(player.GetXVelocity(), -12800)); //then it applies a velocity to the player in the up direction, forming a jump
+                player.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
+                //player.SetVelocity(new Vector2(player.GetXVelocity(), -12800)); //then it applies a velocity to the player in the up direction, forming a jump
                 remainingJumpSteps--; //subtract a frame from the jumpsteps
             }
             if (player.IsColliding("Ground") != null) //if player is colliding with ground then it sets current jumpmode to false, as player is not currently jumping and logs a message
@@ -648,6 +649,14 @@ namespace Plat2d_2
             {
                 //Log.Warning("Player is not colliding with Ground and thus cannot jump.");
                 //jumpstate handling for this is done in the if() structure that checks for jumpsteps
+            }
+            bool onGround = player.IsColliding("Ground") != null;
+
+            if (onGround && player.GetYVelocity() > 0)
+            {
+                player.SetVelocity(new Vector2(player.GetXVelocity(), 0));
+                remainingJumpSteps = 0;
+                jumpmode = false;
             }
             player.UpdatePosition(); //updates players position
 
