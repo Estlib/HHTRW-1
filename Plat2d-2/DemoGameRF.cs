@@ -1211,6 +1211,7 @@ namespace Plat2d_2
                     }
                     UnloadLastLevel();
                     navCause = NavigationReason.ReturnToMap;
+                    //Thread.Sleep(10);
                     GoToLevel(state, reloadDestination, worlds);
                     currentDestination = reloadDestination;
                     state = CallState.WorldMap;
@@ -1220,9 +1221,10 @@ namespace Plat2d_2
                     && currentDestination.AreaNumber == reloadDestination.AreaNumber
                     && currentDestination.LevelNumber != reloadDestination.LevelNumber)
                 {
+                    UnloadLastLevel();
                     state = CallState.RoomTransition;
                     navCause = NavigationReason.None;
-                    UnloadLastLevel();
+                    //Thread.Sleep(10);
                     GoToLevel(state, reloadDestination, worlds);
                     currentDestination = reloadDestination;
                     state = CallState.PlayingLevel;
