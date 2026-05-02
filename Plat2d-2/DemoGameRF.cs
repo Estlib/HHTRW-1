@@ -116,6 +116,12 @@ namespace Plat2d_2
         int steps = 0;
         int slowDownFrameRate = 0;
         int remainingJumpSteps = 0;
+        bool isInvincible = false;
+        bool overrideSprite = false;
+        int invincibilityForFrames = 125;
+        int overrideSpriteForFrames = 5;
+        int hasBeenInvincibleFor = 0;
+        int invincibleFrameHasBeenDisplayedFor = 0;
         //weapons-player
         List<Weapon> unlockedWeapons = new List<Weapon>();
         //weapons-player-active
@@ -132,15 +138,17 @@ namespace Plat2d_2
         //huddata
         public static int crystalScoreTally = 0;
         public static int pointScoreTally = 0;
-        public static int playerHealth = 100;
+        public static int playerHealth = 3;
         public static int playerLives = 5;
         List<Bitmap> HudBMP = ArtData.HudSprites();
         List<Bitmap> DigitBMP = ArtData.DigitSprites();
         List<Bitmap> WeaponIcons = ArtData.WeaponIconSprites();
+        List<Bitmap> BarElements = ArtData.BarElementSprites();
         Sprite2d hud;
         List<HUDObject> Lives = new List<HUDObject>();
         List<HUDObject> Gems = new List<HUDObject>();
         List<HUDObject> ScoreNumbers = new List<HUDObject>();
+        List<HUDObject> HealthLeftItems = new List<HUDObject>();
         HUDObject weaponicon;
 
         //enemies
@@ -451,7 +459,8 @@ namespace Plat2d_2
                 Log.Info("MaxBulletCount: " + activeWeapon.MaxBulletCount);
                 Log.Info("ThisWeaponType: " + activeWeapon.ThisWeaponType);
                 Log.Info("SpriteCount: " + activeWeapon.Graphics.Count);
-                UpdateHud();
+                //UpdateHud(); dont update entire hud
+                SetCurrentWeapon(weaponicon);
             }
             else
             {
@@ -682,7 +691,7 @@ namespace Plat2d_2
                         }
                         sfxInstance.Play("enemy ow");
                         pointScoreTally += 250;
-                        UpdateHud();
+                        SetHudScore(ScoreNumbers);
                         enemyobject.sprite2d.DestroySelf();
                         enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
                         enemiesv2.Remove(enemiesv2.ElementAt(i));
@@ -768,6 +777,8 @@ namespace Plat2d_2
                 sfxInstance.Play("Gem collect");
                 pointScoreTally += 100;
                 crystalScoreTally++;
+                SetHudScore(ScoreNumbers);
+                SetHudGems(Gems);
                 Log.Info($"Coin is being touched. Current Crystalcount: {crystalScoreTally}"); //then it logs a message to the console
                 coin.DestroySelf(); //and destroys the object
 
@@ -852,18 +863,32 @@ namespace Plat2d_2
                 return;
             }
 
-            Sprite2d enemy = player.IsColliding("Enemy"); //checks for collisions between the player and the level finishing trigger object.
+            Sprite2d enemy = player.IsColliding("Enemy"); //checks if player is kissing an enemy
             Sprite2d bulletcollision = null;
-            if (enemy != null) //if the trigger object is being touched
+            if (enemy != null & isInvincible == false) //if the trigger object is being touched
             {
                 playerHealth--;
+                SetHudHealthbar(HealthLeftItems);
+                //todo, call hud update for health
                 bulletcollision = enemy.IsColliding("Bullet");
+                isInvincible = true;
+                overrideSprite = true;
+                //knockback on hurt
+                if (facedirection == 0)
+                {
+                    player.ApplyImpulse(new Vector2(320000, -320000), Vector2.Zero());
+                }
+                else if (facedirection == 1)
+                {
+                    player.ApplyImpulse(new Vector2(-320000, -320000), Vector2.Zero());
+                }
                 //Log.Info($"Player has touched an enemy. Health left: {playerHealth}. Lives left: {playerLives}"); //then it logs a message to the console
             }
             if (bulletcollision != null)
             {
                 pointScoreTally += 250;
-                UpdateHud();
+                SetHudScore(ScoreNumbers);
+                //Todo: call ammo count lowering too
                 enemy.DestroySelf();
             }
 
@@ -871,11 +896,11 @@ namespace Plat2d_2
 
             if (bufferLives != playerLives)
             {
-                UpdateHud();
+                SetHudLives(Lives);
             }
             if (bufferCrystalScoreTally != crystalScoreTally)
             {
-                UpdateHud();
+                SetHudGems(Gems);
             }
 
             //frame measuring tools again
@@ -1071,12 +1096,15 @@ namespace Plat2d_2
         {
             Log.Info("LoseLife has been called");
             playerLives--;
-            playerHealth = 100;
+            playerHealth = 3;
             Log.Info($"X = {player.Position.X}. Y = {player.Position.Y}");
             Log.Info($"respawn X = {respawnlocation.X}. respawnY = {respawnlocation.Y}");
             player.SetLocation(respawnlocation);
             Log.Info($"X = {player.Position.X}. Y = {player.Position.Y}");
             Log.Info($"respawn X = {respawnlocation.X}. respawnY = {respawnlocation.Y}");
+            SetHudLives(Lives);
+            SetHudHealthbar(HealthLeftItems);
+            //TODO: kick player out of level, every time after they lose a life.
 
         }
         private void AnimateEnemiesV2sys(bool loglevel, int animationClock)
@@ -1150,7 +1178,43 @@ namespace Plat2d_2
                 steps = start;
             }
             //player = new Sprite2d(new Vector2(player.Position.X, player.Position.Y), new Vector2(32, 32), playerSprites[steps], "Player");
-            player.Sprite = playerSpritesBitmap[steps];
+            if (isInvincible)
+            {
+                //Log.Highlight("isInvincible " + isInvincible + " /overrideSprite " + overrideSprite);
+                //Log.Highlight("invincibilityForFrames " + invincibilityForFrames + " /overrideSpriteForFrames " + overrideSpriteForFrames);
+                //Log.Highlight("hasBeenInvincibleFor " + hasBeenInvincibleFor+ " /invincibleFrameHasBeenDisplayedFor "+ invincibleFrameHasBeenDisplayedFor);
+                if (hasBeenInvincibleFor < invincibilityForFrames)
+                {
+                    if (invincibleFrameHasBeenDisplayedFor < overrideSpriteForFrames)
+                    {
+                        
+                        invincibleFrameHasBeenDisplayedFor++;
+                    }
+                    else
+                    {
+                        overrideSprite = !overrideSprite;
+                        invincibleFrameHasBeenDisplayedFor = 0;
+                    }
+                    hasBeenInvincibleFor++;
+                }
+                else
+                {
+                    hasBeenInvincibleFor = 0;
+                    isInvincible = false;
+                }
+            }
+            if (!isInvincible)
+            {
+                player.Sprite = playerSpritesBitmap[steps];
+            }
+            else if (isInvincible & overrideSprite)                
+            {
+                player.Sprite = playerSpritesBitmap[23];
+            }
+            else
+            {
+                player.Sprite = playerSpritesBitmap[steps];
+            }
         }
         private void UpdatePlayerCamera()
         {
@@ -1214,6 +1278,21 @@ namespace Plat2d_2
                 if (HUDObjects[i].Tag == "CrystalElement2")
                 {
                     HUDObjects[i].Position.X = -(x - 184);
+                }
+            }
+            for (int i = 0; i < HUDObjects.Count; i++)
+            {
+                if (HUDObjects[i].Tag == "HealthElement0")
+                {
+                    HUDObjects[i].Position.X = -(x - 56);
+                }
+                if (HUDObjects[i].Tag == "HealthElement1")
+                {
+                    HUDObjects[i].Position.X = -(x - 64);
+                }
+                if (HUDObjects[i].Tag == "HealthElement2")
+                {
+                    HUDObjects[i].Position.X = -(x - 72);
                 }
             }
             for(int i = 0;i < HUDObjects.Count;i++)
@@ -1802,6 +1881,32 @@ namespace Plat2d_2
                                         );
                                     break;
 
+                                case "Health":
+                                    string digitNormalH = DigitNormalizer(playerHealth, "Health");
+                                    Log.Info(digitNormalH);
+                                    HealthLeftItems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, (j * 16)+8), new Vector2(8, 8), $"hud/{digitNormalH[0]}", true, "HealthElement0"),
+                                            BarElements,
+                                            0
+                                            )
+                                        );
+                                    HealthLeftItems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16+8, (j * 16)+8), new Vector2(8, 8), $"hud/{digitNormalH[1]}", true, "HealthElement1"),
+                                            BarElements,
+                                            0
+                                            )
+                                        );
+                                    HealthLeftItems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16+16, (j * 16)+8), new Vector2(8, 8), $"hud/{digitNormalH[2]}", true, "HealthElement2"),
+                                            BarElements,
+                                            0
+                                            )
+                                        );
+
+                                    break;
                                 case "Gems":
 
                                     string digitNormalG = DigitNormalizer(crystalScoreTally, "Gems");
@@ -1941,26 +2046,64 @@ namespace Plat2d_2
                     return "999";
                 }
             }
+            else if (what == "Health")
+            {
+                bool isOdd = false;
+                string item = "_";
+                if ((normalizeint%2) != 0)
+                {
+                    item = "-";
+                }
+                else if ((normalizeint % 2) == 0)
+                {
+                    item = "=";
+                }
+                else
+                {
+                    item = "_";
+                }
+                if (normalizeint <= 0)
+                {
+                    return "___";
+                }
+                else if (normalizeint < 3)
+                {
+                    return item + "__";
+                }
+                else if (normalizeint < 5)
+                {
+                    return "=" + item + "_";
+                }
+                else if (normalizeint < 7)
+                {
+                    return "==" + item;
+                }
+                else
+                {
+                    return "===";
+                }
+
+            }
             else if (what == "Score")
             {
                 switch (normalizeint.ToString().Length)
                 {
                     case 0:
-                        return "00000000"+ normalizeint.ToString();
+                        return "00000000" + normalizeint.ToString();
                     case 1:
-                        return "0000000"+ normalizeint.ToString();
+                        return "0000000" + normalizeint.ToString();
                     case 2:
-                        return "000000"+ normalizeint.ToString();
+                        return "000000" + normalizeint.ToString();
                     case 3:
-                        return "00000"+ normalizeint.ToString();
+                        return "00000" + normalizeint.ToString();
                     case 4:
-                        return "0000"+ normalizeint.ToString();
+                        return "0000" + normalizeint.ToString();
                     case 5:
-                        return "000"+ normalizeint.ToString();
+                        return "000" + normalizeint.ToString();
                     case 6:
-                        return "00"+ normalizeint.ToString();
+                        return "00" + normalizeint.ToString();
                     case 7:
-                        return "0"+ normalizeint.ToString();
+                        return "0" + normalizeint.ToString();
                     default:
                         return "00000000";
                         break;
@@ -2323,7 +2466,78 @@ namespace Plat2d_2
                 }
             }
         }
-
+        private void SetHudHealthbar(List<HUDObject> barelements)
+        {
+            if (playerHealth <= 0)
+            {
+                foreach (var sprite in HUDObjects)
+                {
+                    if (sprite.Tag == "HealthElement0")
+                    {
+                        HealthLeftItems[0].DisplayedDataInt = 0;
+                    }
+                    if (sprite.Tag == "HealthElement1")
+                    {
+                        HealthLeftItems[1].DisplayedDataInt = 0;
+                    }
+                    if (sprite.Tag == "HealthElement2")
+                    {
+                        HealthLeftItems[2].DisplayedDataInt = 0;
+                    }
+                }
+            }
+            else
+            {
+                string converted = DigitNormalizer(playerHealth, "Health");
+                int[] prep = new int[3];
+                for (int i = 0; i < prep.Length; i++)
+                {
+                    if (converted[i] == '_')
+                    {
+                        prep[i] = 0;
+                    }
+                    else if (converted[i] == '-')
+                    {
+                        prep[i] = 1;
+                    }
+                    else
+                    {
+                        prep[i] = 2;
+                    }
+                }
+                Log.Highlight(prep[0] + " " + prep[1] + " " + prep[2]);
+                foreach (var sprite in HUDObjects)
+                {
+                    if (sprite.Tag == "HealthElement0")
+                    {
+                        HealthLeftItems[0].DisplayedDataInt = prep[0];
+                    }
+                    if (sprite.Tag == "HealthElement1")
+                    {
+                        HealthLeftItems[1].DisplayedDataInt = prep[1];
+                    }
+                    if (sprite.Tag == "HealthElement2")
+                    {
+                        HealthLeftItems[2].DisplayedDataInt = prep[2];
+                    }
+                }
+            }
+            foreach (var hudsprite in HUDObjects)
+            {
+                if (hudsprite.Tag == "HealthElement0")
+                {
+                    hudsprite.Sprite = HealthLeftItems[0].DisplayElements[HealthLeftItems[0].DisplayedDataInt];
+                }
+                if (hudsprite.Tag == "HealthElement1")
+                {
+                    hudsprite.Sprite = HealthLeftItems[1].DisplayElements[HealthLeftItems[1].DisplayedDataInt];
+                }
+                if (hudsprite.Tag == "HealthElement2")
+                {
+                    hudsprite.Sprite = HealthLeftItems[2].DisplayElements[HealthLeftItems[2].DisplayedDataInt];
+                }
+            }
+        }
         private void SetHudLives(List<HUDObject> lives)
         {
             //if lives are zero or lower, update both HUDObjects, to display " 0 0 "

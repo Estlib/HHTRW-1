@@ -625,7 +625,9 @@ namespace Plat2d_2.EngineCore
                 new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand2flip.png")),       //18 - inbetween for standing and crouching flipped
                 new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3duckflip.png")),   //19 - crouching flipped
                 new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/stand3jumpflip.png")),   //20 - jumping flipped
-                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfallFLIP.png"))       //21 - falling flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/ALTfallFLIP.png")),      //21 - falling flipped
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/errorstate.png")),       //22 - errorstate
+                new Bitmap(Image.FromFile($"assets/sprites/player/wipspriteset/nosprite.png"))       //23 - no sprite
             };
         }
 
@@ -675,6 +677,16 @@ namespace Plat2d_2.EngineCore
                 new Bitmap(Image.FromFile($"assets/sprites/hud/barker_icon.png")) ,
                 new Bitmap(Image.FromFile($"assets/sprites/hud/debug_icon.png")) ,
                 new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")) 
+            };
+        }
+
+        internal static List<Bitmap> BarElementSprites()
+        {
+
+            return new List<Bitmap>() {
+                new Bitmap(Image.FromFile($"assets/sprites/hud/_.png")),
+                new Bitmap(Image.FromFile($"assets/sprites/hud/-.png")),
+                new Bitmap(Image.FromFile($"assets/sprites/hud/=.png"))
             };
         }
     }
