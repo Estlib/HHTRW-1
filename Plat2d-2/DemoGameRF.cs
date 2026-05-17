@@ -144,12 +144,14 @@ namespace Plat2d_2
         List<Bitmap> DigitBMP = ArtData.DigitSprites();
         List<Bitmap> WeaponIcons = ArtData.WeaponIconSprites();
         List<Bitmap> BarElements = ArtData.BarElementSprites();
+        List<Bitmap> WeaponNames = ArtData.WeaponNameSprites();
         Sprite2d hud;
         List<HUDObject> Lives = new List<HUDObject>();
         List<HUDObject> Gems = new List<HUDObject>();
         List<HUDObject> ScoreNumbers = new List<HUDObject>();
         List<HUDObject> HealthLeftItems = new List<HUDObject>();
         HUDObject weaponicon;
+        HUDObject weaponname;
 
         //enemies
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>(); //enemies that exist
@@ -238,6 +240,7 @@ namespace Plat2d_2
             /* TODO: leave empty, in original demogame, thread is invoked,
             refactor so that a thread doesnt need to be invoked to avoid
             race conditions.
+            DONE
             */
 
             //logging tool
@@ -404,21 +407,22 @@ namespace Plat2d_2
             switch (animationClock)
             {
                 case 0:
-                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ░░ ░░ ");
-                    break;
-                case 1:
                     LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ██ ░░ ░░ ░░ ");
                     break;
-                case 2:
+                case 1:
                     LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ██ ░░ ░░ ");
                     break;
-                case 3:
+                case 2:
                     LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ██ ░░ ");
                     break;
-                case 4:
+                case 3:
                     LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ░░ ██ ");
                     break;
+                case 4:
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ░░ █4 ");
+                    break;
                 default:
+                    LogUtility.LogCurrentAnimationState($"Animation clock is currently {animationClock} ░░ ░░ ░░ ░░ ");
                     break;
             }
 
@@ -460,7 +464,7 @@ namespace Plat2d_2
                 Log.Info("ThisWeaponType: " + activeWeapon.ThisWeaponType);
                 Log.Info("SpriteCount: " + activeWeapon.Graphics.Count);
                 //UpdateHud(); dont update entire hud
-                SetCurrentWeapon(weaponicon);
+                SetCurrentWeapon(weaponicon, weaponname);
             }
             else
             {
@@ -1263,6 +1267,10 @@ namespace Plat2d_2
                 {
                     HUDObjects[i].Position.X = -(x - 256);
                 }
+                if (HUDObjects[i].Tag == "WeaponNameElement")
+                {
+                    HUDObjects[i].Position.X = -(x - 200);
+                }
             }
             for (int i = 0; i < HUDObjects.Count; i++)
             {
@@ -1820,6 +1828,43 @@ namespace Plat2d_2
                                     hud = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(256, 32), $"hud/{hudelements[0]}", false, "HUD");
                                     break;
 
+                                case "Weaponname":
+                                    string whatthiswepname = unlockedWeapons[selectedweapon].WeaponName;
+                                    switch (whatthiswepname)
+                                    {
+                                        case "Debug":
+                                            weaponname = new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, j * 16 + 8), new Vector2(48, 8), $"hud/debug_word", true, "WeaponNameElement"),
+                                            WeaponNames,
+                                            0
+                                            );
+                                            break;
+                                        case "Barker":
+                                            weaponname = new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, j * 16 + 8), new Vector2(48, 8), $"hud/barker_word", true, "WeaponNameElement"),
+                                            WeaponNames,
+                                            0
+                                            );
+                                            break;
+                                        case "Väits":
+                                            weaponname = new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, j * 16 + 8), new Vector2(48, 8), $"hud/väits_word", true, "WeaponNameElement"),
+                                            WeaponNames,
+                                            0
+                                            );
+                                            break;
+                                        case "Willo":
+                                            weaponname = new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, j * 16 + 8), new Vector2(48, 8), $"hud/willo_word", true, "WeaponNameElement"),
+                                            WeaponNames,
+                                            0
+                                            );
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    break;
+
                                 case "W_Icon":
                                     string whatthiswep = unlockedWeapons[selectedweapon].WeaponName;
                                     switch (whatthiswep)
@@ -2196,7 +2241,7 @@ namespace Plat2d_2
             SetHudLives(Lives);
             SetHudGems(Gems);
             SetHudScore(ScoreNumbers);
-            SetCurrentWeapon(weaponicon);
+            SetCurrentWeapon(weaponicon, weaponname);
 
 
             //Log.Highlight("UpdateHud() has no function");
@@ -2284,7 +2329,7 @@ namespace Plat2d_2
             //    LevelLabel.Text = $"{CheckLevel(levelclearingsforlabel)}";
         }
 
-        private void SetCurrentWeapon(HUDObject weaponicon)
+        private void SetCurrentWeapon(HUDObject weaponicon, HUDObject weaponname)
         {
             string whatthiswep = unlockedWeapons[selectedweapon].WeaponName;
             foreach (var sprite in HUDObjects)
@@ -2307,6 +2352,27 @@ namespace Plat2d_2
                             break;      
                         default:
                             weaponicon.Display.Sprite = weaponicon.DisplayElements[4];
+                            break;
+                    }
+                }
+                if (sprite.Tag == "WeaponNameElement")
+                {
+                    switch (whatthiswep)
+                    {
+                        case "Debug":
+                            weaponname.Display.Sprite = weaponname.DisplayElements[3];
+                            break;
+                        case "Barker":
+                            weaponname.Display.Sprite = weaponname.DisplayElements[2];
+                            break;
+                        case "Väits":
+                            weaponname.Display.Sprite = weaponname.DisplayElements[0];
+                            break;
+                        case "Willo":
+                            weaponname.Display.Sprite = weaponname.DisplayElements[1];
+                            break;
+                        default:
+                            weaponname.Display.Sprite = weaponname.DisplayElements[4];
                             break;
                     }
                 }

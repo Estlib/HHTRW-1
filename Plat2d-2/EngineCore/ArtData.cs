@@ -680,6 +680,18 @@ namespace Plat2d_2.EngineCore
             };
         }
 
+        internal static List<Bitmap> WeaponNameSprites()
+        {
+
+            return new List<Bitmap>() {
+                new Bitmap(Image.FromFile($"assets/sprites/hud/väits_word.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/willo_word.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/barker_word.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/debug_word.png")) ,
+                new Bitmap(Image.FromFile($"assets/sprites/hud/none_word.png")) 
+            };
+        }
+
         internal static List<Bitmap> BarElementSprites()
         {
 
