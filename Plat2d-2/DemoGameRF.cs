@@ -511,6 +511,8 @@ namespace Plat2d_2
             if (up == true && down == true)
             {
                 activeWeapon.AmmoLeft = 12;
+                Log.Highlight(activeWeapon.AmmoLeft.ToString());
+                SetHudAmmobar(AmmoLeftItems);
             }
 
             if (activeWeapon.AmmoLeft < 1)
@@ -528,6 +530,8 @@ namespace Plat2d_2
                         activeWeapon.AmmoLeft -= activeWeapon.AmmoConsumption; //then remove some ammo
                     }
                     activeWeapon.FiringLock = true; //enable firinglock for current inhand
+                    Log.Highlight(activeWeapon.AmmoLeft.ToString());
+                    SetHudAmmobar(AmmoLeftItems);
                     if (bullets.Count < activeWeapon.MaxBulletCount || bullets == null) //only if max bulletcount onscreen is not reached
                     {
 
@@ -626,6 +630,7 @@ namespace Plat2d_2
                         LogUtility.LogCurrentWeaponState($"Fired Bullet Limit reached. Limit {activeWeapon.MaxBulletCount}. Onscreen {currentbulletsonscreen}", true);
                     }
                 }                
+                
             }
 
             //player control & collisions
@@ -2247,13 +2252,17 @@ namespace Plat2d_2
                 {
                     return "==" + item + "___";
                 }
-                else if (normalizeint < 5)
+                else if (normalizeint < 9)
                 {
                     return "===" + item + "__";
                 }
-                else if (normalizeint < 7)
+                else if (normalizeint < 11)
                 {
                     return "====" + item + "_";
+                }
+                else if (normalizeint < 13)
+                {
+                    return "=====" + item;
                 }
                 else
                 {
@@ -2701,6 +2710,7 @@ namespace Plat2d_2
             else
             {
                 string converted = DigitNormalizer(activeWeapon.AmmoLeft, "AmmoLeft");
+                Log.Highlight(converted);
                 int[] prep = new int[6];
                 for (int i = 0; i < prep.Length; i++)
                 {
@@ -2720,55 +2730,106 @@ namespace Plat2d_2
                 Log.Highlight(prep[0] + " " + prep[1] + " " + prep[2] + " " + prep[3] + " " + prep[4] + " " + prep[5]);
                 foreach (var sprite in HUDObjects)
                 {
-                    switch (sprite.Tag)
+                    if (sprite.Tag == "AmmoElement0")
                     {
-                        case "AmmoElement0":
-                            AmmoLeftItems[0].DisplayedDataInt = 0;
-                            break;
-                        case "AmmoElement1":
-                            AmmoLeftItems[1].DisplayedDataInt = 0;
-                            break;
-                        case "AmmoElement2":
-                            AmmoLeftItems[2].DisplayedDataInt = 0;
-                            break;
-                        case "AmmoElement3":
-                            AmmoLeftItems[3].DisplayedDataInt = 0;
-                            break;
-                        case "AmmoElement4":
-                            AmmoLeftItems[4].DisplayedDataInt = 0;
-                            break;
-                        case "AmmoElement5":
-                            AmmoLeftItems[5].DisplayedDataInt = 0;
-                            break;
-                        default:
-                            break;
+                        AmmoLeftItems[0].DisplayedDataInt = prep[0];
+                    }
+                    if (sprite.Tag == "AmmoElement1")
+                    {
+                        AmmoLeftItems[1].DisplayedDataInt = prep[1];
+                    }
+                    if (sprite.Tag == "AmmoElement2")
+                    {
+                        AmmoLeftItems[2].DisplayedDataInt = prep[2];
+                    }
+                    if (sprite.Tag == "AmmoElement3")
+                    {
+                        AmmoLeftItems[3].DisplayedDataInt = prep[3];
+                    }
+                    if (sprite.Tag == "AmmoElement4")
+                    {
+                        AmmoLeftItems[4].DisplayedDataInt = prep[4];
+                    }
+                    if (sprite.Tag == "AmmoElement5")
+                    {
+                        AmmoLeftItems[5].DisplayedDataInt = prep[5];
                     }
                 }
-            }
+                //switch (sprite.Tag)
+                //{
+                //    case "AmmoElement0":
+                //        AmmoLeftItems[0].DisplayedDataInt = 0;
+                //        break;
+                //    case "AmmoElement1":
+                //        AmmoLeftItems[1].DisplayedDataInt = 0;
+                //        break;
+                //    case "AmmoElement2":
+                //        AmmoLeftItems[2].DisplayedDataInt = 0;
+                //        break;
+                //    case "AmmoElement3":
+                //        AmmoLeftItems[3].DisplayedDataInt = 0;
+                //        break;
+                //    case "AmmoElement4":
+                //        AmmoLeftItems[4].DisplayedDataInt = 0;
+                //        break;
+                //    case "AmmoElement5":
+                //        AmmoLeftItems[5].DisplayedDataInt = 0;
+                //        break;
+                //    default:
+                //        break;
+                //}
+                //    }
+                //}
+                
+                    //switch (hudsprite.Tag)
+                    //{
+                    //    case "AmmoElement0":
+                    //        hudsprite.Sprite = AmmoLeftItems[0].DisplayElements[HealthLeftItems[0].DisplayedDataInt];
+                    //        break;
+                    //    case "AmmoElement1":
+                    //        hudsprite.Sprite = AmmoLeftItems[1].DisplayElements[HealthLeftItems[1].DisplayedDataInt];
+                    //        break;
+                    //    case "AmmoElement2":
+                    //        hudsprite.Sprite = AmmoLeftItems[2].DisplayElements[HealthLeftItems[2].DisplayedDataInt];
+                    //        break;
+                    //    case "AmmoElement3":
+                    //        hudsprite.Sprite = AmmoLeftItems[3].DisplayElements[HealthLeftItems[3].DisplayedDataInt];
+                    //        break;
+                    //    case "AmmoElement4":
+                    //        hudsprite.Sprite = AmmoLeftItems[4].DisplayElements[HealthLeftItems[4].DisplayedDataInt];
+                    //        break;
+                    //    case "AmmoElement5":
+                    //        hudsprite.Sprite = AmmoLeftItems[5].DisplayElements[HealthLeftItems[5].DisplayedDataInt];
+                    //        break;
+                    //    default:
+                    //        break;
+                    //
+                }
             foreach (var hudsprite in HUDObjects)
             {
-                switch (hudsprite.Tag)
+                if (hudsprite.Tag == "AmmoElement0")
                 {
-                    case "AmmoElement0":
-                        hudsprite.Sprite = AmmoLeftItems[0].DisplayElements[HealthLeftItems[0].DisplayedDataInt];
-                        break;
-                    case "AmmoElement1":
-                        hudsprite.Sprite = AmmoLeftItems[1].DisplayElements[HealthLeftItems[1].DisplayedDataInt];
-                        break;
-                    case "AmmoElement2":
-                        hudsprite.Sprite = AmmoLeftItems[2].DisplayElements[HealthLeftItems[2].DisplayedDataInt];
-                        break;
-                    case "AmmoElement3":
-                        hudsprite.Sprite = AmmoLeftItems[3].DisplayElements[HealthLeftItems[3].DisplayedDataInt];
-                        break;
-                    case "AmmoElement4":
-                        hudsprite.Sprite = AmmoLeftItems[4].DisplayElements[HealthLeftItems[4].DisplayedDataInt];
-                        break;
-                    case "AmmoElement5":
-                        hudsprite.Sprite = AmmoLeftItems[5].DisplayElements[HealthLeftItems[5].DisplayedDataInt];
-                        break;
-                    default:
-                        break;
+                    hudsprite.Sprite = AmmoLeftItems[0].DisplayElements[AmmoLeftItems[0].DisplayedDataInt];
+                }
+                if (hudsprite.Tag == "AmmoElement1")
+                {
+                    hudsprite.Sprite = AmmoLeftItems[1].DisplayElements[AmmoLeftItems[1].DisplayedDataInt];
+                }
+                if (hudsprite.Tag == "AmmoElement2")
+                {
+                    hudsprite.Sprite = AmmoLeftItems[2].DisplayElements[AmmoLeftItems[2].DisplayedDataInt];
+                }
+                if (hudsprite.Tag == "AmmoElement3")
+                {
+                    hudsprite.Sprite = AmmoLeftItems[3].DisplayElements[AmmoLeftItems[3].DisplayedDataInt];
+                }
+                if (hudsprite.Tag == "AmmoElement4")
+                {
+                    hudsprite.Sprite = AmmoLeftItems[4].DisplayElements[AmmoLeftItems[4].DisplayedDataInt];
+                }
+                if (hudsprite.Tag == "AmmoElement5")
+                {
+                    hudsprite.Sprite = AmmoLeftItems[5].DisplayElements[AmmoLeftItems[5].DisplayedDataInt];
                 }
             }
         }
