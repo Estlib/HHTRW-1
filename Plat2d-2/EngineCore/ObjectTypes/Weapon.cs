@@ -97,7 +97,7 @@ namespace Plat2d_2.EngineCore.ObjectTypes
                 "debug",
                 WeaponType.Shot,
                 3,
-                1,
+                0,
                 false,
                 10,
                 new List<Bitmap>()
@@ -115,7 +115,7 @@ namespace Plat2d_2.EngineCore.ObjectTypes
                 "Barker",
                 WeaponType.Shot,
                 1,
-                0,
+                4,
                 false,
                 25,
                 new List<Bitmap>()
@@ -130,21 +130,21 @@ namespace Plat2d_2.EngineCore.ObjectTypes
         private static Weapon Sword()
         {
             return new Weapon(
-                "Väits",
-                WeaponType.Wielded,
-                1,
-                0,
-                false,
-                10,
-                new List<Bitmap>()
+                "Väits", //weaponname
+                WeaponType.Wielded, //weapontype
+                1, //maxbulletonscreen
+                0, //ammoconsumption
+                false, //firinglock
+                10, //lockforframeswhenfired
+                new List<Bitmap>() //use animation
                     {
                         new Bitmap(Image.FromFile($"assets/sprites/bullets/weapon4A.png")),
                         new Bitmap(Image.FromFile($"assets/sprites/bullets/weapon4B.png")),
                         new Bitmap(Image.FromFile($"assets/sprites/bullets/weapon4C.png"))
                     },
-                12,
-                3,
-                3
+                1, //ammo left
+                3, //prefireframes
+                10 //originalfiringlocktimer
             );
         }
         private static Weapon PlasmaRifle()
@@ -153,7 +153,7 @@ namespace Plat2d_2.EngineCore.ObjectTypes
                 "Willo",
                 WeaponType.Shot,
                 10,
-                0,
+                1,
                 false,
                 3,
                 new List<Bitmap>()

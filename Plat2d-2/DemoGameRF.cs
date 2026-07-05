@@ -11,6 +11,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -150,6 +151,7 @@ namespace Plat2d_2
         List<HUDObject> Gems = new List<HUDObject>();
         List<HUDObject> ScoreNumbers = new List<HUDObject>();
         List<HUDObject> HealthLeftItems = new List<HUDObject>();
+        List<HUDObject> AmmoLeftItems = new List<HUDObject>();
         HUDObject weaponicon;
         HUDObject weaponname;
 
@@ -465,6 +467,7 @@ namespace Plat2d_2
                 Log.Info("SpriteCount: " + activeWeapon.Graphics.Count);
                 //UpdateHud(); dont update entire hud
                 SetCurrentWeapon(weaponicon, weaponname);
+                SetHudAmmobar(AmmoLeftItems);
             }
             else
             {
@@ -473,7 +476,6 @@ namespace Plat2d_2
             if (keyTimeoutX > 0)
             {
                 keyTimeoutX--;
-
             }
 
 
@@ -506,33 +508,41 @@ namespace Plat2d_2
                 AnimateBullets();
             }
 
+            if (up == true && down == true)
+            {
+                activeWeapon.AmmoLeft = 12;
+            }
 
+            if (activeWeapon.AmmoLeft < 1)
+            {
+                activeWeapon.FiringLock = true;
+            }
 
             //shooting again
-            if (fire == true && activeWeapon.FiringLock == false)
+            if (fire == true && activeWeapon.FiringLock == false) //if player can fire and has pressed shoot button
             {
-                if (activeWeapon.AmmoLeft != 0)
+                if (activeWeapon.AmmoLeft != 0 || activeWeapon.AmmoLeft > 0) //if the ammoleft is not 0 or less
                 {
-                    if (activeWeapon.WeaponName != "debug")
+                    if (activeWeapon.WeaponName != "debug") //and incase it is not debug weapon
                     {
-                        activeWeapon.AmmoLeft -= activeWeapon.AmmoConsumption;
+                        activeWeapon.AmmoLeft -= activeWeapon.AmmoConsumption; //then remove some ammo
                     }
-                    activeWeapon.FiringLock = true;
-                    if (bullets.Count < activeWeapon.MaxBulletCount || bullets == null)
+                    activeWeapon.FiringLock = true; //enable firinglock for current inhand
+                    if (bullets.Count < activeWeapon.MaxBulletCount || bullets == null) //only if max bulletcount onscreen is not reached
                     {
 
                         //shoot new bullet
                         int heightmod = 0;
-                        if (activeWeapon.WeaponName == "Willo")
+                        if (activeWeapon.WeaponName == "Willo") //Special condition for "Willo" weapon
                         {
                             heightmod = rngFrom8To8.Next(-6, 6);
                         }
-                        else if (activeWeapon.WeaponName == "Väits")
+                        else if (activeWeapon.WeaponName == "Väits") //Special condition for "Väits" weapon
                         {
                             heightmod = -8;
                         }
-                        GunSound(activeWeapon.WeaponName);
-                        if (facedirection == 0)
+                        GunSound(activeWeapon.WeaponName); //play corresponding gunsound
+                        if (facedirection == 0) //if player is facing left
                         {
                             if (down) //fires bullet lower than when standing
                             {
@@ -551,7 +561,7 @@ namespace Plat2d_2
                                 //newbullet.sprite2d.CreateDynamic();
                                 //shoot bullet to the left of player
                             }
-                            else
+                            else //and player is doing anything else, other than ducking
                             {
                                 LogUtility.LogCurrentWeaponState("Bullet is fired to the left");
                                 if (activeWeapon.WeaponName == "Väits")
@@ -607,6 +617,7 @@ namespace Plat2d_2
                             }
                         }
                         currentbulletsonscreen++;
+                        
                         //Log.Info($"Bullet fired. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}");
                     }
                     else
@@ -614,9 +625,7 @@ namespace Plat2d_2
                         //sfxInstance.Play("error");
                         LogUtility.LogCurrentWeaponState($"Fired Bullet Limit reached. Limit {activeWeapon.MaxBulletCount}. Onscreen {currentbulletsonscreen}", true);
                     }
-                }
-
-
+                }                
             }
 
             //player control & collisions
@@ -1338,7 +1347,33 @@ namespace Plat2d_2
                     HUDObjects[i].Position.X = -(x - 152);
                 }
             }
-
+            for (int i = 0; i < HUDObjects.Count; i++)
+            {
+                if (HUDObjects[i].Tag == "AmmoElement0")
+                {
+                    HUDObjects[i].Position.X = -(x - 200);
+                }
+                if (HUDObjects[i].Tag == "AmmoElement1")
+                {
+                    HUDObjects[i].Position.X = -(x - 208);
+                }
+                if (HUDObjects[i].Tag == "AmmoElement2")
+                {
+                    HUDObjects[i].Position.X = -(x - 216);
+                }
+                if (HUDObjects[i].Tag == "AmmoElement3")
+                {
+                    HUDObjects[i].Position.X = -(x - 224);
+                }
+                if (HUDObjects[i].Tag == "AmmoElement4")
+                {
+                    HUDObjects[i].Position.X = -(x - 232);
+                }
+                if (HUDObjects[i].Tag == "AmmoElement5")
+                {
+                    HUDObjects[i].Position.X = -(x - 240);
+                }
+            }
         }
 
         private void GameStateHandler2()
@@ -1792,7 +1827,7 @@ namespace Plat2d_2
                     bool skipcheck = false;
                     int tryint = 0;
                     int result = 0;
-                    List<string> hudelements = new List<string>() { "HUD", "Lives", "Score", "Health", "Gems", "Ammoleft", "Weaponname", "W_Icon" };
+                    List<string> hudelements = new List<string>() { "HUD", "Lives", "Score", "Health", "Gems", "AmmoLeft", "Weaponname", "W_Icon" };
                     if (layer[j, i] == "  ")
                     {
                         skipcheck = true;
@@ -1908,6 +1943,56 @@ namespace Plat2d_2
 
                                     break;
 
+
+                                case "AmmoLeft":
+
+                                    string digitNormalA = DigitNormalizer(activeWeapon.AmmoLeft, "AmmoLeft");
+                                    Log.Info(digitNormalA);
+                                    AmmoLeftItems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[0]}", true, "AmmoElement0"),
+                                            BarElements,
+                                            0
+                                            )
+                                        );
+                                    AmmoLeftItems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16 + 8, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[1]}", true, "AmmoElement1"),
+                                            BarElements,
+                                            0
+                                            )
+                                        );
+                                    AmmoLeftItems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16 + 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[2]}", true, "AmmoElement2"),
+                                            BarElements,
+                                            0
+                                            )
+                                        );
+                                    AmmoLeftItems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16 + 24, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[3]}", true, "AmmoElement3"),
+                                            BarElements,
+                                            0
+                                            )
+                                        );
+                                    AmmoLeftItems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16 + 32, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[4]}", true, "AmmoElement4"),
+                                            BarElements,
+                                            0
+                                            )
+                                        );
+                                    AmmoLeftItems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16 + 40, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[5]}", true, "AmmoElement5"),
+                                            BarElements,
+                                            0
+                                            )
+                                        );
+
+                                    break;
+
                                 case "Lives":
                                     string digitNormal = DigitNormalizer(playerLives, "Lives");
                                     Lives.Add(
@@ -1926,6 +2011,7 @@ namespace Plat2d_2
                                         );
                                     break;
 
+                                    
                                 case "Health":
                                     string digitNormalH = DigitNormalizer(playerHealth, "Health");
                                     Log.Info(digitNormalH);
@@ -2129,6 +2215,52 @@ namespace Plat2d_2
                 }
 
             }
+            else if (what == "AmmoLeft")
+            {
+                bool isOdd = false;
+                string item = "_";
+                if ((normalizeint%2) != 0)
+                {
+                    item = "-";
+                }
+                else if ((normalizeint % 2) == 0)
+                {
+                    item = "=";
+                }
+                else
+                {
+                    item = "_";
+                }
+                if (normalizeint <= 0)
+                {
+                    return "______";
+                }
+                else if (normalizeint < 3)
+                {
+                    return item + "_____";
+                }
+                else if (normalizeint < 5)
+                {
+                    return "=" + item + "____";
+                }
+                else if (normalizeint < 7)
+                {
+                    return "==" + item + "___";
+                }
+                else if (normalizeint < 5)
+                {
+                    return "===" + item + "__";
+                }
+                else if (normalizeint < 7)
+                {
+                    return "====" + item + "_";
+                }
+                else
+                {
+                    return "======";
+                }
+
+            }
             else if (what == "Score")
             {
                 switch (normalizeint.ToString().Length)
@@ -2242,6 +2374,8 @@ namespace Plat2d_2
             SetHudGems(Gems);
             SetHudScore(ScoreNumbers);
             SetCurrentWeapon(weaponicon, weaponname);
+            SetHudHealthbar(HealthLeftItems);
+            SetHudAmmobar(AmmoLeftItems);
 
 
             //Log.Highlight("UpdateHud() has no function");
@@ -2529,6 +2663,112 @@ namespace Plat2d_2
                 if (hudsprite.Tag == "CrystalElement2")
                 {
                     hudsprite.Sprite = Gems[2].DisplayElements[Gems[2].DisplayedDataInt];
+                }
+            }
+        }
+
+        private void SetHudAmmobar(List<HUDObject> barelements)
+        {
+            if (activeWeapon.AmmoLeft <= 0)
+            {
+                foreach (var sprite in HUDObjects)
+                {
+                    switch (sprite.Tag)
+                    {
+                        case "AmmoElement0":
+                            AmmoLeftItems[0].DisplayedDataInt = 0;
+                            break;
+                        case "AmmoElement1":
+                            AmmoLeftItems[1].DisplayedDataInt = 0;
+                            break;
+                        case "AmmoElement2":
+                            AmmoLeftItems[2].DisplayedDataInt = 0;
+                            break;
+                        case "AmmoElement3":
+                            AmmoLeftItems[3].DisplayedDataInt = 0;
+                            break;
+                        case "AmmoElement4":
+                            AmmoLeftItems[4].DisplayedDataInt = 0;
+                            break;
+                        case "AmmoElement5":
+                            AmmoLeftItems[5].DisplayedDataInt = 0;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                string converted = DigitNormalizer(activeWeapon.AmmoLeft, "AmmoLeft");
+                int[] prep = new int[6];
+                for (int i = 0; i < prep.Length; i++)
+                {
+                    if (converted[i] == '_')
+                    {
+                        prep[i] = 0;
+                    }
+                    else if (converted[i] == '-')
+                    {
+                        prep[i] = 1;
+                    }
+                    else
+                    {
+                        prep[i] = 2;
+                    }
+                }
+                Log.Highlight(prep[0] + " " + prep[1] + " " + prep[2] + " " + prep[3] + " " + prep[4] + " " + prep[5]);
+                foreach (var sprite in HUDObjects)
+                {
+                    switch (sprite.Tag)
+                    {
+                        case "AmmoElement0":
+                            AmmoLeftItems[0].DisplayedDataInt = 0;
+                            break;
+                        case "AmmoElement1":
+                            AmmoLeftItems[1].DisplayedDataInt = 0;
+                            break;
+                        case "AmmoElement2":
+                            AmmoLeftItems[2].DisplayedDataInt = 0;
+                            break;
+                        case "AmmoElement3":
+                            AmmoLeftItems[3].DisplayedDataInt = 0;
+                            break;
+                        case "AmmoElement4":
+                            AmmoLeftItems[4].DisplayedDataInt = 0;
+                            break;
+                        case "AmmoElement5":
+                            AmmoLeftItems[5].DisplayedDataInt = 0;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            foreach (var hudsprite in HUDObjects)
+            {
+                switch (hudsprite.Tag)
+                {
+                    case "AmmoElement0":
+                        hudsprite.Sprite = AmmoLeftItems[0].DisplayElements[HealthLeftItems[0].DisplayedDataInt];
+                        break;
+                    case "AmmoElement1":
+                        hudsprite.Sprite = AmmoLeftItems[1].DisplayElements[HealthLeftItems[1].DisplayedDataInt];
+                        break;
+                    case "AmmoElement2":
+                        hudsprite.Sprite = AmmoLeftItems[2].DisplayElements[HealthLeftItems[2].DisplayedDataInt];
+                        break;
+                    case "AmmoElement3":
+                        hudsprite.Sprite = AmmoLeftItems[3].DisplayElements[HealthLeftItems[3].DisplayedDataInt];
+                        break;
+                    case "AmmoElement4":
+                        hudsprite.Sprite = AmmoLeftItems[4].DisplayElements[HealthLeftItems[4].DisplayedDataInt];
+                        break;
+                    case "AmmoElement5":
+                        hudsprite.Sprite = AmmoLeftItems[5].DisplayElements[HealthLeftItems[5].DisplayedDataInt];
+                        break;
+                    default:
+                        break;
                 }
             }
         }
