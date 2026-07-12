@@ -200,6 +200,10 @@ namespace Plat2d_2.EngineCore
             {
                 Log.Highlight("Enemy is being unregistered");
             }
+            if (sprite.Tag == "Collectable")
+            {
+                Log.Highlight("Enemy is being unregistered");
+            }
             AllSprites.Remove(sprite);
             //LevelSprites[DemoGame.currentLevel].Remove(sprite);
         }

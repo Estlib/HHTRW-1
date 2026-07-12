@@ -79,6 +79,7 @@ namespace Plat2d_2
         int fpsCounter = 0; //how many fps this frame
         Stopwatch fpsTimer = Stopwatch.StartNew(); //timerthingy for the frametime ms counting
         public double lastFrameTime = 0; //how long last frame took
+        Random RNGIDGEN = new Random();
 
         /* hud stuff */
         //random
@@ -207,7 +208,7 @@ namespace Plat2d_2
         Random rngFrom8To8 = new Random();
         int waitForThisManyFrames = 100;
         //Item templates
-        public List<Collectable> ItemTemplates = new List<Collectable>();
+        public List<Collectable> DroppedItems = new List<Collectable>();
 
 
         /// <summary>
@@ -227,6 +228,7 @@ namespace Plat2d_2
 
         public override void OnLoad()
         {
+            
             int gameHasWaitedFor = 0;
             //fps tools
             timeBeginPeriod(1); //set time measuring to milliseconds
@@ -279,22 +281,37 @@ namespace Plat2d_2
             }
             LogUtility.ClearLineOnly(6);
 
-            //Item Templates:
-            ItemTemplates.Add(new Collectable(
-                new Sprite2d(
-                    new Vector2(-16f, -16f),
-                    new Vector2(1, 1),
-                    new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
-                    "Collectable"
-                    )
-                ,
-                new List<Bitmap>() {
-                    new Bitmap(Image.FromFile($"assets/sprites/tiles/noart/testobject3.png")),                    
-                    new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png"))
-                    },
-                6,
-                ItemType.Health
-                ));
+            ////Item Templates:
+            //ItemTemplates.Add(new Collectable(
+            //    new Sprite2d(
+            //        new Vector2(-16f, -16f),
+            //        new Vector2(1, 1),
+            //        new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
+            //        "Collectable"
+            //        )
+            //    ,
+            //    new List<Bitmap>() {
+            //        new Bitmap(Image.FromFile($"assets/sprites/tiles/noart/testobject3.png")),                    
+            //        new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png"))
+            //        },
+            //    6,
+            //    ItemType.Health
+            //    ));
+            //ItemTemplates.Add(new Collectable(
+            //    new Sprite2d(
+            //        new Vector2(-16f, -16f),
+            //        new Vector2(1, 1),
+            //        new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
+            //        "Collectable"
+            //        )
+            //    ,
+            //    new List<Bitmap>() {
+            //        new Bitmap(Image.FromFile($"assets/sprites/tiles/noart/testobject3.png")),                    
+            //        new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png"))
+            //        },
+            //    6,
+            //    ItemType.Ammo
+            //    ));
 
             //Start game on title screen   \/
             state = CallState.TitleScreen;
@@ -729,6 +746,52 @@ namespace Plat2d_2
                         sfxInstance.Play("enemy ow");
                         pointScoreTally += 250;
                         SetHudScore(ScoreNumbers);
+                        //
+                        ItemType thisItem = ItemType.Undefined;
+                        
+                        Collectable loot = (new Collectable(
+                        new Sprite2d(
+                            new Vector2(enemyobject.sprite2d.Position.X, enemyobject.sprite2d.Position.Y),
+                            new Vector2(16, 16),
+                            new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
+                            "Collectable"
+                            )
+                        ,
+                        new List<Bitmap>() {
+                        new Bitmap(Image.FromFile($"assets/sprites/tiles/noart/testobject3.png")),
+                        new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
+                        new Bitmap(Image.FromFile($"assets/sprites/tiles/noart/testobject2.png")),
+                                },
+                            6,
+                            thisItem
+                            ));
+                        int itemResult = RNGIDGEN.Next(1, 100);
+                        if (itemResult > 0 && itemResult < 50)
+                        {
+                            loot.WhatThisType = ItemType.Ammo;
+                            loot.Value = 6;
+                            loot.Sprite.Sprite = loot.AniFrames[1];
+                        }
+                        else if (itemResult > 49 && itemResult < 80)
+                        {
+                            loot.WhatThisType = ItemType.Health;
+                            loot.Value = 2;
+                            loot.Sprite.Sprite = loot.AniFrames[0];
+                        }
+                        else
+                        {
+                            loot.WhatThisType = ItemType.Life;
+                            loot.Value = 1;
+                            loot.Sprite.Sprite = loot.AniFrames[2];
+                        }
+                        loot.Sprite.RNGID = RNGIDGEN.Next(1, 9999);
+
+                        loot.Sprite.CreateItem();
+                        //sfxInstance.Play("item drop");
+                        loot.Sprite.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
+                        //loot.Sprite.AddForce();
+                        DroppedItems.Add(loot);
+                        //
                         enemyobject.sprite2d.DestroySelf();
                         enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
                         enemiesv2.Remove(enemiesv2.ElementAt(i));
@@ -806,6 +869,17 @@ namespace Plat2d_2
                 }
 
             }
+
+            //update fallen objects
+            if (DroppedItems != null)
+            {
+                foreach(var collectable in DroppedItems)
+                {
+                    collectable.Sprite.UpdatePosition();
+                }
+            }
+
+
 
             //object collisions
             Sprite2d coin = player.IsColliding("Coin"); //checks for collisions between the player and the coin.
@@ -927,6 +1001,49 @@ namespace Plat2d_2
                 SetHudScore(ScoreNumbers);
                 //Todo: call ammo count lowering too
                 enemy.DestroySelf();
+            }
+            for (int i = 0; i < DroppedItems.Count; i++) 
+            {     
+                Collectable collectable = DroppedItems[i];
+                Sprite2d touching = player.IsColliding("Collectable");
+                if (touching != null)
+                {
+
+                    if (collectable.Sprite.RNGID == touching.RNGID)
+                    {
+                        switch (collectable.WhatThisType)
+                        {
+                            case ItemType.Undefined:
+                                Log.Warning("Player has collected an underfined item. No action performed");
+                                break;
+                            case ItemType.Ammo:
+                                activeWeapon.AmmoLeft += collectable.Value;
+                                sfxInstance.Play("ammopick");
+                                SetHudAmmobar(AmmoLeftItems);
+                                break;
+                            case ItemType.Health:
+                                playerHealth += collectable.Value;
+                                sfxInstance.Play("healthpick");
+                                SetHudHealthbar(HealthLeftItems);
+                                break;
+                            case ItemType.Life:
+                                playerLives += collectable.Value;
+                                sfxInstance.Play("GEMS 1-up");
+                                SetHudLives(Lives);
+                                break;
+                            case ItemType.Trigger:
+                            case ItemType.WeaponUnlock:
+                            case ItemType.StoryItem:
+                            default:
+                                Log.Warning("Unimplemented Collectable Case");
+                                break;
+                        }
+                        collectable.Sprite.DestroySelf();
+                        collectable.Sprite.DestroyStatic(collectable.Sprite);
+                        DroppedItems.Remove(DroppedItems.ElementAt(i));
+                    }
+                }
+
             }
 
             //hud management

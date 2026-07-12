@@ -24,6 +24,7 @@ namespace Plat2d_2.EngineCore
         private Bitmap bitmap;
         public int[] worldData = null;
         public bool IsHudObject = false;
+        public int RNGID = 0;
         /// <summary>
         /// 
         /// </summary>
@@ -233,6 +234,59 @@ namespace Plat2d_2.EngineCore
             body.SetMassFromShapes();
 
             body.SetUserData(this);
+            Log.Info($"{this.Tag} has been made dynamic");
+        }
+        public void CreateItem()
+        {
+            Log.Highlight($"{this.Tag} is being made dynamic");
+            // Define the dynamic body. We set its position and call the body factory.
+            //bodyDef = new BodyDef();
+            bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
+            body = EngineCore.world.CreateBody(bodyDef);
+            //if (this.Tag == "Bullet")
+            //{
+            //    body.IsBullet();
+            //}
+
+            // Define another box shape for our dynamic body.
+            PolygonDef shapeDef = new PolygonDef();
+            shapeDef.SetAsBox(0.1f, 0.1f);
+
+            // Set the box density to be non-zero, so it will be dynamic.
+            //if (this.Tag == "Bullet")
+            //{
+            //    shapeDef.Density = 0.01f;
+
+            //}
+            //else
+            //{
+                shapeDef.Density = 1000.0f;
+            //}
+
+            // Override the default friction.
+            shapeDef.Friction = 2.0f;
+
+            shapeDef.Restitution = 0.0f;
+
+            try
+            {
+                // Add the shape to the body.
+                body.CreateShape(shapeDef);  //enemy body assert error here
+
+            }
+            catch (Exception)
+            {
+                Log.Error($"Couldnt create a body for {this.Sprite}");
+                Thread.Sleep(3000);
+
+            }
+
+            // Now tell the dynamic body to compute it's mass properties base
+            // on its shape.
+            body.SetMassFromShapes();
+
+            body.SetUserData(this);
+
             Log.Info($"{this.Tag} has been made dynamic");
         }
         /// <summary>
