@@ -175,6 +175,7 @@
     <Compile Include="EngineCore\ObjectControllers\WorldController.cs" />
     <Compile Include="EngineCore\ObjectTypes\Area.cs" />
     <Compile Include="EngineCore\ObjectTypes\Block.cs" />
+    <Compile Include="EngineCore\ObjectTypes\Collectable.cs" />
     <Compile Include="EngineCore\ObjectTypes\HUDObject.cs" />
     <Compile Include="EngineCore\ObjectTypes\Weapon.cs" />
     <Compile Include="EngineCore\ObjectTypes\WorldStructure.cs" />

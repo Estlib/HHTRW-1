@@ -206,6 +206,8 @@ namespace Plat2d_2
         int keyTimeoutX = 25;
         Random rngFrom8To8 = new Random();
         int waitForThisManyFrames = 100;
+        //Item templates
+        public List<Collectable> ItemTemplates = new List<Collectable>();
 
 
         /// <summary>
@@ -276,6 +278,23 @@ namespace Plat2d_2
                 Log.Info($"{sfxR.Name}");
             }
             LogUtility.ClearLineOnly(6);
+
+            //Item Templates:
+            ItemTemplates.Add(new Collectable(
+                new Sprite2d(
+                    new Vector2(-16f, -16f),
+                    new Vector2(1, 1),
+                    new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
+                    "Collectable"
+                    )
+                ,
+                new List<Bitmap>() {
+                    new Bitmap(Image.FromFile($"assets/sprites/tiles/noart/testobject3.png")),                    
+                    new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png"))
+                    },
+                6,
+                ItemType.Health
+                ));
 
             //Start game on title screen   \/
             state = CallState.TitleScreen;
@@ -2137,6 +2156,13 @@ namespace Plat2d_2
             }
         }
 
+        /// <summary>
+        /// evoke this method when enemy needs to drop an item
+        /// </summary>
+        private void DropAnItem()
+        {
+
+        }
         private string DigitNormalizer(int normalizeint, string what)
         {
             int length = normalizeint.ToString().Length;
