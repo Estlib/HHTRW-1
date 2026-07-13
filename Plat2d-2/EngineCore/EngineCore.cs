@@ -17,6 +17,7 @@ using System.Windows.Forms;
 
 namespace Plat2d_2.EngineCore
 {
+    
 
     public class Canvas : Form
     {
@@ -236,6 +237,9 @@ namespace Plat2d_2.EngineCore
         //float timeStep = 100000.01f;
         int velocityIterations = 16;
         int positionIterations = 16;
+
+        public bool ShowSolids = false;
+
         void GameLoop()
         {
 
@@ -370,6 +374,11 @@ namespace Plat2d_2.EngineCore
                         sprite.Scale.Y
                     );
                 }
+            }
+
+            if (ShowSolids)
+            {
+                DrawSolids(backGraphics);
             }
 
             for (int i = 0; i < HUDSprites.Count; i++) 
@@ -529,6 +538,95 @@ namespace Plat2d_2.EngineCore
             //}
 
         }
+
+        private void DrawSolids(Graphics gfx)
+        {
+            // this is clanker code
+            using (Pen dynamicPen = new Pen(System.Drawing.Color.Lime, 1))
+            using (Pen staticPen = new Pen(System.Drawing.Color.Red, 1))
+            using (Pen sleepingPen = new Pen(System.Drawing.Color.Gray, 1))
+            {
+                for (Body body = world.GetBodyList();
+                     body != null;
+                     body = body.GetNext())
+                {
+                    Pen pen;
+
+                    if (body.IsSleeping())
+                    {
+                        pen = sleepingPen;
+                    }
+                    else if (body.IsStatic())
+                    {
+                        pen = staticPen;
+                    }
+                    else
+                    {
+                        pen = dynamicPen;
+                    }
+
+                    for (Shape shape = body.GetShapeList();
+                         shape != null;
+                         shape = shape.GetNext())
+                    {
+                        PolygonShape polygon = shape as PolygonShape;
+
+                        if (polygon != null)
+                        {
+                            DrawPolygonShape(gfx, body, polygon, pen);
+                            continue;
+                        }
+
+                        CircleShape circle = shape as CircleShape;
+
+                        if (circle != null)
+                        {
+                            DrawCircleShape(gfx, body, circle, pen);
+                        }
+                    }
+                }
+            }
+        }
+        private void DrawPolygonShape(Graphics graphics,Body body,PolygonShape polygon,Pen pen)
+        {
+            // this is clanker code
+            Vec2[] vertices = polygon.GetVertices();
+            int vertexCount = polygon.VertexCount;
+
+            if (vertexCount < 2)
+                return;
+
+            PointF[] points = new PointF[vertexCount];
+
+            for (int i = 0; i < vertexCount; i++)
+            {
+                // Polygon vertices are local to the body.
+                Vec2 worldPoint = body.GetWorldPoint(vertices[i]);
+
+                points[i] = new PointF(
+                    worldPoint.X,
+                    worldPoint.Y
+                );
+            }
+
+            graphics.DrawPolygon(pen, points);
+        }
+
+        private void DrawCircleShape(Graphics graphics,Body body,CircleShape circle,Pen pen)
+        // this is clanker code
+        {
+            Vec2 center = body.GetWorldPoint(circle.GetLocalPosition());
+            float radius = circle.GetRadius();
+
+            graphics.DrawEllipse(
+                pen,
+                center.X - radius,
+                center.Y - radius,
+                radius * 2,
+                radius * 2
+            );
+        }
+
         //private void HudRendering(object sender, PaintEventArgs e)
         //{
         //    Graphics h = e.Graphics;

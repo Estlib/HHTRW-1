@@ -3135,6 +3135,7 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.Q) { respawntester = true; }
             if (e.KeyCode == Keys.Enter) { togglePause(); }
             if (e.KeyCode == Keys.X) { nextweapon = true; }
+            if (e.KeyCode == Keys.D) { ShowSolids = !ShowSolids; }
             //if (e.KeyCode == Keys.Return) { EngineCore.EngineCore.pausebuttoninput = !pausebuttoninput; }
         }
         public override void GetKeyUp(KeyEventArgs e)
@@ -3152,5 +3153,7 @@ namespace Plat2d_2
         {
             pauseGameKey = !pauseGameKey;
         }
+
+
     }
 }
