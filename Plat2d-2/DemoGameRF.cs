@@ -787,7 +787,7 @@ namespace Plat2d_2
                         loot.Sprite.RNGID = RNGIDGEN.Next(1, 9999);
 
                         loot.Sprite.CreateItem();
-                        //sfxInstance.Play("item drop");
+                        sfxInstance.Play("item drop");
                         loot.Sprite.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
                         //loot.Sprite.AddForce();
                         DroppedItems.Add(loot);
