@@ -173,7 +173,7 @@ namespace Plat2d_2.EngineCore
             shapeDef.Density = 0.0f;
 
             // The extents are the half-widths of the box.
-            shapeDef.SetAsBox(22.0f, 23.0f);
+            shapeDef.SetAsBox(8.0f, 8.0f,new Vec2(16,16),0);
 
             // Add the ground shape to the ground body.
             body.CreateShape(shapeDef);
@@ -183,6 +183,7 @@ namespace Plat2d_2.EngineCore
         /// <summary>
         /// Creates a dynamic body into the world.
         /// used for player only currently.
+        /// Remains for compatibility with old version of demogame
         /// </summary>
         public void CreateDynamic()
         {
@@ -236,12 +237,175 @@ namespace Plat2d_2.EngineCore
             body.SetUserData(this);
             Log.Info($"{this.Tag} has been made dynamic");
         }
+        /// <summary>
+        /// Method for all enemies
+        /// </summary>
+        public void CreateActor()
+        {
+            Log.Info($"{this.Tag} is being made dynamic");
+            // Define the dynamic body. We set its position and call the body factory.
+            //bodyDef = new BodyDef();
+            bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
+            bodyDef.FixedRotation = true;
+            
+            body = EngineCore.world.CreateBody(bodyDef);
+            //if (this.Tag == "Bullet")
+            //{
+            //    body.IsBullet();
+            //}
+
+            // Define another box shape for our dynamic body.
+            //PolygonDef shapeDef = new PolygonDef();
+            PolygonDef shapeDef = new PolygonDef();
+            shapeDef.SetAsBox(8.0f, 16.0f,new Vec2(16,16),0);
+            //shapeDef.
+            //Vec2[] vertices = new Vec2[4] {
+            //    new Vec2(this.Position.X + 8, this.Position.Y),
+            //    new Vec2(this.Position.X + 24, this.Position.Y),
+            //    new Vec2(this.Position.X + 24, this.Position.Y - 32),
+            //    new Vec2(this.Position.X + 8, this.Position.Y - 32)
+            //};
+            //shapeDef.Vertices = vertices;
+            Log.Highlight($"Vertices 0: {shapeDef.Vertices[0].X}{shapeDef.Vertices[0].Y}\n" +
+                $" 1: {shapeDef.Vertices[1].X}{shapeDef.Vertices[1].Y}\n" +
+                $" 2: {shapeDef.Vertices[2].X}{shapeDef.Vertices[2].Y}\n" +
+                $" 3: {shapeDef.Vertices[3].X}{shapeDef.Vertices[3].Y}");
+            //shapeDef.Vertices = vertices;
+            //shapeDef.VertexCount = 4;
+            //PolygonShape polygonShape = new PolygonShape(shapeDef) { };
+            
+            //shapeDef2.VertexCount = 4;
+            //shapeDef2.Vertices =vertices;
+
+
+            // Set the box density to be non-zero, so it will be dynamic.
+            //if (this.Tag == "Bullet")
+            //{
+            //    shapeDef.Density = 0.01f;
+
+            //}
+            //else
+            //{
+                shapeDef.Density = 1.0f;
+            //}
+
+            // Override the default friction.
+            shapeDef.Friction = 2.0f;
+
+            shapeDef.Restitution = 0.0f;
+
+            
+
+            try
+            {
+                // Add the shape to the body.
+                body.CreateShape(shapeDef);  //enemy body assert error here
+
+            }
+            catch (Exception)
+            {
+                Log.Error($"Couldnt create a body for {this.Sprite}");
+                Thread.Sleep(3000);
+
+            }
+
+            // Now tell the dynamic body to compute it's mass properties base
+            // on its shape.
+            body.SetMassFromShapes();
+
+            body.SetUserData(this);
+            Log.Info($"{this.Tag} has been made dynamic");
+        }
+        /// <summary>
+        /// player-only dynamic
+        /// </summary>
+        public void CreatePlayer()
+        {
+            Log.Info($"{this.Tag} is being made dynamic");
+            // Define the dynamic body. We set its position and call the body factory.
+            //bodyDef = new BodyDef();
+            bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
+            bodyDef.FixedRotation = true;
+            //bodyDef.LinearDamping = 10;
+            
+            body = EngineCore.world.CreateBody(bodyDef);
+            //if (this.Tag == "Bullet")
+            //{
+            //    body.IsBullet();
+            //}
+
+            // Define another box shape for our dynamic body.
+            //PolygonDef shapeDef = new PolygonDef();
+            PolygonDef shapeDef = new PolygonDef();
+            shapeDef.SetAsBox(7.0f, 14.0f,new Vec2(16,18),0);
+            //shapeDef.
+            //Vec2[] vertices = new Vec2[4] {
+            //    new Vec2(this.Position.X + 8, this.Position.Y),
+            //    new Vec2(this.Position.X + 24, this.Position.Y),
+            //    new Vec2(this.Position.X + 24, this.Position.Y - 32),
+            //    new Vec2(this.Position.X + 8, this.Position.Y - 32)
+            //};
+            //shapeDef.Vertices = vertices;
+            Log.Highlight($"Vertices 0: {shapeDef.Vertices[0].X}{shapeDef.Vertices[0].Y}\n" +
+                $" 1: {shapeDef.Vertices[1].X}{shapeDef.Vertices[1].Y}\n" +
+                $" 2: {shapeDef.Vertices[2].X}{shapeDef.Vertices[2].Y}\n" +
+                $" 3: {shapeDef.Vertices[3].X}{shapeDef.Vertices[3].Y}");
+            //shapeDef.Vertices = vertices;
+            //shapeDef.VertexCount = 4;
+            //PolygonShape polygonShape = new PolygonShape(shapeDef) { };
+            
+            //shapeDef2.VertexCount = 4;
+            //shapeDef2.Vertices =vertices;
+
+
+            // Set the box density to be non-zero, so it will be dynamic.
+            //if (this.Tag == "Bullet")
+            //{
+            //    shapeDef.Density = 0.01f;
+
+            //}
+            //else
+            //{
+                shapeDef.Density = 1.0f;
+            //}
+
+            // Override the default friction.
+            shapeDef.Friction = 2.0f;
+
+            shapeDef.Restitution = 00.0f;
+
+            
+
+            try
+            {
+                // Add the shape to the body.
+                body.CreateShape(shapeDef);  //enemy body assert error here
+
+            }
+            catch (Exception)
+            {
+                Log.Error($"Couldnt create a body for {this.Sprite}");
+                Thread.Sleep(3000);
+
+            }
+
+            // Now tell the dynamic body to compute it's mass properties base
+            // on its shape.
+            body.SetMassFromShapes();
+
+            body.SetUserData(this);
+            Log.Info($"{this.Tag} has been made dynamic");
+        }
+        /// <summary>
+        /// dropped item dynamic
+        /// </summary>
         public void CreateItem()
         {
             Log.Highlight($"{this.Tag} is being made dynamic");
             // Define the dynamic body. We set its position and call the body factory.
             //bodyDef = new BodyDef();
             bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
+            bodyDef.FixedRotation = true;
             body = EngineCore.world.CreateBody(bodyDef);
             //if (this.Tag == "Bullet")
             //{
@@ -250,7 +414,7 @@ namespace Plat2d_2.EngineCore
 
             // Define another box shape for our dynamic body.
             PolygonDef shapeDef = new PolygonDef();
-            shapeDef.SetAsBox(0.1f, 0.1f);
+            shapeDef.SetAsBox(8.0f, 8.0f,new Vec2(8,8),0);
 
             // Set the box density to be non-zero, so it will be dynamic.
             //if (this.Tag == "Bullet")
@@ -298,6 +462,27 @@ namespace Plat2d_2.EngineCore
         {
             body.ApplyImpulse(new Vec2(force.X, force.Y), new Vec2(point.X, point.Y));
         }
+
+        public void ApplyYImpulse(Vector2 force, Vector2 point)
+        {
+            ApplyLinearImpulse(force.Y);
+        }
+
+        public void ApplyLinearImpulse(float impulse)
+        {
+            if (this.body.IsSleeping() == true)
+            {
+                this.body.WakeUp();
+            }
+            //Vec2 movingness = body.GetLinearVelocity();
+            //body.ApplyImpulse(new Vec2(movingness.X, force.Y), new Vec2(movingness.X, point.Y));
+            float currentAvel = this.body.GetLinearVelocity().Y;
+            float currentLvel = this.body.GetLinearVelocity().Y;
+            //this.body.SetLinearVelocity( new Vec2 (this.body.GetLinearVelocity().X, currentAvel += (-this.body.GetInertia()) * impulse));
+            this.body.SetAngularVelocity( currentLvel += (this.body.GetInertia()-((this.body.GetInertia()*2)) * impulse));
+        }
+
+
         /// <summary>
         /// Method to apply a force to a dynamic body
         /// </summary>

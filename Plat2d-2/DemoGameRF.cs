@@ -228,7 +228,7 @@ namespace Plat2d_2
 
         public override void OnLoad()
         {
-            
+
             int gameHasWaitedFor = 0;
             //fps tools
             timeBeginPeriod(1); //set time measuring to milliseconds
@@ -657,7 +657,7 @@ namespace Plat2d_2
                             }
                         }
                         currentbulletsonscreen++;
-                        
+
                         //Log.Info($"Bullet fired. Limit {maxbulletsallowed}. Onscreen {currentbulletsonscreen}");
                     }
                     else
@@ -665,8 +665,8 @@ namespace Plat2d_2
                         //sfxInstance.Play("error");
                         LogUtility.LogCurrentWeaponState($"Fired Bullet Limit reached. Limit {activeWeapon.MaxBulletCount}. Onscreen {currentbulletsonscreen}", true);
                     }
-                }                
-                
+                }
+
             }
 
             //player control & collisions
@@ -691,6 +691,32 @@ namespace Plat2d_2
             {
                 player.SetVelocity(new Vector2(120, player.GetYVelocity()));
             }
+            if (!left && !right)
+            {
+                int dampeningValue = 1;
+                if (facedirection == 1)
+                {
+                    if (player.GetXVelocity() >= 0)
+                    {
+                        player.SetVelocity(new Vector2(0, player.GetYVelocity()));
+                    }
+                    else
+                    {
+                        player.SetVelocity(new Vector2((player.GetXVelocity() - dampeningValue + 10) + dampeningValue, player.GetYVelocity()));
+                    }
+                }
+                else if (facedirection == 0)
+                {
+                    if (player.GetXVelocity() <= 0)
+                    {
+                        player.SetVelocity(new Vector2(0, player.GetYVelocity()));
+                    }
+                    else
+                    {
+                        player.SetVelocity(new Vector2((player.GetXVelocity() + dampeningValue + 10) - dampeningValue, player.GetYVelocity()));
+                    }
+                }
+            }
             if (jump) //performs jumpstepping when the jump key boolean is true
             {
                 if (player.IsColliding("Ground") != null) //if player is colliding with the ground, only then allow the player to jump
@@ -700,9 +726,25 @@ namespace Plat2d_2
                 }
                 jumpmode = true; //sets the jumpmode as true, the player is currently jumping
             }
+            float impadd = 0;
+            if (right)
+            {
+                impadd = 160000;
+            }
+            else if (left)
+            {
+                impadd = -160000;
+            }
+            else
+            {
+                impadd = 0;
+            }
             if (remainingJumpSteps > 0) //if the jump steps are greater than 0
             {
-                player.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
+
+                player.ApplyImpulse(new Vector2(impadd, -160000), Vector2.Zero());
+                //player.ApplyYImpulse(new Vector2(0, -160000), Vector2.Zero());
+                //player.ApplyLinearImpulse(300000);
                 //player.SetVelocity(new Vector2(player.GetXVelocity(), -12800)); //then it applies a velocity to the player in the up direction, forming a jump
                 remainingJumpSteps--; //subtract a frame from the jumpsteps
             }
@@ -721,7 +763,7 @@ namespace Plat2d_2
 
             if (onGround && player.GetYVelocity() > 0)
             {
-                player.SetVelocity(new Vector2(player.GetXVelocity(), 0));
+                //player.SetVelocity(new Vector2(player.GetXVelocity(), 0));
                 remainingJumpSteps = 0;
                 jumpmode = false;
             }
@@ -748,7 +790,7 @@ namespace Plat2d_2
                         SetHudScore(ScoreNumbers);
                         //
                         ItemType thisItem = ItemType.Undefined;
-                        
+
                         Collectable loot = (new Collectable(
                         new Sprite2d(
                             new Vector2(enemyobject.sprite2d.Position.X, enemyobject.sprite2d.Position.Y),
@@ -873,7 +915,7 @@ namespace Plat2d_2
             //update fallen objects
             if (DroppedItems != null)
             {
-                foreach(var collectable in DroppedItems)
+                foreach (var collectable in DroppedItems)
                 {
                     collectable.Sprite.UpdatePosition();
                 }
@@ -1002,8 +1044,8 @@ namespace Plat2d_2
                 //Todo: call ammo count lowering too
                 enemy.DestroySelf();
             }
-            for (int i = 0; i < DroppedItems.Count; i++) 
-            {     
+            for (int i = 0; i < DroppedItems.Count; i++)
+            {
                 Collectable collectable = DroppedItems[i];
                 Sprite2d touching = player.IsColliding("Collectable");
                 if (touching != null)
@@ -1341,7 +1383,7 @@ namespace Plat2d_2
                 {
                     if (invincibleFrameHasBeenDisplayedFor < overrideSpriteForFrames)
                     {
-                        
+
                         invincibleFrameHasBeenDisplayedFor++;
                     }
                     else
@@ -1361,7 +1403,7 @@ namespace Plat2d_2
             {
                 player.Sprite = playerSpritesBitmap[steps];
             }
-            else if (isInvincible & overrideSprite)                
+            else if (isInvincible & overrideSprite)
             {
                 player.Sprite = playerSpritesBitmap[23];
             }
@@ -1453,7 +1495,7 @@ namespace Plat2d_2
                     HUDObjects[i].Position.X = -(x - 72);
                 }
             }
-            for(int i = 0;i < HUDObjects.Count;i++)
+            for (int i = 0; i < HUDObjects.Count; i++)
             {
                 if (HUDObjects[i].Tag == "ScoreElement0")
                 {
@@ -1877,7 +1919,7 @@ namespace Plat2d_2
                     {
                         player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerSpritesBitmap[0], "Player");
                         //player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerStand, "Player");
-                        player.CreateDynamic();
+                        player.CreatePlayer();
                         //pass a list of sprites here, changing happens by animating list numbers, limited by if limits
                         //see https://www.youtube.com/results?search_query=box2d+tutorial+c%23
                         //playercollision = new Shape2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), "Player");
@@ -1912,7 +1954,7 @@ namespace Plat2d_2
                                 0
                             );
 
-                        enemyv2.sprite2d.CreateDynamic();
+                        enemyv2.sprite2d.CreateActor();
                         enemiesv2.Add(enemyv2);
 
                     }
@@ -1950,7 +1992,7 @@ namespace Plat2d_2
                             0
                         );
 
-                        enemyv2.sprite2d.CreateDynamic();
+                        enemyv2.sprite2d.CreateActor();
                         enemiesv2.Add(enemyv2);
 
                     }
@@ -2065,7 +2107,7 @@ namespace Plat2d_2
                                             WeaponIcons,
                                             0
                                             );
-                                            break; 
+                                            break;
                                         case "Willo":
                                             weaponicon = new HUDObject(
                                             new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/willo_icon", true, "WeaponIconElement"),
@@ -2152,27 +2194,27 @@ namespace Plat2d_2
                                         );
                                     break;
 
-                                    
+
                                 case "Health":
                                     string digitNormalH = DigitNormalizer(playerHealth, "Health");
                                     Log.Info(digitNormalH);
                                     HealthLeftItems.Add(
                                         new HUDObject(
-                                            new Sprite2d(new Vector2(i * 16, (j * 16)+8), new Vector2(8, 8), $"hud/{digitNormalH[0]}", true, "HealthElement0"),
+                                            new Sprite2d(new Vector2(i * 16, (j * 16) + 8), new Vector2(8, 8), $"hud/{digitNormalH[0]}", true, "HealthElement0"),
                                             BarElements,
                                             0
                                             )
                                         );
                                     HealthLeftItems.Add(
                                         new HUDObject(
-                                            new Sprite2d(new Vector2(i * 16+8, (j * 16)+8), new Vector2(8, 8), $"hud/{digitNormalH[1]}", true, "HealthElement1"),
+                                            new Sprite2d(new Vector2(i * 16 + 8, (j * 16) + 8), new Vector2(8, 8), $"hud/{digitNormalH[1]}", true, "HealthElement1"),
                                             BarElements,
                                             0
                                             )
                                         );
                                     HealthLeftItems.Add(
                                         new HUDObject(
-                                            new Sprite2d(new Vector2(i * 16+16, (j * 16)+8), new Vector2(8, 8), $"hud/{digitNormalH[2]}", true, "HealthElement2"),
+                                            new Sprite2d(new Vector2(i * 16 + 16, (j * 16) + 8), new Vector2(8, 8), $"hud/{digitNormalH[2]}", true, "HealthElement2"),
                                             BarElements,
                                             0
                                             )
@@ -2182,27 +2224,27 @@ namespace Plat2d_2
                                 case "Gems":
 
                                     string digitNormalG = DigitNormalizer(crystalScoreTally, "Gems");
-                                        Gems.Add(
-                                            new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalG[0]}", true, "CrystalElement0"),
-                                                DigitBMP,
-                                                0
-                                                )
-                                            );
-                                        Gems.Add(
-                                            new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16 + 8, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalG[1]}", true, "CrystalElement1"),
-                                                DigitBMP,
-                                                0
-                                                )
-                                            );
-                                        Gems.Add(
-                                            new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16 + 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalG[2]}", true, "CrystalElement2"),
-                                                DigitBMP,
-                                                0
-                                                )
-                                            );
+                                    Gems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalG[0]}", true, "CrystalElement0"),
+                                            DigitBMP,
+                                            0
+                                            )
+                                        );
+                                    Gems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16 + 8, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalG[1]}", true, "CrystalElement1"),
+                                            DigitBMP,
+                                            0
+                                            )
+                                        );
+                                    Gems.Add(
+                                        new HUDObject(
+                                            new Sprite2d(new Vector2(i * 16 + 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalG[2]}", true, "CrystalElement2"),
+                                            DigitBMP,
+                                            0
+                                            )
+                                        );
                                     break;
                                 case "Score":
                                     string digitNormalS = DigitNormalizer(pointScoreTally, "Score");
@@ -2215,49 +2257,49 @@ namespace Plat2d_2
                                         );
                                     ScoreNumbers.Add(
                                         new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16+8, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[1]}", true, "ScoreElement1"),
+                                                new Sprite2d(new Vector2(i * 16 + 8, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[1]}", true, "ScoreElement1"),
                                                 DigitBMP,
                                                 0
                                                 )
                                         );
                                     ScoreNumbers.Add(
                                         new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16+16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[2]}", true, "ScoreElement2"),
+                                                new Sprite2d(new Vector2(i * 16 + 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[2]}", true, "ScoreElement2"),
                                                 DigitBMP,
                                                 0
                                                 )
                                         );
                                     ScoreNumbers.Add(
                                         new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16+24, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[3]}", true, "ScoreElement3"),
+                                                new Sprite2d(new Vector2(i * 16 + 24, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[3]}", true, "ScoreElement3"),
                                                 DigitBMP,
                                                 0
                                                 )
                                         );
                                     ScoreNumbers.Add(
                                         new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16+32, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[4]}", true, "ScoreElement4"),
+                                                new Sprite2d(new Vector2(i * 16 + 32, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[4]}", true, "ScoreElement4"),
                                                 DigitBMP,
                                                 0
                                                 )
                                         );
                                     ScoreNumbers.Add(
                                         new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16+40, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[5]}", true, "ScoreElement5"),
+                                                new Sprite2d(new Vector2(i * 16 + 40, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[5]}", true, "ScoreElement5"),
                                                 DigitBMP,
                                                 0
                                                 )
                                         );
                                     ScoreNumbers.Add(
                                         new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16+48, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[6]}", true, "ScoreElement6"),
+                                                new Sprite2d(new Vector2(i * 16 + 48, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[6]}", true, "ScoreElement6"),
                                                 DigitBMP,
                                                 0
                                                 )
                                         );
                                     ScoreNumbers.Add(
                                         new HUDObject(
-                                                new Sprite2d(new Vector2(i * 16+56, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[7]}", true, "ScoreElement7"),
+                                                new Sprite2d(new Vector2(i * 16 + 56, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[7]}", true, "ScoreElement7"),
                                                 DigitBMP,
                                                 0
                                                 )
@@ -2329,7 +2371,7 @@ namespace Plat2d_2
             {
                 bool isOdd = false;
                 string item = "_";
-                if ((normalizeint%2) != 0)
+                if ((normalizeint % 2) != 0)
                 {
                     item = "-";
                 }
@@ -2367,7 +2409,7 @@ namespace Plat2d_2
             {
                 bool isOdd = false;
                 string item = "_";
-                if ((normalizeint%2) != 0)
+                if ((normalizeint % 2) != 0)
                 {
                     item = "-";
                 }
@@ -2629,13 +2671,13 @@ namespace Plat2d_2
                             break;
                         case "Barker":
                             weaponicon.Display.Sprite = weaponicon.DisplayElements[2];
-                            break;      
+                            break;
                         case "Väits":
                             weaponicon.Display.Sprite = weaponicon.DisplayElements[0];
-                            break;      
+                            break;
                         case "Willo":
                             weaponicon.Display.Sprite = weaponicon.DisplayElements[1];
-                            break;      
+                            break;
                         default:
                             weaponicon.Display.Sprite = weaponicon.DisplayElements[4];
                             break;
@@ -2663,13 +2705,13 @@ namespace Plat2d_2
                     }
                 }
             }
-           
+
         }
 
         private void SetHudScore(List<HUDObject> scoreNumbers)
         {
             string normalized = DigitNormalizer(pointScoreTally, "Score");
-            Log.Info(normalized+" "+pointScoreTally);
+            Log.Info(normalized + " " + pointScoreTally);
             foreach (var sprite in HUDObjects)
             {
                 switch (sprite.Tag)
@@ -2923,31 +2965,31 @@ namespace Plat2d_2
                 //}
                 //    }
                 //}
-                
-                    //switch (hudsprite.Tag)
-                    //{
-                    //    case "AmmoElement0":
-                    //        hudsprite.Sprite = AmmoLeftItems[0].DisplayElements[HealthLeftItems[0].DisplayedDataInt];
-                    //        break;
-                    //    case "AmmoElement1":
-                    //        hudsprite.Sprite = AmmoLeftItems[1].DisplayElements[HealthLeftItems[1].DisplayedDataInt];
-                    //        break;
-                    //    case "AmmoElement2":
-                    //        hudsprite.Sprite = AmmoLeftItems[2].DisplayElements[HealthLeftItems[2].DisplayedDataInt];
-                    //        break;
-                    //    case "AmmoElement3":
-                    //        hudsprite.Sprite = AmmoLeftItems[3].DisplayElements[HealthLeftItems[3].DisplayedDataInt];
-                    //        break;
-                    //    case "AmmoElement4":
-                    //        hudsprite.Sprite = AmmoLeftItems[4].DisplayElements[HealthLeftItems[4].DisplayedDataInt];
-                    //        break;
-                    //    case "AmmoElement5":
-                    //        hudsprite.Sprite = AmmoLeftItems[5].DisplayElements[HealthLeftItems[5].DisplayedDataInt];
-                    //        break;
-                    //    default:
-                    //        break;
-                    //
-                }
+
+                //switch (hudsprite.Tag)
+                //{
+                //    case "AmmoElement0":
+                //        hudsprite.Sprite = AmmoLeftItems[0].DisplayElements[HealthLeftItems[0].DisplayedDataInt];
+                //        break;
+                //    case "AmmoElement1":
+                //        hudsprite.Sprite = AmmoLeftItems[1].DisplayElements[HealthLeftItems[1].DisplayedDataInt];
+                //        break;
+                //    case "AmmoElement2":
+                //        hudsprite.Sprite = AmmoLeftItems[2].DisplayElements[HealthLeftItems[2].DisplayedDataInt];
+                //        break;
+                //    case "AmmoElement3":
+                //        hudsprite.Sprite = AmmoLeftItems[3].DisplayElements[HealthLeftItems[3].DisplayedDataInt];
+                //        break;
+                //    case "AmmoElement4":
+                //        hudsprite.Sprite = AmmoLeftItems[4].DisplayElements[HealthLeftItems[4].DisplayedDataInt];
+                //        break;
+                //    case "AmmoElement5":
+                //        hudsprite.Sprite = AmmoLeftItems[5].DisplayElements[HealthLeftItems[5].DisplayedDataInt];
+                //        break;
+                //    default:
+                //        break;
+                //
+            }
             foreach (var hudsprite in HUDObjects)
             {
                 if (hudsprite.Tag == "AmmoElement0")
