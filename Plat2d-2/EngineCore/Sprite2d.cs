@@ -414,7 +414,7 @@ namespace Plat2d_2.EngineCore
 
             // Define another box shape for our dynamic body.
             PolygonDef shapeDef = new PolygonDef();
-            shapeDef.SetAsBox(8.0f, 8.0f,new Vec2(8,8),0);
+            shapeDef.SetAsBox(8.0f, 7.0f,new Vec2(8,10),0);
 
             // Set the box density to be non-zero, so it will be dynamic.
             //if (this.Tag == "Bullet")

@@ -727,22 +727,26 @@ namespace Plat2d_2
                 jumpmode = true; //sets the jumpmode as true, the player is currently jumping
             }
             float impadd = 0;
+            float impYadd = 0;
             if (right)
             {
-                impadd = 160000;
+                impadd = 320000;
+                impYadd = 320000;
             }
             else if (left)
             {
-                impadd = -160000;
+                impadd = -320000;
+                impYadd = 320000;
             }
             else
             {
                 impadd = 0;
+                impYadd = 0;
             }
             if (remainingJumpSteps > 0) //if the jump steps are greater than 0
             {
 
-                player.ApplyImpulse(new Vector2(impadd, -160000), Vector2.Zero());
+                player.ApplyImpulse(new Vector2(impadd, -(160000+impYadd)), Vector2.Zero());
                 //player.ApplyYImpulse(new Vector2(0, -160000), Vector2.Zero());
                 //player.ApplyLinearImpulse(300000);
                 //player.SetVelocity(new Vector2(player.GetXVelocity(), -12800)); //then it applies a velocity to the player in the up direction, forming a jump
