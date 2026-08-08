@@ -5,6 +5,7 @@ using Box2DX.Dynamics;
 using Box2DX.Common;
 using System;
 using System.Threading;
+using Plat2d_2.EngineCore.ObjectTypes;
 
 namespace Plat2d_2.EngineCore
 {
@@ -25,6 +26,7 @@ namespace Plat2d_2.EngineCore
         public int[] worldData = null;
         public bool IsHudObject = false;
         public int RNGID = 0;
+        public Block BlockData { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -111,6 +113,29 @@ namespace Plat2d_2.EngineCore
             this.Position = Position;
             this.Scale = Scale;
             this.Tag = Tag;
+
+            //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
+            //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
+            this.Sprite = Reference.Sprite; //sets the sprite bitmap to be the one from the reference sprite
+
+            //Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
+            Log.InfoContinuous($"{Directory} {Tag} ADD");
+            EngineCore.RegisterSprite(this);
+        }
+
+        /// <summary>
+        /// has block
+        /// </summary>
+        /// <param name="Position"></param>
+        /// <param name="Scale"></param>
+        /// <param name="Reference"></param>
+        /// <param name="Tag"></param>
+        public Sprite2d(Vector2 Position, Vector2 Scale, Sprite2d Reference, string Tag, Block blockdata)
+        {
+            this.Position = Position;
+            this.Scale = Scale;
+            this.Tag = Tag;
+            this.BlockData = blockdata;
 
             //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);

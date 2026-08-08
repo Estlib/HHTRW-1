@@ -159,6 +159,8 @@ namespace Plat2d_2
         //enemies
         public static List<EnemyV2> enemiesv2 = new List<EnemyV2>(); //enemies that exist
         List<Bitmap> walkingEnemySpritesBitmap = EnemyV2.EnemySprites("walking"); //holds walking enemy type object sprite bitmaps
+        //blocks
+        public static List<Sprite2d> destructables = new List<Sprite2d>();
         //loggers
         public static bool logThisEnemy = false;
         public static int loggedEnemyArrayID = -1;
@@ -515,7 +517,7 @@ namespace Plat2d_2
             }
 
 
-            //shooting
+            //shooting locking
             if (activeWeapon.FiringLock)
             {
                 if (activeWeapon.FiringLockTimer != 0)
@@ -556,7 +558,7 @@ namespace Plat2d_2
                 activeWeapon.FiringLock = true;
             }
 
-            //shooting again
+            //shooting weapon
             if (fire == true && activeWeapon.FiringLock == false) //if player can fire and has pressed shoot button
             {
                 if (activeWeapon.AmmoLeft != 0 || activeWeapon.AmmoLeft > 0) //if the ammoleft is not 0 or less
@@ -746,7 +748,7 @@ namespace Plat2d_2
             if (remainingJumpSteps > 0) //if the jump steps are greater than 0
             {
 
-                player.ApplyImpulse(new Vector2(impadd, -(160000+impYadd)), Vector2.Zero());
+                player.ApplyImpulse(new Vector2(impadd, -(160000 + impYadd)), Vector2.Zero());
                 //player.ApplyYImpulse(new Vector2(0, -160000), Vector2.Zero());
                 //player.ApplyLinearImpulse(300000);
                 //player.SetVelocity(new Vector2(player.GetXVelocity(), -12800)); //then it applies a velocity to the player in the up direction, forming a jump
@@ -773,6 +775,103 @@ namespace Plat2d_2
             }
             player.UpdatePosition(); //updates players position
 
+            //killboxes
+
+            if (destructables != null)
+            {
+                for (int i = 0; i < destructables.Count; i++)
+                {
+                    Sprite2d thisblock = destructables[i];
+                    if (thisblock.IsColliding("Bullet") != null)
+                    {
+                        foreach (var bullet in bullets)
+                        {
+                            if ((bullet.sprite2d.IsColliding("Box") != null) || (bullet.sprite2d.IsColliding("PBox")!= null))
+                            {
+                                bullet.sprite2d.Tag = "RemoveThis";
+                                switch (bullet.weaponName)
+                                {
+                                    case "debug":
+                                        thisblock.DestroySelf();
+                                        thisblock.DestroyStatic(thisblock);
+                                        destructables.Remove(thisblock);
+                                        break;
+                                    case "Willo":
+                                        if (thisblock.BlockData.BlockHealth <= 1)
+                                        {
+                                            thisblock.DestroySelf();
+                                            thisblock.DestroyStatic(thisblock);
+                                            destructables.Remove(thisblock);
+                                            sfxInstance.Play("block remove");
+                                        }
+                                        else
+                                        {
+                                            thisblock.BlockData.BlockHealth -= 1;
+                                            sfxInstance.Play("hit block from below");
+                                        }
+                                        break;
+                                    case "Barker":
+                                        if (thisblock.BlockData.BlockHealth <= 4)
+                                        {
+                                            thisblock.DestroySelf();
+                                            thisblock.DestroyStatic(thisblock);
+                                            destructables.Remove(thisblock);
+                                            sfxInstance.Play("block remove");
+                                        }
+                                        else
+                                        {
+                                            thisblock.BlockData.BlockHealth -= 4;
+                                            sfxInstance.Play("hit block from below");
+                                        }
+                                        break;
+                                    case "Väits":
+                                        if (thisblock.BlockData.BlockHealth <= 2)
+                                        {
+                                            thisblock.DestroySelf();
+                                            thisblock.DestroyStatic(thisblock);
+                                            destructables.Remove(thisblock);
+                                            sfxInstance.Play("block remove");
+                                        }
+                                        else
+                                        {
+                                            thisblock.BlockData.BlockHealth -= 2;
+                                            sfxInstance.Play("hit block from below");
+                                        }
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                                if (thisblock.Tag == "PBox")
+                                {
+                                    SpawnLoot(thisblock.Position.X, thisblock.Position.Y);
+                                }
+                            }
+                        }
+                        //calculate health first
+                        //  if less than bullet damage,
+                        //      destroy
+                        //  if more than bullet damage,
+                        //      subtract from health
+                        //      play box destruction sound
+
+                        foreach (var bullet in bullets)
+                        {
+                            if (bullet.sprite2d.Tag != "Bullet")
+                            {
+                                if (bullet.weaponName != "Väits")
+                                {
+                                    bullet.sprite2d.DestroySelf();
+                                    bullets.Remove(bullet);
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+
             //enemies' bizarre encounter with boolet
             if (enemiesv2 != null)
             {
@@ -793,50 +892,7 @@ namespace Plat2d_2
                         pointScoreTally += 250;
                         SetHudScore(ScoreNumbers);
                         //
-                        ItemType thisItem = ItemType.Undefined;
-
-                        Collectable loot = (new Collectable(
-                        new Sprite2d(
-                            new Vector2(enemyobject.sprite2d.Position.X, enemyobject.sprite2d.Position.Y),
-                            new Vector2(16, 16),
-                            new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
-                            "Collectable"
-                            )
-                        ,
-                        new List<Bitmap>() {
-                        new Bitmap(Image.FromFile($"assets/sprites/tiles/noart/testobject3.png")),
-                        new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
-                        new Bitmap(Image.FromFile($"assets/sprites/tiles/noart/testobject2.png")),
-                                },
-                            6,
-                            thisItem
-                            ));
-                        int itemResult = RNGIDGEN.Next(1, 100);
-                        if (itemResult > 0 && itemResult < 50)
-                        {
-                            loot.WhatThisType = ItemType.Ammo;
-                            loot.Value = 6;
-                            loot.Sprite.Sprite = loot.AniFrames[1];
-                        }
-                        else if (itemResult > 49 && itemResult < 80)
-                        {
-                            loot.WhatThisType = ItemType.Health;
-                            loot.Value = 2;
-                            loot.Sprite.Sprite = loot.AniFrames[0];
-                        }
-                        else
-                        {
-                            loot.WhatThisType = ItemType.Life;
-                            loot.Value = 1;
-                            loot.Sprite.Sprite = loot.AniFrames[2];
-                        }
-                        loot.Sprite.RNGID = RNGIDGEN.Next(1, 9999);
-
-                        loot.Sprite.CreateItem();
-                        sfxInstance.Play("item drop");
-                        loot.Sprite.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
-                        //loot.Sprite.AddForce();
-                        DroppedItems.Add(loot);
+                        SpawnLoot(enemyobject.sprite2d.Position.X, enemyobject.sprite2d.Position.Y);
                         //
                         enemyobject.sprite2d.DestroySelf();
                         enemyobject.sprite2d.DestroyStatic(enemyobject.sprite2d);
@@ -1128,6 +1184,53 @@ namespace Plat2d_2
 
         }
 
+        private void SpawnLoot(float x, float y)
+        {
+            ItemType thisItem = ItemType.Undefined;
+
+            Collectable loot = (new Collectable(
+            new Sprite2d(
+                new Vector2((int)x,(int)y),
+                new Vector2(16, 16),
+                new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
+                "Collectable"
+                )
+            ,
+            new List<Bitmap>() {
+                        new Bitmap(Image.FromFile($"assets/sprites/tiles/noart/testobject3.png")),
+                        new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
+                        new Bitmap(Image.FromFile($"assets/sprites/tiles/noart/testobject2.png")),
+                    },
+                6,
+                thisItem
+                ));
+            int itemResult = RNGIDGEN.Next(1, 100);
+            if (itemResult > 0 && itemResult < 50)
+            {
+                loot.WhatThisType = ItemType.Ammo;
+                loot.Value = 6;
+                loot.Sprite.Sprite = loot.AniFrames[1];
+            }
+            else if (itemResult > 49 && itemResult < 80)
+            {
+                loot.WhatThisType = ItemType.Health;
+                loot.Value = 2;
+                loot.Sprite.Sprite = loot.AniFrames[0];
+            }
+            else
+            {
+                loot.WhatThisType = ItemType.Life;
+                loot.Value = 1;
+                loot.Sprite.Sprite = loot.AniFrames[2];
+            }
+            loot.Sprite.RNGID = RNGIDGEN.Next(1, 9999);
+
+            loot.Sprite.CreateItem();
+            sfxInstance.Play("item drop");
+            loot.Sprite.ApplyImpulse(new Vector2(0, -160000), Vector2.Zero());
+            DroppedItems.Add(loot);
+        }
+
         private void GunSound(string weaponName)
         {
             switch (weaponName)
@@ -1145,7 +1248,7 @@ namespace Plat2d_2
                     sfxInstance.Play("W3 - continuous shot");
                     break;
                 default:
-                    sfxInstance.Play("error");
+                    sfxInstance.Play("error - SFX not found");
                     break;
             }
         }
@@ -2028,6 +2131,21 @@ namespace Plat2d_2
                         if (artTagDefinitions[tryint] == "Ground")
                         {
                             new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint]).CreateStatic();
+                        }
+                        else if (artTagDefinitions[tryint] == "Box")
+                        {
+                            Block blockdata = new Block(new List<Bitmap>(), false, 3);
+                            Sprite2d thisblock = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint], blockdata);
+                            thisblock.CreateStatic();
+                            destructables.Add(thisblock);
+
+                        }
+                        else if (artTagDefinitions[tryint] == "PBox")
+                        {
+                            Block blockdata = new Block(new List<Bitmap>(), false, 1);
+                            Sprite2d thisblock = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint], blockdata);
+                            thisblock.CreateStatic();
+                            destructables.Add(thisblock);
                         }
                         else
                         {

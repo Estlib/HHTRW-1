@@ -43,7 +43,7 @@ namespace Plat2d_2.EngineCore
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Ground","Ground",
-            "Finish","Air","Air","Air","Air","Air","Air","Air",
+            "Finish","PBox","Air","Box","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Air","Air","Air",
             "Air","Air","Air","Air","Air","Ground","Ground","Ground",
