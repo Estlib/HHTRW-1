@@ -122,6 +122,27 @@ namespace Plat2d_2.EngineCore
             Log.InfoContinuous($"{Directory} {Tag} ADD");
             EngineCore.RegisterSprite(this);
         }
+        /// <summary>
+        /// spriteless sprite, used for solids only
+        /// </summary>
+        /// <param name="Position"></param>
+        /// <param name="Scale"></param>
+        /// <param name="Reference"></param>
+        /// <param name="Tag"></param>
+        public Sprite2d(Vector2 Position, Vector2 Scale)
+        {
+            this.Position = Position;
+            this.Scale = Scale;
+            this.Tag = Tag;
+
+            //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
+            //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
+            this.Sprite = null; //sets the sprite bitmap to be the one from the reference sprite
+
+            //Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
+            Log.InfoContinuous($"Solid {Tag} ADD");
+            EngineCore.RegisterSprite(this);
+        }
 
         /// <summary>
         /// has block
@@ -167,6 +188,7 @@ namespace Plat2d_2.EngineCore
             Log.InfoContinuous($"{Directory} {Tag} ADD");
             EngineCore.RegisterSprite(this);
         }
+
         /// <summary>
         /// Destroys an enemy and its body that this method has been called on.
         /// </summary>
@@ -199,6 +221,53 @@ namespace Plat2d_2.EngineCore
 
             // The extents are the half-widths of the box.
             shapeDef.SetAsBox(8.0f, 8.0f,new Vec2(16,16),0);
+
+            // Add the ground shape to the ground body.
+            body.CreateShape(shapeDef);
+
+            body.SetUserData(this);
+        }
+        public void CreateLongStatic2(int endPos)
+        {
+            // Define the ground body.
+            bodyDef = new BodyDef();
+            bodyDef.Position = new Vec2(this.Position.X-8, this.Position.Y-7);
+
+            // Call the body factory which  creates the ground box shape.
+            // The body is also added to the world.
+            body = EngineCore.world.CreateBody(bodyDef);
+
+            // Define the ground box shape.
+            PolygonDef shapeDef = new PolygonDef();
+            shapeDef.Density = 0.0f;
+
+            float lengthofside = (endPos * 16);
+            float startPos = (this.Position.X-(lengthofside));
+
+            // The extents are the half-widths of the box.
+            shapeDef.SetAsBox((lengthofside/2), 8.0f,new Vec2((lengthofside/2)+24, 16),0);
+
+            // Add the ground shape to the ground body.
+            body.CreateShape(shapeDef);
+
+            body.SetUserData(this);
+        }
+        public void CreateLongStatic(int lengthMultiplier)
+        {
+            // Define the ground body.
+            bodyDef = new BodyDef();
+            bodyDef.Position = new Vec2((this.Position.X-(lengthMultiplier*16))-8, this.Position.Y-7);
+
+            // Call the body factory which  creates the ground box shape.
+            // The body is also added to the world.
+            body = EngineCore.world.CreateBody(bodyDef);
+
+            // Define the ground box shape.
+            PolygonDef shapeDef = new PolygonDef();
+            shapeDef.Density = 0.0f;
+
+            // The extents are the half-widths of the box.
+            shapeDef.SetAsBox(8.0f * (lengthMultiplier / 2), 8.0f,new Vec2(16*(lengthMultiplier/2),16),0);
 
             // Add the ground shape to the ground body.
             body.CreateShape(shapeDef);

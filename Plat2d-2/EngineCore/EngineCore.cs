@@ -364,7 +364,7 @@ namespace Plat2d_2.EngineCore
             for (int i = 0; i < AllSprites.Count; i++)
             {
                 Sprite2d sprite = AllSprites[i];
-                if (!sprite.IsReference)
+                if (!sprite.IsReference && sprite.Sprite != null)
                 {
                     backGraphics.DrawImage(
                         sprite.Sprite,

@@ -3,6 +3,7 @@ using Box2DX.Dynamics;
 using Plat2d_2.EngineCore;
 using Plat2d_2.EngineCore.ObjectControllers;
 using Plat2d_2.EngineCore.ObjectTypes;
+using Python.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -211,6 +212,7 @@ namespace Plat2d_2
         int waitForThisManyFrames = 100;
         //Item templates
         public List<Collectable> DroppedItems = new List<Collectable>();
+        private bool renderingSystemToggle = true;
 
 
         /// <summary>
@@ -786,7 +788,7 @@ namespace Plat2d_2
                     {
                         foreach (var bullet in bullets)
                         {
-                            if ((bullet.sprite2d.IsColliding("Box") != null) || (bullet.sprite2d.IsColliding("PBox")!= null))
+                            if ((bullet.sprite2d.IsColliding("Box") != null) || (bullet.sprite2d.IsColliding("PBox") != null))
                             {
                                 bullet.sprite2d.Tag = "RemoveThis";
                                 switch (bullet.weaponName)
@@ -1190,7 +1192,7 @@ namespace Plat2d_2
 
             Collectable loot = (new Collectable(
             new Sprite2d(
-                new Vector2((int)x,(int)y),
+                new Vector2((int)x, (int)y),
                 new Vector2(16, 16),
                 new Bitmap(Image.FromFile($"assets/sprites/hud/none_icon.png")),
                 "Collectable"
@@ -1951,7 +1953,15 @@ namespace Plat2d_2
                     {
                         //
                     }
-                    RenderLayer(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
+                    if (renderingSystemToggle)
+                    {
+                        RenderLayerv2(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
+
+                    }
+                    else 
+                    { 
+                        RenderLayer(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
+                    }
                 }
             }
             if (reloadDestination.LevelNumber == 0)
@@ -1987,6 +1997,7 @@ namespace Plat2d_2
                 else
                 {
                     RenderLayer(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
+                    //RenderLayerv2(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
                 }
             }
             PlayLevelTrack(loadTarget);
@@ -2110,9 +2121,9 @@ namespace Plat2d_2
 
         private void RenderLayer(Sprite2d[] artRefs, string[,] layer, string[] artTagDefinitions)
         {
-            for (int i = 0; i < layer.GetLength(1); i++)
+            for (int j = 0; j < layer.GetLength(0); j++)
             {
-                for (int j = 0; j < layer.GetLength(0); j++)
+                for (int i = 0; i < layer.GetLength(1); i++)
                 {
                     bool skipcheck = false;
                     int tryint = 0;
@@ -2433,7 +2444,564 @@ namespace Plat2d_2
                             }
                         }
                     }
+                    //Log.Info($"J{j} I{i}");
                 }
+
+            }
+
+        }
+
+        private void RenderLayerv2(Sprite2d[] artRefs, string[,] layer, string[] artTagDefinitions)
+        {
+            // for-for ij of 
+
+
+            for (int j = 0; j < layer.GetLength(0); j++)
+            {
+                // loop to parse entire line tags
+                List<KeyValuePair<int,string>> tagsInLine = new List<KeyValuePair<int,string>>();
+                for (int i = 0; i < layer.GetLength(1); i++)
+                {
+                    int tryint = 0;
+                    int result = 0;
+                    if (layer[j, i] == "  ")
+                    {                        
+                        tagsInLine.Add(new KeyValuePair<int, string>(i, "-1"));
+                    }
+                    else
+                    {
+                        if (int.TryParse(layer[j, i], out result))
+                        {
+                            tryint = result;
+                        }
+                        tagsInLine.Add(new KeyValuePair<int, string>(i, artTagDefinitions[tryint]));
+                    }
+                }
+
+                //process solidity areas in the line
+                List<Tuple<int, int, string>> solidities = new List<Tuple<int, int, string>>();
+
+                int thissolidlength = 0;
+                for (int i = 0; i < tagsInLine.Count; i++)
+                {
+                    KeyValuePair<int, string> tile = tagsInLine[i];
+                    KeyValuePair<int, string> ahead;
+                    if (i+1 >= tagsInLine.Count)
+                    {
+                        ahead = tagsInLine[0];
+                    }
+                    else
+                    {
+                        ahead = tagsInLine[i+1];
+                    }
+                    if (tile.Value == "Ground" && ahead.Value == "Ground")
+                    {
+                        thissolidlength++;
+                    }
+                    else if (tile.Value == "Ground" && ahead.Value != "Ground")
+                    {
+                        thissolidlength++;
+                        solidities.Add(new Tuple<int, int, string>(i - thissolidlength, thissolidlength, "Ground"));
+                    }
+                    else
+                    {
+                        thissolidlength = 0;
+                    }
+                }
+
+                //render solids
+
+                
+                int xthing = 0;
+                if (solidities.Any())
+                {
+                    Log.Warning("Starting regions");
+                    
+                    foreach (var region in solidities)
+                    {
+                        xthing++;
+                        Log.Highlight($"region {xthing} >>> {region.Item1.ToString()}/{region.Item2.ToString()}/{region.Item3.ToString()}/");
+                        int startPos = region.Item1;
+                        int endPos = region.Item2;
+                        string regionTag = region.Item3;
+                                                                                                  //sky tile
+                        new Sprite2d(new Vector2((startPos++) * 16, j * 16), new Vector2(16, 16), artRefs[00], regionTag).CreateLongStatic2(endPos);
+                    }
+                    Log.Warning("Finished regions");
+                }
+                else
+                {
+                    Log.Warning($"Skipped regions, none found {j}");
+                }                   
+
+                for (int i = 0; i < layer.GetLength(1); i++)
+                {
+                    //variables for line
+                    bool skipThisElement = false;
+                    int tryint = 0;
+                    int result = 0;
+                    List<string> hudelements = new List<string>() { "HUD", "Lives", "Score", "Health", "Gems", "AmmoLeft", "Weaponname", "W_Icon" };
+
+                    //chek if empty
+                    if (layer[j, i] == "  ")
+                    {
+                        skipThisElement = true;
+                    }
+                    // if not empty
+                    if (!skipThisElement)
+                    {
+
+                        //try for integer
+                        if (int.TryParse(layer[j, i], out result))
+                        {
+                            tryint = result;
+                        }
+                        //detect ground
+                        if (artTagDefinitions[tryint] == "Ground")
+                        {
+                            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint]);
+                        }
+
+                        
+
+                        else if (artTagDefinitions[tryint] != "Ground")
+                        {
+
+
+                            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint]);
+                        }
+                        //render destructable blocks
+                        else if (artTagDefinitions[tryint] == "Box")
+                        {
+
+                            Block blockdata = new Block(new List<Bitmap>(), false, 3);
+                            Sprite2d thisblock = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint], blockdata);
+                            thisblock.CreateStatic();
+                            destructables.Add(thisblock);
+
+                        }
+                        //render powerup blocks
+                        else if (artTagDefinitions[tryint] == "PBox")
+                        {
+                            Block blockdata = new Block(new List<Bitmap>(), false, 1);
+                            Sprite2d thisblock = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint], blockdata);
+                            thisblock.CreateStatic();
+                            destructables.Add(thisblock);
+                        }
+
+                        //otherwise, set starting point
+                        else
+                        {
+
+                            if (artTagDefinitions[tryint] == "Start")
+                            {
+                                var datasprite = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint])/*.CreateStatic()*/;
+                                datasprite.worldData = new int[] { 1, 99 };
+                            }
+                            else
+                            {
+                                new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint])/*.CreateStatic()*/;
+                            }
+                        }
+                    }
+                    //if find hudelements to render
+                    if (hudelements.Contains(layer[j, i]))
+                    {
+                        RenderLayer_HudHelper(layer, j, i, hudelements);
+                    }
+                    //Log.Info($"J{j} I{i}");
+                }
+
+            }
+
+        }
+
+        private void NewRenderLayer(Sprite2d[] artRefs, string[,] layer, string[] artTagDefinitions)
+        {
+            // for-for ij of 
+
+
+            for (int j = 0; j < layer.GetLength(0); j++)
+            {
+                int[] startCoord = null; //where solid starts
+                int[] endCoord = new int[2]; //where it ends
+                int[] arrayStart = new int[2];
+                int[] arrayEnd = new int[2];
+                bool IsThereASolid = false; //is there a solid to render
+                int blocklength = 0; //length of solid / how many sprites to render
+                for (int i = 0; i < layer.GetLength(1); i++)
+                {
+                    //variables for line
+                    bool skipThisElement = false;
+                    int tryint = 0;
+                    int result = 0;
+                    List<string> hudelements = new List<string>() { "HUD", "Lives", "Score", "Health", "Gems", "AmmoLeft", "Weaponname", "W_Icon" };
+
+                    //chek if empty
+                    if (layer[j, i] == "  ")
+                    {
+                        skipThisElement = true;
+                    }
+                    // if not empty
+                    if (!skipThisElement)
+                    {
+
+                        //try for integer
+                        if (int.TryParse(layer[j, i], out result))
+                        {
+                            tryint = result;
+                        }
+                        //detect ground
+                        if (artTagDefinitions[tryint] == "Ground")
+                        {
+                            IsThereASolid = true;
+                            if (startCoord == null)
+                            {
+                                arrayStart = new int[2] { i, j };
+                            }
+                            blocklength += 1;
+                            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint]);
+                        }
+
+                        //else if not ground
+                        //create long solid
+                        //render all solid-area sprites
+                        // for - 
+                        //      mark this
+                        //render *this* block
+
+                        else if (artTagDefinitions[tryint] != "Ground")
+                        {
+
+                            //set last block as end of solid
+                            arrayEnd = new int[2] { i - 1, j };
+                            if (IsThereASolid)
+                            {
+                                new Sprite2d(new Vector2((i - blocklength) * 16, j * 16), new Vector2(16, 16)).CreateStatic();
+                                IsThereASolid = false;
+                            }
+                            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint]);
+
+                            blocklength = 0;
+
+                        }
+                        //render destructable blocks
+                        else if (artTagDefinitions[tryint] == "Box")
+                        {
+
+                            Block blockdata = new Block(new List<Bitmap>(), false, 3);
+                            Sprite2d thisblock = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint], blockdata);
+                            thisblock.CreateStatic();
+                            destructables.Add(thisblock);
+
+                        }
+                        //render powerup blocks
+                        else if (artTagDefinitions[tryint] == "PBox")
+                        {
+                            Block blockdata = new Block(new List<Bitmap>(), false, 1);
+                            Sprite2d thisblock = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint], blockdata);
+                            thisblock.CreateStatic();
+                            destructables.Add(thisblock);
+                        }
+
+                        //otherwise, set starting point
+                        else
+                        {
+
+                            if (artTagDefinitions[tryint] == "Start")
+                            {
+                                var datasprite = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint])/*.CreateStatic()*/;
+                                datasprite.worldData = new int[] { 1, 99 };
+                            }
+                            else
+                            {
+                                new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint])/*.CreateStatic()*/;
+                            }
+                        }
+                    }
+                    //if find hudelements to render
+                    if (hudelements.Contains(layer[j, i]))
+                    {
+                        RenderLayer_HudHelper(layer, j, i, hudelements);
+                    }
+                    //Log.Info($"J{j} I{i}");
+                }
+                IsThereASolid = false;
+
+            }
+
+        }
+
+        private void RenderLayer_HudHelper(string[,] layer, int j, int i, List<string> hudelements)
+        {
+            switch (layer[j, i])
+            {
+                case "HUD":
+                    hud = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(256, 32), $"hud/{hudelements[0]}", false, "HUD");
+                    break;
+
+                case "Weaponname":
+                    string whatthiswepname = unlockedWeapons[selectedweapon].WeaponName;
+                    switch (whatthiswepname)
+                    {
+                        case "Debug":
+                            weaponname = new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, j * 16 + 8), new Vector2(48, 8), $"hud/debug_word", true, "WeaponNameElement"),
+                            WeaponNames,
+                            0
+                            );
+                            break;
+                        case "Barker":
+                            weaponname = new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, j * 16 + 8), new Vector2(48, 8), $"hud/barker_word", true, "WeaponNameElement"),
+                            WeaponNames,
+                            0
+                            );
+                            break;
+                        case "Väits":
+                            weaponname = new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, j * 16 + 8), new Vector2(48, 8), $"hud/väits_word", true, "WeaponNameElement"),
+                            WeaponNames,
+                            0
+                            );
+                            break;
+                        case "Willo":
+                            weaponname = new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, j * 16 + 8), new Vector2(48, 8), $"hud/willo_word", true, "WeaponNameElement"),
+                            WeaponNames,
+                            0
+                            );
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+
+                case "W_Icon":
+                    string whatthiswep = unlockedWeapons[selectedweapon].WeaponName;
+                    switch (whatthiswep)
+                    {
+                        case "Debug":
+                            weaponicon = new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/debug_icon", true, "WeaponIconElement"),
+                            WeaponIcons,
+                            0
+                            );
+                            break;
+                        case "Barker":
+                            weaponicon = new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/barker_icon", true, "WeaponIconElement"),
+                            WeaponIcons,
+                            0
+                            );
+                            break;
+                        case "Väits":
+                            weaponicon = new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/väits_icon", true, "WeaponIconElement"),
+                            WeaponIcons,
+                            0
+                            );
+                            break;
+                        case "Willo":
+                            weaponicon = new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/willo_icon", true, "WeaponIconElement"),
+                            WeaponIcons,
+                            0
+                            );
+                            break;
+                        default:
+                            weaponicon = new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, j * 16 - 8), new Vector2(16, 16), $"hud/none_icon", true, "WeaponIconElement"),
+                            WeaponIcons,
+                            0
+                            );
+                            break;
+                    }
+
+                    break;
+
+
+                case "AmmoLeft":
+
+                    string digitNormalA = DigitNormalizer(activeWeapon.AmmoLeft, "AmmoLeft");
+                    Log.Info(digitNormalA);
+                    AmmoLeftItems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[0]}", true, "AmmoElement0"),
+                            BarElements,
+                            0
+                            )
+                        );
+                    AmmoLeftItems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16 + 8, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[1]}", true, "AmmoElement1"),
+                            BarElements,
+                            0
+                            )
+                        );
+                    AmmoLeftItems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16 + 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[2]}", true, "AmmoElement2"),
+                            BarElements,
+                            0
+                            )
+                        );
+                    AmmoLeftItems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16 + 24, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[3]}", true, "AmmoElement3"),
+                            BarElements,
+                            0
+                            )
+                        );
+                    AmmoLeftItems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16 + 32, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[4]}", true, "AmmoElement4"),
+                            BarElements,
+                            0
+                            )
+                        );
+                    AmmoLeftItems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16 + 40, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalA[5]}", true, "AmmoElement5"),
+                            BarElements,
+                            0
+                            )
+                        );
+
+                    break;
+
+                case "Lives":
+                    string digitNormal = DigitNormalizer(playerLives, "Lives");
+                    Lives.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormal[0]}", true, "LifeElement0"),
+                            DigitBMP,
+                            0
+                            )
+                        );
+                    Lives.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16 - 8, (j * 16)), new Vector2(8, 8), $"hud/{digitNormal[1]}", true, "LifeElement1"),
+                            DigitBMP,
+                            0
+                            )
+                        );
+                    break;
+
+
+                case "Health":
+                    string digitNormalH = DigitNormalizer(playerHealth, "Health");
+                    Log.Info(digitNormalH);
+                    HealthLeftItems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, (j * 16) + 8), new Vector2(8, 8), $"hud/{digitNormalH[0]}", true, "HealthElement0"),
+                            BarElements,
+                            0
+                            )
+                        );
+                    HealthLeftItems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16 + 8, (j * 16) + 8), new Vector2(8, 8), $"hud/{digitNormalH[1]}", true, "HealthElement1"),
+                            BarElements,
+                            0
+                            )
+                        );
+                    HealthLeftItems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16 + 16, (j * 16) + 8), new Vector2(8, 8), $"hud/{digitNormalH[2]}", true, "HealthElement2"),
+                            BarElements,
+                            0
+                            )
+                        );
+
+                    break;
+                case "Gems":
+
+                    string digitNormalG = DigitNormalizer(crystalScoreTally, "Gems");
+                    Gems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalG[0]}", true, "CrystalElement0"),
+                            DigitBMP,
+                            0
+                            )
+                        );
+                    Gems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16 + 8, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalG[1]}", true, "CrystalElement1"),
+                            DigitBMP,
+                            0
+                            )
+                        );
+                    Gems.Add(
+                        new HUDObject(
+                            new Sprite2d(new Vector2(i * 16 + 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalG[2]}", true, "CrystalElement2"),
+                            DigitBMP,
+                            0
+                            )
+                        );
+                    break;
+                case "Score":
+                    string digitNormalS = DigitNormalizer(pointScoreTally, "Score");
+                    ScoreNumbers.Add(
+                        new HUDObject(
+                                new Sprite2d(new Vector2(i * 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[0]}", true, "ScoreElement0"),
+                                DigitBMP,
+                                0
+                                )
+                        );
+                    ScoreNumbers.Add(
+                        new HUDObject(
+                                new Sprite2d(new Vector2(i * 16 + 8, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[1]}", true, "ScoreElement1"),
+                                DigitBMP,
+                                0
+                                )
+                        );
+                    ScoreNumbers.Add(
+                        new HUDObject(
+                                new Sprite2d(new Vector2(i * 16 + 16, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[2]}", true, "ScoreElement2"),
+                                DigitBMP,
+                                0
+                                )
+                        );
+                    ScoreNumbers.Add(
+                        new HUDObject(
+                                new Sprite2d(new Vector2(i * 16 + 24, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[3]}", true, "ScoreElement3"),
+                                DigitBMP,
+                                0
+                                )
+                        );
+                    ScoreNumbers.Add(
+                        new HUDObject(
+                                new Sprite2d(new Vector2(i * 16 + 32, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[4]}", true, "ScoreElement4"),
+                                DigitBMP,
+                                0
+                                )
+                        );
+                    ScoreNumbers.Add(
+                        new HUDObject(
+                                new Sprite2d(new Vector2(i * 16 + 40, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[5]}", true, "ScoreElement5"),
+                                DigitBMP,
+                                0
+                                )
+                        );
+                    ScoreNumbers.Add(
+                        new HUDObject(
+                                new Sprite2d(new Vector2(i * 16 + 48, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[6]}", true, "ScoreElement6"),
+                                DigitBMP,
+                                0
+                                )
+                        );
+                    ScoreNumbers.Add(
+                        new HUDObject(
+                                new Sprite2d(new Vector2(i * 16 + 56, (j * 16)), new Vector2(8, 8), $"hud/{digitNormalS[7]}", true, "ScoreElement7"),
+                                DigitBMP,
+                                0
+                                )
+                        );
+                    break;
+                default:
+                    Log.Warning("Nothing has been rendered, but a hud element was detected: " + layer[j, i]);
+                    break;
             }
         }
 
