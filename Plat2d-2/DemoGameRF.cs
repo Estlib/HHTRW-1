@@ -212,7 +212,7 @@ namespace Plat2d_2
         int waitForThisManyFrames = 100;
         //Item templates
         public List<Collectable> DroppedItems = new List<Collectable>();
-        private bool renderingSystemToggle = true;
+        private bool renderingSystemToggle = false;
 
 
         /// <summary>
@@ -1996,8 +1996,15 @@ namespace Plat2d_2
                 }
                 else
                 {
-                    RenderLayer(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
-                    //RenderLayerv2(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
+                    if (renderingSystemToggle)
+                    {
+                        RenderLayerv2(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
+                    }
+                    else
+                    {
+                        RenderLayer(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
+                    }
+                    //
                 }
             }
             PlayLevelTrack(loadTarget);
@@ -3869,6 +3876,7 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.X) { nextweapon = true; }
             if (e.KeyCode == Keys.D) { ShowSolids = !ShowSolids; }
             //if (e.KeyCode == Keys.Return) { EngineCore.EngineCore.pausebuttoninput = !pausebuttoninput; }
+            Log.Select($"^{up} v{down} <{left} >{right} z{fire} x{nextweapon} _{jump} q{respawntester} d{ShowSolids}");
         }
         public override void GetKeyUp(KeyEventArgs e)
         {
@@ -3880,6 +3888,7 @@ namespace Plat2d_2
             if (e.KeyCode == Keys.Space) { jump = false; }
             if (e.KeyCode == Keys.Q) { respawntester = false; }
             if (e.KeyCode == Keys.X) { nextweapon = false; }
+            Log.Select($"^{up} v{down} <{left} >{right} z{fire} x{nextweapon} _{jump} q{respawntester} d{ShowSolids}");
         }
         private void togglePause()
         {

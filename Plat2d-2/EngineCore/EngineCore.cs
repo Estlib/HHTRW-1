@@ -137,6 +137,7 @@ namespace Plat2d_2.EngineCore
             {
                 Window.Paint += Renderer;
             }
+            Window.KeyPreview = true;
             Window.KeyDown += Window_KeyDown;
             Window.KeyUp += Window_KeyUp;
             Window.FormBorderStyle = FormBorderStyle.FixedToolWindow;
@@ -253,7 +254,7 @@ namespace Plat2d_2.EngineCore
                     world.Step(timeStep, velocityIterations, positionIterations);
                     OnUpdate();
                     Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
-                    //Thread.Sleep(2);
+                    //Thread.Sleep(10);
                     if (Window != null)
                     {
                         //Window.BeginInvoke((MethodInvoker)delegate { UpdateHud(); });
@@ -339,6 +340,7 @@ namespace Plat2d_2.EngineCore
             this.Window.StartPosition = FormStartPosition.Manual;
             this.Window.Location = new Point(0, 0);
             this.Window.WindowState = FormWindowState.Maximized;
+            this.Window.KeyPreview = true;
             //this.Window.TopMost = false; // Optional
         }
         public void FullscreenMode()
