@@ -212,7 +212,7 @@ namespace Plat2d_2
         int waitForThisManyFrames = 100;
         //Item templates
         public List<Collectable> DroppedItems = new List<Collectable>();
-        private bool renderingSystemToggle = false;
+        private bool renderingSystemToggle = true;
 
 
         /// <summary>
@@ -1955,6 +1955,10 @@ namespace Plat2d_2
                     }
                     if (renderingSystemToggle)
                     {
+                        if (loadTarget.levelname == "World Map") 
+                        {
+                            RenderLayer(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
+                        }
                         RenderLayerv2(loadTarget.artRefs, layer, loadTarget.artTagDefinitions);
 
                     }
@@ -2517,7 +2521,6 @@ namespace Plat2d_2
                 }
 
                 //render solids
-
                 
                 int xthing = 0;
                 if (solidities.Any())
@@ -2541,6 +2544,7 @@ namespace Plat2d_2
                     Log.Warning($"Skipped regions, none found {j}");
                 }                   
 
+                //render other sprites
                 for (int i = 0; i < layer.GetLength(1); i++)
                 {
                     //variables for line
@@ -2567,18 +2571,17 @@ namespace Plat2d_2
                         if (artTagDefinitions[tryint] == "Ground")
                         {
                             new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint]);
-                        }
+                        }                       
 
-                        
-
-                        else if (artTagDefinitions[tryint] != "Ground")
-                        {
-
-
-                            new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint]);
-                        }
+                        //else if (artTagDefinitions[tryint] != "Ground" )
+                        //{
+                        //    if (artTagDefinitions[tryint] != "Box" || artTagDefinitions[tryint] != "PBox")
+                        //    {
+                        //        new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(16, 16), artRefs[tryint], artTagDefinitions[tryint]);
+                        //    }
+                        //}
                         //render destructable blocks
-                        else if (artTagDefinitions[tryint] == "Box")
+                        else if (artTagDefinitions[tryint] == "Box")  
                         {
 
                             Block blockdata = new Block(new List<Bitmap>(), false, 3);
