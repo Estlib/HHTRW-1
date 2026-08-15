@@ -24,12 +24,12 @@ namespace Plat2d_2.EngineCore.ObjectTypes
     public class Sensor
     {
         private static int sensorIncrementor = 0;
-        public int sensorID = sensorIncrementor++;
-        public int? parentID { get; set; }
-        public string parentObjName { get; set; } = "";
+        public int SensorID = sensorIncrementor++;
+        public int? ParentID { get; set; }
+        public string ParentObjName { get; set; } = "";
         public CardinalDirection ThisSensorDirection { get; set; }
         public Vector2 CoordsOnSprite { get; set; }
-        public bool IsTouchingTag { get; set; }
+        public bool? IsTouchingTag { get; set; } = false;
 
         public Sensor()
         {
@@ -40,20 +40,33 @@ namespace Plat2d_2.EngineCore.ObjectTypes
             }
         }
 
+        public Sensor(string parentObjName, CardinalDirection direction, Vector2 coords, bool isTouchingTag, int parentID = -1) : base()
+        {
+            //solve parent
+            ParentID = parentID;
+            if (string.IsNullOrEmpty(parentObjName))
+            {
+                ParentObjName = ParentID.ToString();
+            }
+            else
+            {
+                ParentObjName = parentObjName;
+            }
+
+            ThisSensorDirection = direction;
+            CoordsOnSprite = coords;
+            IsTouchingTag = isTouchingTag;
+
+        }
         private bool CheckParent()
         {
-            if (parentID == null || parentObjName == "")
+            if (ParentID == null || ParentObjName == "")
             {
                 Log.Error("Parent object is not defined, nor its id set. Skipping Sensor creation");
                 return false;
             }
 
             return true;
-        }
-
-        public Sensor()
-        {
-            
         }
 
 

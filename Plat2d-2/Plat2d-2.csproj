@@ -177,6 +177,7 @@
     <Compile Include="EngineCore\ObjectTypes\Block.cs" />
     <Compile Include="EngineCore\ObjectTypes\Collectable.cs" />
     <Compile Include="EngineCore\ObjectTypes\HUDObject.cs" />
+    <Compile Include="EngineCore\ObjectTypes\Sensor.cs" />
     <Compile Include="EngineCore\ObjectTypes\Weapon.cs" />
     <Compile Include="EngineCore\ObjectTypes\WorldStructure.cs" />
     <Compile Include="EngineCore\RuntimeDebuggingTools.cs" />
