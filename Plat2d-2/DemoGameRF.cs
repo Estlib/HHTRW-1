@@ -2046,7 +2046,9 @@ namespace Plat2d_2
                 {
                     if (layer[j, i] == "P")
                     {
-                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerSpritesBitmap[0], "Player");
+
+                        player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerSpritesBitmap[0], "Player", new List<Sensor>());
+
                         //player = new Sprite2d(new Vector2(i * 16, j * 16), new Vector2(32, 32), playerStand, "Player");
                         player.CreatePlayer();
                         //pass a list of sprites here, changing happens by animating list numbers, limited by if limits

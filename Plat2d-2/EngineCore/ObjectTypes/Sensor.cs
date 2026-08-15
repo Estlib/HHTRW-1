@@ -19,7 +19,7 @@ namespace Plat2d_2.EngineCore.ObjectTypes
          TL - bottom middle
          TL - bottom right
          */
-        TL, TT,TR,ML,MM,MR,BL,BB,BR
+        TL,TT,TR,ML,MM,MR,BL,BB,BR
     }
     public class Sensor
     {
@@ -40,7 +40,7 @@ namespace Plat2d_2.EngineCore.ObjectTypes
             }
         }
 
-        public Sensor(string parentObjName, CardinalDirection direction, Vector2 coords, bool isTouchingTag, int parentID = -1) : base()
+        public Sensor(string parentObjName, CardinalDirection direction, Vector2 coords, bool isTouchingTag = false, int parentID = -1) : base()
         {
             //solve parent
             ParentID = parentID;

@@ -27,6 +27,7 @@ namespace Plat2d_2.EngineCore
         public bool IsHudObject = false;
         public int RNGID = 0;
         public Block BlockData { get; set; }
+        public List<Sensor> SideSensors { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -64,14 +65,14 @@ namespace Plat2d_2.EngineCore
         /// <param name="Position">Sprite location</param>
         /// <param name="Scale">Sprite size.</param>
         /// <param name="Directory">string for loading sprite from directory</param>
-        public Sprite2d(Vector2 Position, Vector2 Scale, string Directory, bool isObjectOrHudsprite, string elementTag )
+        public Sprite2d(Vector2 Position, Vector2 Scale, string Directory, bool isObjectOrHudsprite, string elementTag)
         {
             this.Position = Position;
             this.Scale = Scale;
             this.Directory = Directory;
             this.IsHudObject = isObjectOrHudsprite;
-            this.Tag= elementTag;
-            
+            this.Tag = elementTag;
+
 
             Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
             this.Sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
@@ -89,7 +90,7 @@ namespace Plat2d_2.EngineCore
         /// <param name="Directory">directory string for the sprites location</param>
         public Sprite2d(string Directory)
         {
-            this.IsReference = true; 
+            this.IsReference = true;
             //this.Isreference is defined internally because there is no need for this to ever be false, if its not a reference sprite, it will use any other constructor anyway.
             this.Directory = Directory;
 
@@ -188,6 +189,28 @@ namespace Plat2d_2.EngineCore
             Log.InfoContinuous($"{Directory} {Tag} ADD");
             EngineCore.RegisterSprite(this);
         }
+        /// <summary>
+        /// constructor for an animated Sprite2d. taking in position and scale vectors aswell as a bitmap image and a tag string.
+        /// it is used to render player object only(!) onto the screen. The bitmap passed into it is animated in the main game loop using a bitmap list and methods external to this class
+        /// </summary>
+        /// <param name="Position">Sprite location.</param>
+        /// <param name="Scale">Sprite size.</param>
+        /// <param name="bitmap">Bitmap to use for the sprite.</param>
+        /// <param name="Tag">Name of the type of object this sprite is, "Air" "Ground" etc.</param>
+        public Sprite2d(Vector2 Position, Vector2 Scale, Bitmap bitmap, string Tag, List<Sensor> thisSpriteSensors)
+        {
+            this.Position = Position;
+            this.Scale = Scale;
+            this.Tag = Tag;
+
+            //Image tmp = Image.FromFile($"assets/sprites/{Directory}.png");
+            //Bitmap sprite = new Bitmap(tmp/*, (int)this.Scale.X, (int)this.Scale.Y*/);
+            this.Sprite = bitmap;
+
+            //Log.Info($"[SPRITE2D]({Directory} {Tag}) sprite has been registered");
+            Log.InfoContinuous($"{Directory} {Tag} ADD");
+            EngineCore.RegisterSprite(this);
+        }
 
         /// <summary>
         /// Destroys an enemy and its body that this method has been called on.
@@ -209,7 +232,7 @@ namespace Plat2d_2.EngineCore
         {
             // Define the ground body.
             bodyDef = new BodyDef();
-            bodyDef.Position = new Vec2(this.Position.X-8, this.Position.Y-7);
+            bodyDef.Position = new Vec2(this.Position.X - 8, this.Position.Y - 7);
 
             // Call the body factory which  creates the ground box shape.
             // The body is also added to the world.
@@ -220,7 +243,7 @@ namespace Plat2d_2.EngineCore
             shapeDef.Density = 0.0f;
 
             // The extents are the half-widths of the box.
-            shapeDef.SetAsBox(8.0f, 8.0f,new Vec2(16,16),0);
+            shapeDef.SetAsBox(8.0f, 8.0f, new Vec2(16, 16), 0);
 
             // Add the ground shape to the ground body.
             body.CreateShape(shapeDef);
@@ -231,7 +254,7 @@ namespace Plat2d_2.EngineCore
         {
             // Define the ground body.
             bodyDef = new BodyDef();
-            bodyDef.Position = new Vec2(this.Position.X-8, this.Position.Y-7);
+            bodyDef.Position = new Vec2(this.Position.X - 8, this.Position.Y - 7);
 
             // Call the body factory which  creates the ground box shape.
             // The body is also added to the world.
@@ -242,10 +265,10 @@ namespace Plat2d_2.EngineCore
             shapeDef.Density = 0.0f;
 
             float lengthofside = (endPos * 16);
-            float startPos = (this.Position.X-(lengthofside));
+            float startPos = (this.Position.X - (lengthofside));
 
             // The extents are the half-widths of the box.
-            shapeDef.SetAsBox((lengthofside/2), 8.0f,new Vec2((lengthofside/2)+24, 16),0);
+            shapeDef.SetAsBox((lengthofside / 2), 8.0f, new Vec2((lengthofside / 2) + 24, 16), 0);
 
             // Add the ground shape to the ground body.
             body.CreateShape(shapeDef);
@@ -256,7 +279,7 @@ namespace Plat2d_2.EngineCore
         {
             // Define the ground body.
             bodyDef = new BodyDef();
-            bodyDef.Position = new Vec2((this.Position.X-(lengthMultiplier*16))-8, this.Position.Y-7);
+            bodyDef.Position = new Vec2((this.Position.X - (lengthMultiplier * 16)) - 8, this.Position.Y - 7);
 
             // Call the body factory which  creates the ground box shape.
             // The body is also added to the world.
@@ -267,7 +290,7 @@ namespace Plat2d_2.EngineCore
             shapeDef.Density = 0.0f;
 
             // The extents are the half-widths of the box.
-            shapeDef.SetAsBox(8.0f * (lengthMultiplier / 2), 8.0f,new Vec2(16*(lengthMultiplier/2),16),0);
+            shapeDef.SetAsBox(8.0f * (lengthMultiplier / 2), 8.0f, new Vec2(16 * (lengthMultiplier / 2), 16), 0);
 
             // Add the ground shape to the ground body.
             body.CreateShape(shapeDef);
@@ -303,7 +326,7 @@ namespace Plat2d_2.EngineCore
             //}
             //else
             //{
-                shapeDef.Density = 1000.0f;
+            shapeDef.Density = 1000.0f;
             //}
 
             // Override the default friction.
@@ -341,7 +364,7 @@ namespace Plat2d_2.EngineCore
             //bodyDef = new BodyDef();
             bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
             bodyDef.FixedRotation = true;
-            
+
             body = EngineCore.world.CreateBody(bodyDef);
             //if (this.Tag == "Bullet")
             //{
@@ -351,7 +374,7 @@ namespace Plat2d_2.EngineCore
             // Define another box shape for our dynamic body.
             //PolygonDef shapeDef = new PolygonDef();
             PolygonDef shapeDef = new PolygonDef();
-            shapeDef.SetAsBox(8.0f, 16.0f,new Vec2(16,16),0);
+            shapeDef.SetAsBox(8.0f, 16.0f, new Vec2(16, 16), 0);
             //shapeDef.
             //Vec2[] vertices = new Vec2[4] {
             //    new Vec2(this.Position.X + 8, this.Position.Y),
@@ -367,7 +390,7 @@ namespace Plat2d_2.EngineCore
             //shapeDef.Vertices = vertices;
             //shapeDef.VertexCount = 4;
             //PolygonShape polygonShape = new PolygonShape(shapeDef) { };
-            
+
             //shapeDef2.VertexCount = 4;
             //shapeDef2.Vertices =vertices;
 
@@ -380,7 +403,7 @@ namespace Plat2d_2.EngineCore
             //}
             //else
             //{
-                shapeDef.Density = 1.0f;
+            shapeDef.Density = 1.0f;
             //}
 
             // Override the default friction.
@@ -388,7 +411,7 @@ namespace Plat2d_2.EngineCore
 
             shapeDef.Restitution = 0.0f;
 
-            
+
 
             try
             {
@@ -421,7 +444,7 @@ namespace Plat2d_2.EngineCore
             bodyDef.Position = new Vec2(this.Position.X, this.Position.Y);
             bodyDef.FixedRotation = true;
             //bodyDef.LinearDamping = 10;
-            
+
             body = EngineCore.world.CreateBody(bodyDef);
             //if (this.Tag == "Bullet")
             //{
@@ -431,7 +454,7 @@ namespace Plat2d_2.EngineCore
             // Define another box shape for our dynamic body.
             //PolygonDef shapeDef = new PolygonDef();
             PolygonDef shapeDef = new PolygonDef();
-            shapeDef.SetAsBox(7.0f, 14.0f,new Vec2(16,18),0);
+            shapeDef.SetAsBox(7.0f, 14.0f, new Vec2(16, 18), 0);
             //shapeDef.
             //Vec2[] vertices = new Vec2[4] {
             //    new Vec2(this.Position.X + 8, this.Position.Y),
@@ -440,14 +463,37 @@ namespace Plat2d_2.EngineCore
             //    new Vec2(this.Position.X + 8, this.Position.Y - 32)
             //};
             //shapeDef.Vertices = vertices;
-            Log.Highlight($"Vertices 0: {shapeDef.Vertices[0].X}{shapeDef.Vertices[0].Y}\n" +
-                $" 1: {shapeDef.Vertices[1].X}{shapeDef.Vertices[1].Y}\n" +
-                $" 2: {shapeDef.Vertices[2].X}{shapeDef.Vertices[2].Y}\n" +
-                $" 3: {shapeDef.Vertices[3].X}{shapeDef.Vertices[3].Y}");
+            // --,
+            //   |
+            // <-'
+            Log.Highlight($"Vertices\n 0: {shapeDef.Vertices[0].X} : {shapeDef.Vertices[0].Y}\n" +
+                $" 1: {shapeDef.Vertices[1].X} : {shapeDef.Vertices[1].Y}\n" +
+                $" 2: {shapeDef.Vertices[2].X} : {shapeDef.Vertices[2].Y}\n" +
+                $" 3: {shapeDef.Vertices[3].X} : {shapeDef.Vertices[3].Y}");
+            List<Sensor> playersensors = new List<Sensor>()
+            {
+                // <^  vertice 0
+                new Sensor("Player",CardinalDirection.TL,new Vector2(shapeDef.Vertices[0].X,shapeDef.Vertices[0].Y)),
+                // 
+                new Sensor("Player",CardinalDirection.TT,new Vector2(shapeDef.Vertices[1].X/2,shapeDef.Vertices[0].Y)),
+                // ^>  vertice 1
+                new Sensor("Player",CardinalDirection.TR,new Vector2(shapeDef.Vertices[1].X,shapeDef.Vertices[1].Y)),
+                //
+                new Sensor("Player",CardinalDirection.MR,new Vector2(shapeDef.Vertices[1].X,shapeDef.Vertices[2].Y/2)),
+                // v>  vertice 2
+                new Sensor("Player",CardinalDirection.BR,new Vector2(shapeDef.Vertices[2].X,shapeDef.Vertices[2].Y)),
+                //
+                new Sensor("Player",CardinalDirection.BB,new Vector2(shapeDef.Vertices[1].X/2,shapeDef.Vertices[2].Y)),
+                // <v  vertice 3
+                new Sensor("Player",CardinalDirection.BL,new Vector2(shapeDef.Vertices[3].X,shapeDef.Vertices[3].Y)),
+                //
+                new Sensor("Player",CardinalDirection.ML,new Vector2(shapeDef.Vertices[3].X,shapeDef.Vertices[2].Y/2)),
+            };
+            this.SideSensors = playersensors;
             //shapeDef.Vertices = vertices;
             //shapeDef.VertexCount = 4;
             //PolygonShape polygonShape = new PolygonShape(shapeDef) { };
-            
+
             //shapeDef2.VertexCount = 4;
             //shapeDef2.Vertices =vertices;
 
@@ -460,7 +506,7 @@ namespace Plat2d_2.EngineCore
             //}
             //else
             //{
-                shapeDef.Density = 1.0f;
+            shapeDef.Density = 1.0f;
             //}
 
             // Override the default friction.
@@ -468,7 +514,7 @@ namespace Plat2d_2.EngineCore
 
             shapeDef.Restitution = 00.0f;
 
-            
+
 
             try
             {
@@ -508,7 +554,7 @@ namespace Plat2d_2.EngineCore
 
             // Define another box shape for our dynamic body.
             PolygonDef shapeDef = new PolygonDef();
-            shapeDef.SetAsBox(8.0f, 7.0f,new Vec2(8,10),0);
+            shapeDef.SetAsBox(8.0f, 7.0f, new Vec2(8, 10), 0);
 
             // Set the box density to be non-zero, so it will be dynamic.
             //if (this.Tag == "Bullet")
@@ -518,7 +564,7 @@ namespace Plat2d_2.EngineCore
             //}
             //else
             //{
-                shapeDef.Density = 1000.0f;
+            shapeDef.Density = 1000.0f;
             //}
 
             // Override the default friction.
@@ -573,7 +619,7 @@ namespace Plat2d_2.EngineCore
             float currentAvel = this.body.GetLinearVelocity().Y;
             float currentLvel = this.body.GetLinearVelocity().Y;
             //this.body.SetLinearVelocity( new Vec2 (this.body.GetLinearVelocity().X, currentAvel += (-this.body.GetInertia()) * impulse));
-            this.body.SetAngularVelocity( currentLvel += (this.body.GetInertia()-((this.body.GetInertia()*2)) * impulse));
+            this.body.SetAngularVelocity(currentLvel += (this.body.GetInertia() - ((this.body.GetInertia() * 2)) * impulse));
         }
 
 
@@ -627,6 +673,51 @@ namespace Plat2d_2.EngineCore
             //Log.Warning("X is " + body.GetPosition().X + ". Y is " + body.GetPosition().Y);
             this.Position.X = (float)System.Math.Round(body.GetPosition().X);
             this.Position.Y = (float)System.Math.Round(body.GetPosition().Y);
+            if (this.SideSensors != null)
+            {
+                foreach (var sensor in this.SideSensors)
+                {
+                    switch (sensor.ThisSensorDirection)
+                    {
+                        case CardinalDirection.TL:
+                            break;
+                        case CardinalDirection.TT:
+                            break;
+                        case CardinalDirection.TR:
+                            break;
+                        case CardinalDirection.ML:
+                            break;
+                        case CardinalDirection.MM:
+                            break;
+                        case CardinalDirection.MR:
+                            break;
+                        case CardinalDirection.BL:
+                            break;
+                        case CardinalDirection.BB:
+                            break;
+                        case CardinalDirection.BR:
+                            break;
+                        default:
+                            break;
+                    }
+                    // <^  vertice 0
+                    new Sensor("Player", CardinalDirection.TL, new Vector2(shapeDef.Vertices[0].X, shapeDef.Vertices[0].Y)),
+                // 
+                new Sensor("Player", CardinalDirection.TT, new Vector2(shapeDef.Vertices[1].X / 2, shapeDef.Vertices[0].Y)),
+                // ^>  vertice 1
+                new Sensor("Player", CardinalDirection.TR, new Vector2(shapeDef.Vertices[1].X, shapeDef.Vertices[1].Y)),
+                //
+                new Sensor("Player", CardinalDirection.MR, new Vector2(shapeDef.Vertices[1].X, shapeDef.Vertices[2].Y / 2)),
+                // v>  vertice 2
+                new Sensor("Player", CardinalDirection.BR, new Vector2(shapeDef.Vertices[2].X, shapeDef.Vertices[2].Y)),
+                //
+                new Sensor("Player", CardinalDirection.BB, new Vector2(shapeDef.Vertices[1].X / 2, shapeDef.Vertices[2].Y)),
+                // <v  vertice 3
+                new Sensor("Player", CardinalDirection.BL, new Vector2(shapeDef.Vertices[3].X, shapeDef.Vertices[3].Y)),
+                //
+                new Sensor("Player", CardinalDirection.ML, new Vector2(shapeDef.Vertices[3].X, shapeDef.Vertices[2].Y / 2)),
+                }
+            }
             //this.Sprite = 
         }
         /// <summary>
@@ -710,7 +801,7 @@ namespace Plat2d_2.EngineCore
         {
             //Log.Info($"[SPRITE2D]({Tag}) has been destroyed");
             //EngineCore.world.DestroyBody(body);
-            EngineCore.UnRegisterSprite(this); 
+            EngineCore.UnRegisterSprite(this);
         }
         /// <summary>
         /// destructor for the sprite2d class
